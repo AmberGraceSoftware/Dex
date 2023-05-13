@@ -9,6 +9,7 @@ export type Symbol<Name> = Types.Symbol<Name>
 
 local Symbol = {}
 Symbol.__index = {}
+Symbol.__index._dectype = "Symbol"
 Symbol.__tostring = function(self: Symbol<any>)
     if self._usage then
         return table.concat({self._name, "\n(Usage: ", self._usage, ")"})

@@ -11,6 +11,7 @@ export type Observable<T = any> = typeof(setmetatable(
 		_current: T,
 	},
 	{} :: {__index: {
+		_dectype: string,
 		Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
 		Current: (self: Observable<T>) -> T,
 		DeferUpdates: (self: Observable<T>) -> Observable<T>,
@@ -69,6 +70,7 @@ export type VirtualInstance = typeof(setmetatable(
 		_directives: {any},
 	},
 	{} :: {__index: {
+		_dectype: string,
 		Assign: (
 			self: VirtualInstance,
 			propertyMap: {[string]: any}
@@ -152,19 +154,25 @@ export type VirtualInstance = typeof(setmetatable(
 		propertyMap: {[string]: any}
 	) -> VirtualInstance}
 ))
-export type Reconciled = {
-	_connections: {RBXScriptConnection},
-	_instances: {Instance},
-	_instance: Instance,
-}
+export type Reconciled = typeof(setmetatable(
+	{} :: {
+		_connections: {RBXScriptConnection},
+		_instances: {Instance},
+		_instance: Instance,
+	},
+	{} :: {__index: {
+		_dectype: string,
+		Destroy: (self: Reconciled) -> (),
+	}}
+))
 export type Symbol<Name> = typeof(setmetatable(
 	{} :: {
 		_name: Name,
 		_usage: string?,
 	},
-	{} :: {
-		__tostring: (self: Symbol<Name>) -> string
-	}
+	{} :: {__index: {
+		_dectype: string,
+	}, __tostring: (self: Symbol<Name>) -> string}
 ))
 
 -- Temporary typedef for library; will move typings to the return of component
