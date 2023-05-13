@@ -157,13 +157,13 @@ export type Reconciled = {
 	_instances: {Instance},
 	_instance: Instance,
 }
-export type Symbol = typeof(setmetatable(
+export type Symbol<Name> = typeof(setmetatable(
 	{} :: {
-		_name: string,
+		_name: Name,
 		_usage: string?,
 	},
 	{} :: {
-		__tostring: (self: Symbol) -> string
+		__tostring: (self: Symbol<Name>) -> string
 	}
 ))
 

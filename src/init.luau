@@ -12,6 +12,7 @@
 ]]
 
 local Types = require(script.Types)
+local Symbols = require(script.Symbols)
 
 export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>
@@ -22,8 +23,11 @@ export type Timer = Types.Timer
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type VirtualInstance = Types.VirtualInstance
 export type Reconciled = Types.Reconciled
-export type Symbol = Types.Symbol
+export type Symbol<Name> = Types.Symbol<Name>
+export type Nil = Symbol<"Nil">
 
 local Dec = {}
+
+Dec.Nil = Symbols.Nil
 
 return Dec
