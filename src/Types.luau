@@ -12,6 +12,7 @@ export type Observable<T = any> = typeof(setmetatable(
 	},
 	{} :: {__index: {
 		_dectype: string,
+		_decobservabletype: string,
 		Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
 		Current: (self: Observable<T>) -> T,
 		Destroy: (self: Observable<T>) -> (),
@@ -26,11 +27,12 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 export type Spring<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {
 		_angularFrequency: number,
-		_current: number,
-		_target: number,
+		_current: T,
+		_target: T,
 		_snapToGoalTheshold: number?,
 	},
 	{} :: {__index: {
+		_snapToGoalTheshold: number,
 		SetAngularFrequency: (self: State<T>, number) -> (),
 		CurrentAngularFrequency: (self: State<T>) -> number,
 		SetTarget: (self: State<T>, target: T) -> (),
@@ -69,7 +71,7 @@ export type Stopwatch = BaseTimer & typeof(setmetatable(
 ))
 export type Timer = BaseTimer & typeof(setmetatable(
 	{} :: {
-		_duration: Observable<number>,
+		_duration: number,
 	},
 	{} :: {__index: {
 		SetDuration: (self: Timer) -> (),
@@ -126,28 +128,31 @@ export type VirtualInstance = typeof(setmetatable(
 		OutProperty: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: CanBeObservable<State<any>>
+			outState: State<any>
 		) -> (),
 		OutAttribute: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: CanBeObservable<State<any>>
+			outState: State<any>
 		) -> (),
 		OutInstance: (
 			self: VirtualInstance,
-			outState: CanBeObservable<State<Instance> | State<Instance?>>
+			outState: State<Instance> | State<Instance?>
 		) -> (),
 		Copy: (self: VirtualInstance) -> VirtualInstance,
+		DeepCopy: (self: VirtualInstance) -> VirtualInstance,
 		Children: (
 			self: VirtualInstance,
 			childMap: CanBeObservable<{
-				[string | number]: CanBeObservable<Instance | VirtualInstance>
+				[string | {string} | number]: CanBeObservable<
+					Instance | VirtualInstance | nil
+				>
 			}>
 		) -> (),
 		Child: (
 			self: VirtualInstance,
-			child: CanBeObservable<Instance | VirtualInstance>,
-			name: CanBeObservable<string?>
+			path: CanBeObservable<string | {string}>,
+			child: CanBeObservable<Instance | VirtualInstance | nil>
 		) -> (),
 		OnMount: (
 			self: VirtualInstance,
@@ -187,7 +192,8 @@ export type Root = typeof(setmetatable(
 		_instance: Instance,
 		_reconciled: ReconciledNode?
 	},
-	{} :: {_index: {
+	{} :: {__index: {
+		_dectype: string,
 		Render: (self: Root, node: VirtualInstance) -> ReconciledNode,
 		Unmount: (self: Root) -> (),
 		Destroy: (self: Root) -> (),
