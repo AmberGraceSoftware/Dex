@@ -23,6 +23,21 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 		Set: (self: State<T>, T) -> (),
 	}}
 ))
+export type Spring<T = any> = Observable<T> & typeof(setmetatable(
+	{} :: {
+		_angularFrequency: number,
+		_current: number,
+		_target: number,
+		_snapToGoalTheshold: number?,
+	},
+	{} :: {__index: {
+		SetAngularFrequency: (self: State<T>, number) -> (),
+		CurrentAngularFrequency: (self: State<T>) -> number,
+		SetTarget: (self: State<T>, target: T) -> (),
+		CurrentTarget: (self: State<T>) -> T,
+		SetPosition: (self: State<T>, position: T) -> (),
+	}}
+))
 export type Alpha = Observable<number> & typeof(setmetatable(
 	{} :: {},
 	{} :: {__index: {
@@ -62,6 +77,12 @@ export type Timer = BaseTimer & typeof(setmetatable(
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>
+export type Tween = {
+	info: TweenInfo,
+	start {[string]: any}?,
+	goal = {[string]: any},
+	completed: (() -> ())?,
+}
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
@@ -75,9 +96,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Tweens: (
 			self: VirtualInstance,
-			info: CanBeObservable<TweenInfo>,
-			goalProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>,
-			startProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>
+			Fusion.CanBeObservable<{Tween}>
 		) -> (),
 		Attributes: (
 			self: VirtualInstance,
@@ -168,6 +187,7 @@ export type Root = typeof(setmetatable(
 type Dec = {
 	-- State and Observable Utilities
 	State: <T>(initial: T) -> State<T>,
+	Spring: <T>(initial: T) -> Spring<T>,
 	Stopwatch: () -> Stopwatch,
 	Timer: (duration: number) -> Timer,
 	Derive: (<Return, D1>(
