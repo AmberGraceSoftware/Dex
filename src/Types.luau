@@ -71,87 +71,75 @@ export type VirtualInstance = typeof(setmetatable(
 	},
 	{} :: {__index: {
 		_dectype: string,
-		Assign: (
+		Properties: (
 			self: VirtualInstance,
-			propertyMap: {[string]: any}
-		) -> VirtualInstance,
-		Tween: (
+			propertyMap: CanBeObservable<{[string]: any}>
+		) -> (),
+		Tweens: (
 			self: VirtualInstance,
-			info: TweenInfo,
+			info: CanBeObservable<TweenInfo>,
 			goalProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>,
 			startProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>
-		) -> VirtualInstance,
-		SetAttributes: (
+		) -> (),
+		Attributes: (
 			self: VirtualInstance,
-			attributeMap: {[string]: any}
-		) -> VirtualInstance,
-		SetTags: (
+			attributeMap: CanBeObservable<{[string]: any}>
+		) -> (),
+		Tags: (
 			self: VirtualInstance,
-			tags: {string} | Observable<{string}>
-		) -> VirtualInstance,
+			tags: CanBeObservable<{string} | Observable<{string}>
+		) -> (),
 		Connect: (
 			self: VirtualInstance,
 			eventName: string,
 			signal: (...any) -> ()
-		) -> VirtualInstance,
-		StoreProperty: (
+		) -> (),
+		OutProperty: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: State<any>
-		) -> VirtualInstance,
-		StoreAttribute: (
+			outState: CanBeObservable<State<any>>
+		) -> (),
+		OutAttribute: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: State<any>
-		) -> VirtualInstance,
-		StoreReference: (
+			outState: CanBeObservable<State<any>>
+		) -> (),
+		OutInstance: (
 			self: VirtualInstance,
-			outState: State<Instance>
-		) -> VirtualInstance,
+			outState: CanBeObservable<State<Instance> | State<Instance?>>
+		) -> (),
 		Copy: (self: VirtualInstance) -> VirtualInstance,
-		AddChildren: (
+		NewChildren: (
 			self: VirtualInstance,
 			childMap: CanBeObservable<{
 				[string | number]: CanBeObservable<Instance | VirtualInstance>
 			}>
-		) -> VirtualInstance,
-		AddChild: (
+		) -> (),
+		NewChild: (
 			self: VirtualInstance,
 			child: CanBeObservable<Instance | VirtualInstance>,
-			name: string?
-		) -> VirtualInstance,
-		AddExistingChild: (
+			name: CanBeObservable<string?>
+		) -> (),
+		ExistingChild: (
 			self: VirtualInstance,
-			path: string | {string},
-			callback: CanBeObservable<(VirtualInstance) -> ()>
-		) -> VirtualInstance,
-		AddToParent: (
+			path: CanBeObservable<string | {string}>,
+			child: CanBeObservable<Instance | VirtualInstance>
+		) -> (),
+		ExistingChildren: (
 			self: VirtualInstance,
-			parent: CanBeObservable<VirtualInstance | Instance>
-		) -> VirtualInstance,
-		-- Lifecycle events (Useful for niche cases like event/effect cleanups
-		-- that can't be handled directly via Dec's virtual instances)
-		OnUnmount: (
-			self: VirtualInstance,
-			callback: (instance: Instance) -> ()
-		) -> VirtualInstance,
+			pathMap: CanBeObservable<{[string]: CanBeObservable<VirtualInstance>}
+		) -> (),
 		OnMount: (
 			self: VirtualInstance,
 			callback: (instance: Instance) -> ()
-		) -> VirtualInstance,
-		Index: (
+		) -> (),
+		OnUnmount: (
 			self: VirtualInstance,
-			path: string | {string}
-		) -> VirtualInstance,
-		
-		--  Linked states
-		CleanupOnUnmount: (
-			self: VirtualInstance,
-			object: any
-		) -> any,
+			callback: (instance: Instance) -> (),
+		) -> (),
 	}, __call: (
 		self: VirtualInstance,
-		propertyMap: {[string]: any}
+		propertyMap: CanBeObservable<{[string]: any}>
 	) -> VirtualInstance}
 ))
 export type Reconciled = typeof(setmetatable(
