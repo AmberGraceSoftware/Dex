@@ -209,7 +209,7 @@ type Dec = {
 	Existing: (template: Instance | VirtualInstance) -> VirtualInstance,
 	
 	-- Root-Level Reconciler API
-	CreateRoot: (instance: Instance) -> DecRoot
+	CreateRoot: (instance: Instance) -> Root
 	
 	-- Symbols
 	Nil: {}
