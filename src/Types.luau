@@ -109,25 +109,16 @@ export type VirtualInstance = typeof(setmetatable(
 			outState: CanBeObservable<State<Instance> | State<Instance?>>
 		) -> (),
 		Copy: (self: VirtualInstance) -> VirtualInstance,
-		NewChildren: (
+		Children: (
 			self: VirtualInstance,
 			childMap: CanBeObservable<{
 				[string | number]: CanBeObservable<Instance | VirtualInstance>
 			}>
 		) -> (),
-		NewChild: (
+		Child: (
 			self: VirtualInstance,
 			child: CanBeObservable<Instance | VirtualInstance>,
 			name: CanBeObservable<string?>
-		) -> (),
-		ExistingChild: (
-			self: VirtualInstance,
-			path: CanBeObservable<string | {string}>,
-			child: CanBeObservable<Instance | VirtualInstance>
-		) -> (),
-		ExistingChildren: (
-			self: VirtualInstance,
-			pathMap: CanBeObservable<{[string]: CanBeObservable<VirtualInstance>}
 		) -> (),
 		OnMount: (
 			self: VirtualInstance,
