@@ -14,7 +14,6 @@ export type Observable<T = any> = typeof(setmetatable(
 		_dectype: string,
 		Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
 		Current: (self: Observable<T>) -> T,
-		DeferUpdates: (self: Observable<T>) -> Observable<T>,
 		Destroy: (self: Observable<T>) -> (),
 	}}
 ))
@@ -35,32 +34,31 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 		) -> Alpha
 	}}
 ))
-export type Stopwatch = Observable<number> & typeof(setmetatable(
+export type BaseTimer = Observable<number> & typeof(setmetatable(
 	{} :: {
 		_stepConnection: RBXScriptConnection?,
 		_resumeAt: number?,
 	},
 	{} :: {__index: {
-		Alpha: (self: Stopwatch, endElapsedTime: number) -> Alpha,
-		Start: (self: Stopwatch) -> (),
-		Stop: (self: Stopwatch) -> (),
-		Pause: (self: Stopwatch) -> (),
-		Resume: (self: Stopwatch) -> (),
+		Start: (self: BaseTimer) -> (),
+		Stop: (self: BaseTimer) -> (),
+		Pause: (self: BaseTimer) -> (),
+		Resume: (self: BaseTimer) -> (),
 	}}
 ))
-export type Timer = Observable<number> & typeof(setmetatable(
+export type Stopwatch = BaseTimer & typeof(setmetatable(
+	{} :: { },
+	{} :: {__index: {
+		Alpha: (self: Stopwatch, endElapsedTime: number) -> Alpha,
+	}}
+))
+export type Timer = BaseTimer & typeof(setmetatable(
 	{} :: {
-		_stepConnection: RBXScriptConnection?,
-		_resumeAt: number?,
 		_duration: Observable<number>,
 	},
 	{} :: {__index: {
 		SetDuration: (self: Timer) -> (),
 		Alpha: (self: Timer) -> Alpha,
-		Start: (self: Timer) -> (),
-		Stop: (self: Timer) -> (),
-		Pause: (self: Timer) -> (),
-		Resume: (self: Timer) -> (),
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>
