@@ -77,12 +77,24 @@ export type Timer = BaseTimer & typeof(setmetatable(
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>
-export type Tween = {
+export type TweenState = Observable<{
 	info: TweenInfo,
-	start {[string]: any}?,
-	goal = {[string]: any},
+	startProps: {[string]: any}?,
+	goalProps: {[string]: any},
 	completed: (() -> ())?,
-}
+}> & typeof(setmetatable(
+	{} :: {
+		_currentTween: Tween?,
+	},
+	{} :: {__index: {
+		Start: (self: TweenState) -> (),
+		Cancel: (self: TweenState) -> (),
+		SetGoal: (self: TweenState, goalProps: {[string]: any}) -> (),
+		SetInfo: (self: TweenState, info: TweenInfo) -> (),
+		SetStart: (self: TweenState, startProps: {[string]: any}?) -> (),
+		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
+	}}
+))
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
@@ -96,7 +108,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Tweens: (
 			self: VirtualInstance,
-			Fusion.CanBeObservable<{Tween}>
+			TweenState | {TweenState}
 		) -> (),
 		Attributes: (
 			self: VirtualInstance,
@@ -190,6 +202,7 @@ type Dec = {
 	Spring: <T>(initial: T) -> Spring<T>,
 	Stopwatch: () -> Stopwatch,
 	Timer: (duration: number) -> Timer,
+	Tween: (info: TweenInfo, goalProps: {[string]: any}, startProps: {[string]: any}?) -> TweenState,
 	Derive: (<Return, D1>(
 		dep1: Observable<D1>,
 		map: (dep1: D1) -> Return
@@ -229,10 +242,10 @@ type Dec = {
 	Existing: (template: Instance | VirtualInstance) -> VirtualInstance,
 	
 	-- Root-Level Reconciler API
-	CreateRoot: (instance: Instance) -> Root
+	CreateRoot: (instance: Instance) -> Root,
 	
 	-- Symbols
-	Nil: {}
+	Nil: Symbol<"Nil">,
 }
 
 return nil
