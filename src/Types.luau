@@ -116,7 +116,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Tags: (
 			self: VirtualInstance,
-			tags: CanBeObservable<{string} | Observable<{string}>
+			tags: CanBeObservable<{string}>
 		) -> (),
 		Connect: (
 			self: VirtualInstance,
@@ -155,7 +155,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		OnUnmount: (
 			self: VirtualInstance,
-			callback: (instance: Instance) -> (),
+			callback: (instance: Instance) -> ()
 		) -> (),
 	}, __call: (
 		self: VirtualInstance,

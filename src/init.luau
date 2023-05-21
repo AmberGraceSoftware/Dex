@@ -22,7 +22,8 @@ export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type VirtualInstance = Types.VirtualInstance
-export type Reconciled = Types.Reconciled
+export type ReconciledNode = Types.ReconciledNode
+export type Root = Types.Root
 export type Symbol<Name> = Types.Symbol<Name>
 export type Nil = Symbol<"Nil">
 
