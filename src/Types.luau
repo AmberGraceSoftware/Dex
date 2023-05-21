@@ -14,7 +14,6 @@ export type Observable<T = any> = typeof(setmetatable(
 		_dectype: string,
 		Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
 		Current: (self: Observable<T>) -> T,
-		DeferUpdates: (self: Observable<T>) -> Observable<T>,
 		Destroy: (self: Observable<T>) -> (),
 	}}
 ))
@@ -22,6 +21,21 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {},
 	{} :: {__index: {
 		Set: (self: State<T>, T) -> (),
+	}}
+))
+export type Spring<T = any> = Observable<T> & typeof(setmetatable(
+	{} :: {
+		_angularFrequency: number,
+		_current: number,
+		_target: number,
+		_snapToGoalTheshold: number?,
+	},
+	{} :: {__index: {
+		SetAngularFrequency: (self: State<T>, number) -> (),
+		CurrentAngularFrequency: (self: State<T>) -> number,
+		SetTarget: (self: State<T>, target: T) -> (),
+		CurrentTarget: (self: State<T>) -> T,
+		SetPosition: (self: State<T>, position: T) -> (),
 	}}
 ))
 export type Alpha = Observable<number> & typeof(setmetatable(
@@ -35,35 +49,52 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 		) -> Alpha
 	}}
 ))
-export type Stopwatch = Observable<number> & typeof(setmetatable(
+export type BaseTimer = Observable<number> & typeof(setmetatable(
 	{} :: {
 		_stepConnection: RBXScriptConnection?,
 		_resumeAt: number?,
 	},
 	{} :: {__index: {
-		Alpha: (self: Stopwatch, endElapsedTime: number) -> Alpha,
-		Start: (self: Stopwatch) -> (),
-		Stop: (self: Stopwatch) -> (),
-		Pause: (self: Stopwatch) -> (),
-		Resume: (self: Stopwatch) -> (),
+		Start: (self: BaseTimer) -> (),
+		Stop: (self: BaseTimer) -> (),
+		Pause: (self: BaseTimer) -> (),
+		Resume: (self: BaseTimer) -> (),
 	}}
 ))
-export type Timer = Observable<number> & typeof(setmetatable(
+export type Stopwatch = BaseTimer & typeof(setmetatable(
+	{} :: { },
+	{} :: {__index: {
+		Alpha: (self: Stopwatch, endElapsedTime: number) -> Alpha,
+	}}
+))
+export type Timer = BaseTimer & typeof(setmetatable(
 	{} :: {
-		_stepConnection: RBXScriptConnection?,
-		_resumeAt: number?,
 		_duration: Observable<number>,
 	},
 	{} :: {__index: {
 		SetDuration: (self: Timer) -> (),
 		Alpha: (self: Timer) -> Alpha,
-		Start: (self: Timer) -> (),
-		Stop: (self: Timer) -> (),
-		Pause: (self: Timer) -> (),
-		Resume: (self: Timer) -> (),
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>
+export type TweenState = Observable<{
+	info: TweenInfo,
+	startProps: {[string]: any}?,
+	goalProps: {[string]: any},
+	completed: (() -> ())?,
+}> & typeof(setmetatable(
+	{} :: {
+		_currentTween: Tween?,
+	},
+	{} :: {__index: {
+		Start: (self: TweenState) -> (),
+		Cancel: (self: TweenState) -> (),
+		SetGoal: (self: TweenState, goalProps: {[string]: any}) -> (),
+		SetInfo: (self: TweenState, info: TweenInfo) -> (),
+		SetStart: (self: TweenState, startProps: {[string]: any}?) -> (),
+		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
+	}}
+))
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
@@ -71,90 +102,67 @@ export type VirtualInstance = typeof(setmetatable(
 	},
 	{} :: {__index: {
 		_dectype: string,
-		Assign: (
+		Properties: (
 			self: VirtualInstance,
-			propertyMap: {[string]: any}
-		) -> VirtualInstance,
-		Tween: (
+			propertyMap: CanBeObservable<{[string]: any}>
+		) -> (),
+		Tweens: (
 			self: VirtualInstance,
-			info: TweenInfo,
-			goalProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>,
-			startProperties: CanBeObservable<{[string]: CanBeObservable<any>}?>
-		) -> VirtualInstance,
-		SetAttributes: (
+			TweenState | {TweenState}
+		) -> (),
+		Attributes: (
 			self: VirtualInstance,
-			attributeMap: {[string]: any}
-		) -> VirtualInstance,
-		SetTags: (
+			attributeMap: CanBeObservable<{[string]: any}>
+		) -> (),
+		Tags: (
 			self: VirtualInstance,
-			tags: {string} | Observable<{string}>
-		) -> VirtualInstance,
+			tags: CanBeObservable<{string} | Observable<{string}>
+		) -> (),
 		Connect: (
 			self: VirtualInstance,
 			eventName: string,
 			signal: (...any) -> ()
-		) -> VirtualInstance,
-		StoreProperty: (
+		) -> (),
+		OutProperty: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: State<any>
-		) -> VirtualInstance,
-		StoreAttribute: (
+			outState: CanBeObservable<State<any>>
+		) -> (),
+		OutAttribute: (
 			self: VirtualInstance,
 			propertyName: string,
-			outState: State<any>
-		) -> VirtualInstance,
-		StoreReference: (
+			outState: CanBeObservable<State<any>>
+		) -> (),
+		OutInstance: (
 			self: VirtualInstance,
-			outState: State<Instance>
-		) -> VirtualInstance,
+			outState: CanBeObservable<State<Instance> | State<Instance?>>
+		) -> (),
 		Copy: (self: VirtualInstance) -> VirtualInstance,
-		AddChildren: (
+		Children: (
 			self: VirtualInstance,
 			childMap: CanBeObservable<{
 				[string | number]: CanBeObservable<Instance | VirtualInstance>
 			}>
-		) -> VirtualInstance,
-		AddChild: (
+		) -> (),
+		Child: (
 			self: VirtualInstance,
 			child: CanBeObservable<Instance | VirtualInstance>,
-			name: string?
-		) -> VirtualInstance,
-		AddExistingChild: (
-			self: VirtualInstance,
-			path: string | {string},
-			callback: CanBeObservable<(VirtualInstance) -> ()>
-		) -> VirtualInstance,
-		AddToParent: (
-			self: VirtualInstance,
-			parent: CanBeObservable<VirtualInstance | Instance>
-		) -> VirtualInstance,
-		-- Lifecycle events (Useful for niche cases like event/effect cleanups
-		-- that can't be handled directly via Dec's virtual instances)
-		OnUnmount: (
-			self: VirtualInstance,
-			callback: (instance: Instance) -> ()
-		) -> VirtualInstance,
+			name: CanBeObservable<string?>
+		) -> (),
 		OnMount: (
 			self: VirtualInstance,
 			callback: (instance: Instance) -> ()
-		) -> VirtualInstance,
-		Index: (
+		) -> (),
+		OnUnmount: (
 			self: VirtualInstance,
-			path: string | {string}
-		) -> VirtualInstance,
-		
-		--  Linked states
-		CleanupOnUnmount: (
-			self: VirtualInstance,
-			object: any
-		) -> any,
+			callback: (instance: Instance) -> (),
+		) -> (),
 	}, __call: (
 		self: VirtualInstance,
-		propertyMap: {[string]: any}
+		propertyMap: CanBeObservable<{[string]: any}>
 	) -> VirtualInstance}
 ))
-export type Reconciled = typeof(setmetatable(
+export type ReconciledNode = typeof(setmetatable(
 	{} :: {
 		_connections: {RBXScriptConnection},
 		_instances: {Instance},
@@ -162,7 +170,7 @@ export type Reconciled = typeof(setmetatable(
 	},
 	{} :: {__index: {
 		_dectype: string,
-		Destroy: (self: Reconciled) -> (),
+		Destroy: (self: ReconciledNode) -> (),
 	}}
 ))
 export type Symbol<Name> = typeof(setmetatable(
@@ -174,14 +182,27 @@ export type Symbol<Name> = typeof(setmetatable(
 		_dectype: string,
 	}, __tostring: (self: Symbol<Name>) -> string}
 ))
+export type Root = typeof(setmetatable(
+	{} :: {
+		_instance: Instance,
+		_reconciled: ReconciledNode?
+	},
+	{} :: {_index: {
+		Render: (self: Root, node: VirtualInstance) -> ReconciledNode,
+		Unmount: (self: Root) -> (),
+		Destroy: (self: Root) -> (),
+	}}
+))
 
 -- Temporary typedef for library; will move typings to the return of component
 -- modules themselves.
 type Dec = {
 	-- State and Observable Utilities
 	State: <T>(initial: T) -> State<T>,
+	Spring: <T>(initial: T) -> Spring<T>,
 	Stopwatch: () -> Stopwatch,
 	Timer: (duration: number) -> Timer,
+	Tween: (info: TweenInfo, goalProps: {[string]: any}, startProps: {[string]: any}?) -> TweenState,
 	Derive: (<Return, D1>(
 		dep1: Observable<D1>,
 		map: (dep1: D1) -> Return
@@ -218,18 +239,13 @@ type Dec = {
 	-- VirtualInstance Creators
 	New: (className: string) -> VirtualInstance,
 	Clone: (template: Instance) -> VirtualInstance,
-	Existing: (template: Instance | VirtualInstance) -> VirtualInstance,
+	Premade: () -> VirtualInstance,
 	
 	-- Root-Level Reconciler API
-	Mount: (root: CanBeObservable<VirtualInstance>) -> Reconciled,
-	Replace: (
-		current: Reconciled,
-		new: CanBeObservable<VirtualInstance>
-	) -> VirtualInstance,
-	Unmount: (current: Reconciled) -> (),
+	CreateRoot: (instance: Instance) -> Root,
 	
 	-- Symbols
-	Nil: {}
+	Nil: Symbol<"Nil">,
 }
 
 return nil
