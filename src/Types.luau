@@ -239,7 +239,7 @@ type Dec = {
 	-- VirtualInstance Creators
 	New: (className: string) -> VirtualInstance,
 	Clone: (template: Instance) -> VirtualInstance,
-	Existing: (template: Instance | VirtualInstance) -> VirtualInstance,
+	Premade: () -> VirtualInstance,
 	
 	-- Root-Level Reconciler API
 	CreateRoot: (instance: Instance) -> Root,
