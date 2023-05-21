@@ -131,7 +131,7 @@ export type VirtualInstance = typeof(setmetatable(
 		propertyMap: CanBeObservable<{[string]: any}>
 	) -> VirtualInstance}
 ))
-export type Reconciled = typeof(setmetatable(
+export type ReconciledNode = typeof(setmetatable(
 	{} :: {
 		_connections: {RBXScriptConnection},
 		_instances: {Instance},
@@ -139,7 +139,7 @@ export type Reconciled = typeof(setmetatable(
 	},
 	{} :: {__index: {
 		_dectype: string,
-		Destroy: (self: Reconciled) -> (),
+		Destroy: (self: ReconciledNode) -> (),
 	}}
 ))
 export type Symbol<Name> = typeof(setmetatable(
@@ -150,6 +150,17 @@ export type Symbol<Name> = typeof(setmetatable(
 	{} :: {__index: {
 		_dectype: string,
 	}, __tostring: (self: Symbol<Name>) -> string}
+))
+export type Root = typeof(setmetatable(
+	{} :: {
+		_instance: Instance,
+		_reconciled: ReconciledNode?
+	},
+	{} :: {_index: {
+		Render: (self: Root, node: VirtualInstance) -> ReconciledNode,
+		Unmount: (self: Root) -> (),
+		Destroy: (self: Root) -> (),
+	}}
 ))
 
 -- Temporary typedef for library; will move typings to the return of component
@@ -198,12 +209,7 @@ type Dec = {
 	Existing: (template: Instance | VirtualInstance) -> VirtualInstance,
 	
 	-- Root-Level Reconciler API
-	Mount: (root: CanBeObservable<VirtualInstance>) -> Reconciled,
-	Replace: (
-		current: Reconciled,
-		new: CanBeObservable<VirtualInstance>
-	) -> VirtualInstance,
-	Unmount: (current: Reconciled) -> (),
+	CreateRoot: (instance: Instance) -> DecRoot
 	
 	-- Symbols
 	Nil: {}
