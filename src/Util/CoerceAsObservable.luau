@@ -8,7 +8,7 @@ export type CanBeObservable<T> = Types.CanBeObservable<T>
 
 --[[
     @param passedIn: unknown - The value to coerce.
-    @return Observable<T> - An Observable.
+    @return Dec.Observable<T> - An Observable.
 
     This function coerces the passed in value to an Observable. Useful for
     unwrapped the CanBeObservable<T> type in a component's props.

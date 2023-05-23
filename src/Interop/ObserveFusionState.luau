@@ -8,7 +8,7 @@ export type Unsubscribe = Types.Unsubscribe
 --[[
     @param Fusion: any - The Fusion library runtime that the observable belongs to.
     @param fusionStateObject: Fusion.StateObject<T> - The Fusion StateObject to map.
-    @return observable: Observable<T> - The Dec Observable created
+    @return observable: Dec.Observable<T> - The Dec Observable created
     @return unsubscribe: () -> () - An unsubscribe function to clean up the Fusion observer
 
     Interoperability function for mapping Fusion StateObjects to Dec Observables.

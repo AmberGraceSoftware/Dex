@@ -142,7 +142,7 @@ function VirtualInstance.__index.OutInstance(
 end
 
 --[[
-    @return VirtualInstance - A copy of the Virtual Instance.
+    @return Dec.VirtualInstance - A copy of the Virtual Instance.
 
     Creates a shallow copy of the Virtual Instance.
 ]]
@@ -153,7 +153,7 @@ function VirtualInstance.__index.Copy(
 end
 
 --[[
-    @return VirtualInstance - A deep copy of the VirtualInstance.
+    @return Dec.VirtualInstance - A deep copy of the VirtualInstance.
 
     Creates a deep copy of the VirtualInstance and all child VirtualInstances.
 ]]
@@ -234,7 +234,7 @@ function VirtualInstance.__index.OnUnmount(
 end
 
 --[[
-    @return VirtualInstance - A new, empty Virtual Instance.
+    @return Dec.VirtualInstance - A new, empty Virtual Instance.
 
     A mutable element that Dec reconciles into a Roblox Instance.
     When a VirtualInstance is reconciled, its properties are sealed. A

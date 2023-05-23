@@ -12,7 +12,7 @@ Timer.__index._dectype = "Observable"
 Timer.__index._decobservabletype = "Timer"
 
 --[[
-    @return Alpha
+    @return Dec.Alpha
 
     Derives an Alpha observable object that maps the duration from 0 (start) to
     1 (finish)
@@ -46,7 +46,7 @@ Timer.__index.Destroy = BaseTimer.__index.Destroy
 
 --[[
     @param duration: number
-    @return timer: Timer
+    @return timer: Dec.Timer
 
     Creates a new Timer observable with the given duration.
 ]]
