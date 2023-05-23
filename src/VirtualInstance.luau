@@ -234,21 +234,6 @@ function VirtualInstance.__index.OnUnmount(
 end
 
 --[[
-    @param propertyMap: CanBeObservable<{[string]: any}> - A map of property names to values.
-    @return VirtualInstance - The Virtual Instance with the properties applied.
-
-    Syntax sugar for virtualInstance:Properties(propertyMap). Returns the
-    same VirtualInstance object with the properties applied.
-]]
-function VirtualInstance.__call(
-    self: VirtualInstance,
-    propertyMap: CanBeObservable<{[string]: any}>
-): VirtualInstance
-    self:Properties(propertyMap)
-    return self
-end
-
---[[
     @return VirtualInstance - A new, empty Virtual Instance.
 
     A mutable element that Dec reconciles into a Roblox Instance.
