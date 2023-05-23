@@ -13,8 +13,10 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 
 ## Project Progress
 - [X] API, concepts, and types defined
-- [ ] Basic Project Structure
-- [ ] VirtualInstance API
-- [ ] Reconciler
-- [ ] State and Observables API
+- [X] Basic Public API Skeleton Structure
+- [ ] Reconciler API Skeleton Structure
+- [ ] CI Workflows
+- [ ] VirtualInstance API Implementation
+- [ ] Reconciler Implementation
+- [ ] State and Observables API Implementation
 - [ ] Unit Testing for quality assurance
