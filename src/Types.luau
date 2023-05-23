@@ -97,6 +97,11 @@ export type TweenState = Observable<{
 		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
 	}}
 ))
+export type ChildMap = CanBeObservable<{
+	[string | {string} | number]: CanBeObservable<
+		Instance | VirtualInstance | nil
+	>
+}>
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
@@ -143,11 +148,7 @@ export type VirtualInstance = typeof(setmetatable(
 		DeepCopy: (self: VirtualInstance) -> VirtualInstance,
 		Children: (
 			self: VirtualInstance,
-			childMap: CanBeObservable<{
-				[string | {string} | number]: CanBeObservable<
-					Instance | VirtualInstance | nil
-				>
-			}>
+			childMap: ChildMap
 		) -> (),
 		Child: (
 			self: VirtualInstance,
@@ -162,10 +163,7 @@ export type VirtualInstance = typeof(setmetatable(
 			self: VirtualInstance,
 			callback: (instance: Instance) -> ()
 		) -> (),
-	}, __call: (
-		self: VirtualInstance,
-		propertyMap: CanBeObservable<{[string]: any}>
-	) -> VirtualInstance}
+	}}
 ))
 export type ReconciledNode = typeof(setmetatable(
 	{} :: {
@@ -199,59 +197,5 @@ export type Root = typeof(setmetatable(
 		Destroy: (self: Root) -> (),
 	}}
 ))
-
--- Temporary typedef for library; will move typings to the return of component
--- modules themselves.
-type Dec = {
-	-- State and Observable Utilities
-	State: <T>(initial: T) -> State<T>,
-	Spring: <T>(initial: T) -> Spring<T>,
-	Stopwatch: () -> Stopwatch,
-	Timer: (duration: number) -> Timer,
-	Tween: (info: TweenInfo, goalProps: {[string]: any}, startProps: {[string]: any}?) -> TweenState,
-	Derive: (<Return, D1>(
-		dep1: Observable<D1>,
-		map: (dep1: D1) -> Return
-	) -> Observable<Return>)
-	& (<Return, D1, D2>(
-		dep1: Observable<D1>, dep2: Observable<D2>,
-		map: (dep1: D1, dep2: D2) -> Return
-	) -> Observable<Return>)
-	& (<Return, D1, D2, D3>(
-		dep1: Observable<D1>, dep2: Observable<D2>, dep3: Observable<D3>,
-		map: (dep1: D1, dep2: D2, dep3: D3) -> Return
-	) -> Observable<Return>)
-	& (<Return, D1, D2, D3, D4>(
-		dep1: Observable<D1>, dep2: Observable<D2>, dep3: Observable<D3>,
-		dep4: Observable<D4>,
-		map: (dep1: D1, dep2: D2, dep3: D3, dep4: D4) -> Return
-	) -> Observable<Return>)
-	& (<Return, D1, D2, D3, D4, D5>(
-		dep1: Observable<D1>, dep2: Observable<D2>, dep3: Observable<D3>,
-		dep4: Observable<D4>, dep5: Observable<D4>,
-		map: (dep1: D1, dep2: D2, dep3: D3, dep4: D4, dep5: D5) -> Return
-	) -> Observable<Return>)
-	& (<Return, D1, D2, D3, D4, D5, D6>(
-		dep1: Observable<D1>, dep2: Observable<D2>, dep3: Observable<D3>,
-		dep4: Observable<D4>, dep5: Observable<D4>, dep6: Observable<D4>,
-		map: (dep1: D1, dep2: D2, dep3: D3, dep4: D4, dep5: D5,
-			dep6: D6) -> Return
-	) -> Observable<Return>),
-	CoerceAsObservable: <T>(passedIn: T | Observable<T>) -> Observable<T>,
-	ObserveFusionState: <T>(
-		fusionStateObject: {get: () -> T}
-	) -> (Observable<T>, Unsubscribe),
-	
-	-- VirtualInstance Creators
-	New: (className: string) -> VirtualInstance,
-	Clone: (template: Instance) -> VirtualInstance,
-	Premade: () -> VirtualInstance,
-	
-	-- Root-Level Reconciler API
-	CreateRoot: (instance: Instance) -> Root,
-	
-	-- Symbols
-	Nil: Symbol<"Nil">,
-}
 
 return nil
