@@ -97,6 +97,11 @@ export type TweenState = Observable<{
 		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
 	}}
 ))
+export type ChildMap = CanBeObservable<{
+	[string | {string} | number]: CanBeObservable<
+		Instance | VirtualInstance | nil
+	>
+}>
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
@@ -143,11 +148,7 @@ export type VirtualInstance = typeof(setmetatable(
 		DeepCopy: (self: VirtualInstance) -> VirtualInstance,
 		Children: (
 			self: VirtualInstance,
-			childMap: CanBeObservable<{
-				[string | {string} | number]: CanBeObservable<
-					Instance | VirtualInstance | nil
-				>
-			}>
+			childMap: ChildMap
 		) -> (),
 		Child: (
 			self: VirtualInstance,
@@ -162,10 +163,7 @@ export type VirtualInstance = typeof(setmetatable(
 			self: VirtualInstance,
 			callback: (instance: Instance) -> ()
 		) -> (),
-	}, __call: (
-		self: VirtualInstance,
-		propertyMap: CanBeObservable<{[string]: any}>
-	) -> VirtualInstance}
+	}}
 ))
 export type ReconciledNode = typeof(setmetatable(
 	{} :: {
