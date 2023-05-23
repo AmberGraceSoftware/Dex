@@ -1,9 +1,4 @@
 --!strict
---[[
-    A module for creating Virtual Instances.
-    
-    Provides several convenience methods for creating different types of Virtual Instances.
-]]
 
 local Types = require(script.Parent.Types)
 local VirtualInstance = require(script.Parent.VirtualInstance)

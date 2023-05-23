@@ -1,9 +1,4 @@
 --!strict
---[[
-    A module for creating and managing Virtual Instances.
-    
-    Virtual Instances act as a blueprint for actual Roblox Instances.
-]]
 
 local Types = require(script.Parent.Types)
 
