@@ -89,7 +89,7 @@ export type TweenState = Observable<{
 		_currentTween: Tween?,
 	},
 	{} :: {__index: {
-		Start: (self: TweenState) -> (),
+		Play: (self: TweenState) -> (),
 		Cancel: (self: TweenState) -> (),
 		SetGoal: (self: TweenState, goalProps: {[string]: any}) -> (),
 		SetInfo: (self: TweenState, info: TweenInfo) -> (),

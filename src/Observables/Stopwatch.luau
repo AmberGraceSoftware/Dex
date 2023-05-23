@@ -11,6 +11,13 @@ Stopwatch.__index = {}
 Stopwatch.__index._dectype = "Observable"
 Stopwatch.__index._decobservabletype = "Stopwatch"
 
+--[[
+    @param endElapsedTime: number - The end elapsed time.
+    @return Dec.Alpha - An Alpha observable object that maps the elapsed time from 0 (start) to 1 (end).
+    
+    Derives an Alpha observable object based on the current elapsed time of this
+    stopwatch.
+]]
 function Stopwatch.__index.Alpha(self: Stopwatch, endElapsedTime: number): Alpha
     error("Not implemented yet")
 end
@@ -23,6 +30,11 @@ Stopwatch.__index.Current = BaseTimer.__index.Current
 Stopwatch.__index.Subscribe = BaseTimer.__index.Subscribe
 Stopwatch.__index.Destroy = BaseTimer.__index.Destroy
 
+--[[
+    @return Dec.Stopwatch - The new Stopwatch observable.
+
+    Creates a new Stopwatch observable.
+]]
 function Stopwatch.new(): Stopwatch
     return setmetatable({
         _stepConnection = nil,
