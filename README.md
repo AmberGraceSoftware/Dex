@@ -22,4 +22,8 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [ ] Unit Test Skeleton Structure
 - [ ] Complete Code Coverage of Most Modules
 - [ ] Documentation Site using Moonwave
+- [ ] Add usage guides to docs site
+- [ ] Create a simple open-source demo game using Dec?
+- [ ] Create a simple open-source demo plugin using Dec?
+- [ ] Video tutorials?
 - [ ] Marketing, making a cool logo, etc.
