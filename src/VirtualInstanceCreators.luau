@@ -19,7 +19,13 @@ function VirtualInstanceCreators.New(
     props: {[string]: any}?,
     children: Types.ChildMap?
 ): Types.VirtualInstance
-    error("Not implemented yet")
+    return VirtualInstance.new(
+        "New",
+        className,
+        props,
+        children,
+        1
+    )
 end
 
 --[[
@@ -36,7 +42,13 @@ function VirtualInstanceCreators.Clone(
     props: {[string]: any}?,
     children: Types.ChildMap?
 ): Types.VirtualInstance
-    error("Not implemented yet")
+    return VirtualInstance.new(
+        "Clone",
+        template,
+        props,
+        children,
+        1
+    )
 end
 
 --[[
@@ -57,7 +69,13 @@ function VirtualInstanceCreators.Premade(
     props: {[string]: any}?,
     children: Types.ChildMap?
 ): Types.VirtualInstance
-    error("Not implemented yet")
+    return VirtualInstance.new(
+        "Premade",
+        nil,
+        props,
+        children,
+        1
+    )
 end
 
 return VirtualInstanceCreators

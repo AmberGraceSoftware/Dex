@@ -346,11 +346,7 @@ end
 ]]
 function VirtualInstance.__index.Children(
     self: VirtualInstance,
-    childMap: CanBeObservable<{
-        [ChildPath]: CanBeObservable<
-            Instance | VirtualInstance | nil
-        >
-    }>
+    childMap: ChildMap
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -410,11 +406,10 @@ function VirtualInstance.new(
     constructorType: "New" | "Clone" | "Premade",
     constructorPayload: Instance | string?,
     defaultProperties: {[string]: CanBeObservable<any>}?,
-    defaultChildMap: {[string | {string} | number]: CanBeObservable<Instance | VirtualInstance?>}?,
-    debugMethodName: string,
-    debugTraceLevel: number
+    defaultChildMap: ChildMap?,
+    debugTraceLevel: number?
 ): VirtualInstance
-    debugTraceLevel += 1
+    local traceLevel = (debugTraceLevel or 0) + 1
 
     local directives = {}
     if defaultProperties then
@@ -423,7 +418,7 @@ function VirtualInstance.new(
             {
                 _type = "Properties",
                 _payload = defaultProperties :: any,
-                _trace = getTrace(debugMethodName, debugTraceLevel)
+                _trace = getTrace("Dec." .. constructorType, traceLevel)
             }
         )
     end
@@ -435,7 +430,7 @@ function VirtualInstance.new(
                 _payload = defaultChildMap,
                 _trace = if #directives > 0
                     then directives[1]._trace
-                    else getTrace(debugMethodName, debugTraceLevel)
+                    else getTrace("Dec." .. constructorType, traceLevel)
             }
         )
     end
