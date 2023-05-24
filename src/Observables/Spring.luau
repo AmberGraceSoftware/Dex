@@ -86,8 +86,7 @@ function Spring.new<T>(initialValue: T, angularFrequency: number): Spring<T>
         _current = initialValue,
         _angularFrequency = angularFrequency,
         _target = initialValue,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
         -- _snapToGoalTheshold = nil,
     }, Spring :: any)
 end

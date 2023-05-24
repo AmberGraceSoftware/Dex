@@ -6,9 +6,8 @@ export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
 export type Observable<T = any> = typeof(setmetatable(
 	{} :: {
-		_consumers: Set<any>?,
-		_consumersWeak: Set<any>?,
 		_current: T,
+        _observerCount: number,
 	},
 	{} :: {__index: {
 		_dectype: string,
@@ -97,21 +96,36 @@ export type TweenState = Observable<{
 		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
 	}}
 ))
+export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
-	[string | {string} | number]: CanBeObservable<
+	[ChildPath]: CanBeObservable<
 		Instance | VirtualInstance | nil
 	>
 }>
+export type VirtualInstanceTrace = {
+	method: string,
+	source: string?,
+	traceback: {{
+		identifier: string,
+		line: number,
+	}}
+}
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
-		_directives: {any},
+		_constructorType: string,
+		_constructorTypeArgument: any,
+		_directives: {{
+			_type: string,
+			_payload: any,
+			_trace: VirtualInstanceTrace?,
+		}},
 	},
 	{} :: {__index: {
 		_dectype: string,
 		Properties: (
 			self: VirtualInstance,
-			propertyMap: CanBeObservable<{[string]: any}>
+			propertyMap: {[string]: CanBeObservable<any>}
 		) -> (),
 		Tweens: (
 			self: VirtualInstance,
@@ -119,7 +133,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Attributes: (
 			self: VirtualInstance,
-			attributeMap: CanBeObservable<{[string]: any}>
+			attributeMap: {[string]: CanBeObservable<any>}
 		) -> (),
 		Tags: (
 			self: VirtualInstance,
@@ -152,7 +166,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Child: (
 			self: VirtualInstance,
-			path: CanBeObservable<string | {string}>,
+			path: ChildPath,
 			child: CanBeObservable<Instance | VirtualInstance | nil>
 		) -> (),
 		OnMount: (
@@ -170,6 +184,8 @@ export type ReconciledNode = typeof(setmetatable(
 		_connections: {RBXScriptConnection},
 		_instances: {Instance},
 		_instance: Instance,
+		_rootInstance: Instance,
+		_childPath: string?,
 	},
 	{} :: {__index: {
 		_dectype: string,

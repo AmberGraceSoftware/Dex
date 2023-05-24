@@ -14,7 +14,7 @@
 local Types = require(script.Types)
 local Symbols = require(script.Symbols)
 local VirtualInstanceCreators = require(script.VirtualInstanceCreators)
-local Root = require(script.Root)
+local Root = require(script.Reconciler.Root)
 
 export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>

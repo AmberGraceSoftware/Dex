@@ -57,8 +57,7 @@ Alpha.__index.Destroy = Observable.__index.Destroy
 function Alpha.new(initialValue: number): Alpha
     return setmetatable({
         _current = initialValue,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
     }, Alpha :: any)
 end
 

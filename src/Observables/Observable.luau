@@ -52,8 +52,7 @@ end
 function Observable.new<T>(initialValue: T): Observable<T>
     return setmetatable({
         _current = initialValue,
-		-- _consumers = nil,
-		-- _consumersWeak = nil,
+        _observerCount = 0,
     }, Observable)
 end
 

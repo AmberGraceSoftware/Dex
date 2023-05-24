@@ -40,8 +40,7 @@ function Stopwatch.new(): Stopwatch
         _stepConnection = nil,
         _resumeAt = nil,
         _current = 0,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
     }, Stopwatch :: any)
 end
 
