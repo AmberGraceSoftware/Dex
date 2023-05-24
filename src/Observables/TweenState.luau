@@ -113,8 +113,7 @@ function TweenState.new(
             completed = completed,
         },
         _currentTween = nil,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
     }, TweenState :: any)
 end
 

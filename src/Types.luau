@@ -6,9 +6,8 @@ export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
 export type Observable<T = any> = typeof(setmetatable(
 	{} :: {
-		_consumers: Set<any>?,
-		_consumersWeak: Set<any>?,
 		_current: T,
+        _observerCount: number,
 	},
 	{} :: {__index: {
 		_dectype: string,
@@ -170,6 +169,8 @@ export type ReconciledNode = typeof(setmetatable(
 		_connections: {RBXScriptConnection},
 		_instances: {Instance},
 		_instance: Instance,
+		_rootInstance: Instance,
+		_childPath: string?,
 	},
 	{} :: {__index: {
 		_dectype: string,

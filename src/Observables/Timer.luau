@@ -56,8 +56,7 @@ function Timer.new(duration: number): Timer
         _stepConnection = nil,
         _resumeAt = nil,
         _current = 0,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
     }, Timer :: any)
 end
 

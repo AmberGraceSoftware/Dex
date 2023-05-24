@@ -35,8 +35,7 @@ State.__index.Destroy = Observable.__index.Destroy
 function State.new<T>(initialValue: T): State<T>
     return setmetatable({
         _current = initialValue,
-        -- _consumers = nil,
-        -- _consumersWeak = nil,
+        _observerCount = 0,
     }, State :: any)
 end
 
