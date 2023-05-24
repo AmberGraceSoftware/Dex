@@ -2,6 +2,7 @@
 
 local Types = require(script.Parent.Parent.Types)
 local RenderVirtualInstance = require(script.Parent.RenderVirtualInstance)
+local UnmountVirtualInstance = require(script.Parent.UnmountVirtualInstance)
 
 type Root = Types.Root
 type VirtualInstance = Types.VirtualInstance
@@ -29,8 +30,10 @@ function Root.__index.Render(
 ): ReconciledNode
     self._reconciled = RenderVirtualInstance(
         self._instance,
+        nil,
         node,
-        self._reconciled
+        self._reconciled,
+        1
     )
     return self._reconciled :: ReconciledNode
 end
@@ -43,7 +46,10 @@ end
 ]]
 function Root.__index.Unmount(self: Root)
     if self._reconciled then
-        RenderVirtualInstance(self._instance, nil, self._reconciled)
+        UnmountVirtualInstance(
+            self._reconciled,
+            1
+        )
         self._reconciled = nil
     end
 end
