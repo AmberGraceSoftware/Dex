@@ -19,7 +19,7 @@ local function MountVirtualInstance(
     childPath: string?,
     virtualInstance: VirtualInstance,
     debugLevel: number
-): ReconciledNode?
+): ReconciledNode
     debugLevel += 1
     
     error("Not implemented yet")
