@@ -22,4 +22,4 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [ ] Unit Test Skeleton Structure
 - [ ] Complete Code Coverage of Most Modules
 - [ ] Documentation Site using Moonwave
-- [ ] Marketing
+- [ ] Marketing, making a cool logo, etc.
