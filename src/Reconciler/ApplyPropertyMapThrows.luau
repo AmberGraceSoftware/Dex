@@ -3,6 +3,11 @@
 local Symbols = require(script.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Types)
 type Set<T> = Types.Set<T>
+local NilSymbol = Symbols.Nil
+
+local function applyNilSymbol(value: any): any
+    return if value == NilSymbol then nil else value
+end
 
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to apply
@@ -40,16 +45,13 @@ local function ApplyPropertyMapThrows(
         elseif typeof(value) == "table" and value._dectype == "Observable" then
             table.insert(
                 reconciledConns,
-                value:Subscribe(function(newValue)
-                    local valueToApply = if (newValue == Symbols.Nil :: any)
-                        then nil else newValue
-                    instance[key] = valueToApply
+                value:Subscribe(function(current)
+                    instance[key] = applyNilSymbol(current)
                 end)
             )
-        elseif value == Symbols.Nil then
-            instance[key] = nil
+            instance[key] = applyNilSymbol(value:Current())
         else
-            instance[key] = value
+            instance[key] = applyNilSymbol(value)
         end
     end
 
