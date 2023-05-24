@@ -198,4 +198,13 @@ export type Root = typeof(setmetatable(
 	}}
 ))
 
+export type VirtualInstanceTrace = {
+	method: string,
+	source: string?,
+	traceback: {{
+		identifier: string,
+		line: number,
+	}}
+}
+
 return nil

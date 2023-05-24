@@ -2,11 +2,15 @@
 
 local Types = require(script.Parent.Types)
 
-export type VirtualInstance = Types.VirtualInstance
-export type Observable<T> = Types.Observable<T>
-export type CanBeObservable<T> = Types.CanBeObservable<T>
-export type TweenState = Types.TweenState
-export type State<T> = Types.State<T>
+type VirtualInstanceTrace = Types.VirtualInstanceTrace
+type VirtualInstance = Types.VirtualInstance
+type Observable<T> = Types.Observable<T>
+type CanBeObservable<T> = Types.CanBeObservable<T>
+type TweenState = Types.TweenState
+type State<T> = Types.State<T>
+
+local DEBUG_TRACE_START_LEVEL = 3
+local DEBUG_MAX_TRACEBACK_LENGTH = 3
 
 local VirtualInstance = {}
 VirtualInstance.__index = {}
@@ -237,10 +241,37 @@ end
     reconciled. Use Observers instead to mutate a VirtualInstance after it has
     been reconciled.
 ]]
-function VirtualInstance.new(): VirtualInstance
+function VirtualInstance.new(method: string): VirtualInstance
+    local source: string? = debug.info(DEBUG_TRACE_START_LEVEL, "s")
+    local traceback: {{
+        identifier: string,
+        line: number
+    }} = {}
+    if source then
+        for i = 1, DEBUG_MAX_TRACEBACK_LENGTH do
+            if debug.info(DEBUG_TRACE_START_LEVEL + i, "s") ~= source then
+                break
+            end
+            local ident = debug.info(DEBUG_TRACE_START_LEVEL + i, "n")
+            local line = debug.info(DEBUG_TRACE_START_LEVEL + i, "l")
+            if not ident or not line then
+                break
+            end
+            table.insert(traceback, {
+                identifier = ident,
+                line = line,
+            })
+        end
+    end
+    local trace: VirtualInstanceTrace? = {
+        method = method,
+        source = source,
+        traceback = traceback,
+    }
     return setmetatable({
         _current = nil,
         _directives = {},
+        _trace = trace
     }, VirtualInstance)
 end
 
