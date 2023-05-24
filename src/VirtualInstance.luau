@@ -9,8 +9,38 @@ type CanBeObservable<T> = Types.CanBeObservable<T>
 type TweenState = Types.TweenState
 type State<T> = Types.State<T>
 
-local DEBUG_TRACE_START_LEVEL = 3
 local DEBUG_MAX_TRACEBACK_LENGTH = 3
+
+local function getTrace(methodName: string, traceLevel: number): VirtualInstanceTrace?
+    local source: string? = debug.info(traceLevel, "s")
+    local traceback: {{
+        identifier: string,
+        line: number
+    }} = {}
+    if source then
+        for i = 0, DEBUG_MAX_TRACEBACK_LENGTH - 1 do
+            local traceLevelAtIndex = traceLevel + i
+            if debug.info(traceLevelAtIndex, "s") ~= source then
+                break
+            end
+            local ident = debug.info(traceLevelAtIndex, "n")
+            local line = debug.info(traceLevelAtIndex, "l")
+            if not ident or not line then
+                break
+            end
+            table.insert(traceback, {
+                identifier = ident,
+                line = line,
+            })
+        end
+    end
+    local trace: VirtualInstanceTrace? = {
+        method = methodName,
+        source = source,
+        traceback = traceback,
+    }
+    return trace
+end
 
 local VirtualInstance = {}
 VirtualInstance.__index = {}
@@ -241,37 +271,15 @@ end
     reconciled. Use Observers instead to mutate a VirtualInstance after it has
     been reconciled.
 ]]
-function VirtualInstance.new(method: string): VirtualInstance
-    local source: string? = debug.info(DEBUG_TRACE_START_LEVEL, "s")
-    local traceback: {{
-        identifier: string,
-        line: number
-    }} = {}
-    if source then
-        for i = 1, DEBUG_MAX_TRACEBACK_LENGTH do
-            if debug.info(DEBUG_TRACE_START_LEVEL + i, "s") ~= source then
-                break
-            end
-            local ident = debug.info(DEBUG_TRACE_START_LEVEL + i, "n")
-            local line = debug.info(DEBUG_TRACE_START_LEVEL + i, "l")
-            if not ident or not line then
-                break
-            end
-            table.insert(traceback, {
-                identifier = ident,
-                line = line,
-            })
-        end
-    end
-    local trace: VirtualInstanceTrace? = {
-        method = method,
-        source = source,
-        traceback = traceback,
-    }
+function VirtualInstance.new(
+    debugMethodName: string,
+    debugTraceLevel: number
+): VirtualInstance
+    debugTraceLevel += 1
     return setmetatable({
         _current = nil,
         _directives = {},
-        _trace = trace
+        _trace = getTrace(debugMethodName, debugTraceLevel)
     }, VirtualInstance)
 end
 
