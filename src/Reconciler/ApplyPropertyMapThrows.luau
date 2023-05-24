@@ -1,5 +1,6 @@
 --!strict
 
+local Symbols = require(script.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Types)
 type Set<T> = Types.Set<T>
 
@@ -36,8 +37,20 @@ local function ApplyPropertyMapThrows(
                 reconciledConns,
                 instance[key]:Connect(value)
             )
+        elseif typeof(value) == "table" and value._dectype == "Observable" then
+            table.insert(
+                reconciledConns,
+                value:Subscribe(function(newValue)
+                    local valueToApply = if (newValue == Symbols.Nil :: any)
+                        then nil else newValue
+                    instance[key] = valueToApply
+                end)
+            )
+        elseif value == Symbols.Nil then
+            instance[key] = nil
+        else
+            instance[key] = value
         end
-        instance[key] = value
     end
 
     for _, key in deferredKeys do
