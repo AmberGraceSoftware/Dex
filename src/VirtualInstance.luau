@@ -17,7 +17,7 @@ VirtualInstance.__index = {}
 VirtualInstance.__index._dectype = "VirtualInstance"
 
 --[[
-    @param propertyMap: CanBeObservable<{[string]: any}> - Property map to render
+    @param propertyMap: {[string]: CanBeObservable<any>} - Property map to render
     @return void
 
     Adds properties to be rendered on the instance when it is reconciled.
@@ -27,13 +27,13 @@ VirtualInstance.__index._dectype = "VirtualInstance"
 ]]
 function VirtualInstance.__index.Properties(
     self: VirtualInstance,
-    propertyMap: CanBeObservable<{[string]: CanBeObservable<any>}>
+    propertyMap: {[string]: CanBeObservable<any>}
 ): ()
     error("Not implemented yet")
 end
 
 --[[
-    @param TweenState: CanBeObservable<TweenState | {TweenState}> - TweenState or TweenState list to render
+    @param TweenState: TweenState | {TweenState} - TweenState or TweenState list to render
     @return void
 
     Adds Dec.TweenState objects to play on the Virtual Instance. Multiple calls
@@ -45,13 +45,13 @@ end
 ]]
 function VirtualInstance.__index.Tweens(
     self: VirtualInstance,
-    TweenState: CanBeObservable<TweenState | {TweenState}>
+    TweenState: TweenState | {TweenState}
 ): ()
     error("Not implemented yet")
 end
 
 --[[
-    @param attributeMap: CanBeObservable<{[string]: any}> - Attribute map to render
+    @param attributeMap: {[string]: any} - Attribute map to render
     @return void
 
     Adds attributes to be rendered on the instance when it is reconciled.
@@ -61,7 +61,7 @@ end
 ]]
 function VirtualInstance.__index.Attributes(
     self: VirtualInstance,
-    attributeMap: CanBeObservable<{[string]: CanBeObservable<any>}>
+    attributeMap: {[string]: CanBeObservable<any>}
 ): ()
     error("Not implemented yet")
 end
@@ -163,7 +163,7 @@ function VirtualInstance.__index.DeepCopy(
 end
 
 --[[
-    @param path: CanBeObservable<string | {string}?> - The path of the child to add.
+    @param path: string | {string}? - The path of the child to add. Can be a dot-separated string or a table of raw names.
     @param child: CanBeObservable<Instance | VirtualInstance?> - The child VirtualInstance or actual Instance to add.
     @return void
 
@@ -180,7 +180,7 @@ end
 ]]
 function VirtualInstance.__index.Child(
     self: VirtualInstance,
-    path: CanBeObservable<string | {string}>,
+    path: string | {string},
     child: CanBeObservable<Instance | VirtualInstance | nil>
 ): ()
     error("Not implemented yet")

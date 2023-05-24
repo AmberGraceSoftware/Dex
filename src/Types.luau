@@ -152,7 +152,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Child: (
 			self: VirtualInstance,
-			path: CanBeObservable<string | {string}>,
+			path: string | {string},
 			child: CanBeObservable<Instance | VirtualInstance | nil>
 		) -> (),
 		OnMount: (
