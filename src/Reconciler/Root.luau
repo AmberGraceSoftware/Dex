@@ -1,6 +1,7 @@
 --!strict
 
-local Types = require(script.Parent.Types)
+local Types = require(script.Parent.Parent.Types)
+local RenderVirtualInstance = require(script.Parent.RenderVirtualInstance)
 
 type Root = Types.Root
 type VirtualInstance = Types.VirtualInstance
@@ -26,7 +27,12 @@ function Root.__index.Render(
     self: Root,
     node: VirtualInstance
 ): ReconciledNode
-    error("Not implemented yet")
+    self._reconciled = RenderVirtualInstance(
+        self._instance,
+        node,
+        self._reconciled
+    )
+    return self._reconciled :: ReconciledNode
 end
 
 --[[
@@ -36,7 +42,10 @@ end
     the DataModel but not destroyed.
 ]]
 function Root.__index.Unmount(self: Root)
-    error("Not implemented yet")
+    if self._reconciled then
+        RenderVirtualInstance(self._instance, nil, self._reconciled)
+        self._reconciled = nil
+    end
 end
 
 --[[
@@ -47,7 +56,7 @@ end
     is properly freed.
 ]]
 function Root.__index.Destroy(self: Root)
-    error("Not implemented yet")
+    self:Unmount()
 end
 
 --[[
