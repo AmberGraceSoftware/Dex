@@ -96,15 +96,30 @@ export type TweenState = Observable<{
 		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
 	}}
 ))
+export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
-	[string | {string} | number]: CanBeObservable<
+	[ChildPath]: CanBeObservable<
 		Instance | VirtualInstance | nil
 	>
 }>
+export type VirtualInstanceTrace = {
+	method: string,
+	source: string?,
+	traceback: {{
+		identifier: string,
+		line: number,
+	}}
+}
 export type VirtualInstance = typeof(setmetatable(
 	{} :: {
 		_current: Instance?,
-		_directives: {any},
+		_constructorType: string,
+		_constructorTypeArgument: any,
+		_directives: {{
+			_type: string,
+			_payload: any,
+			_trace: VirtualInstanceTrace?,
+		}},
 	},
 	{} :: {__index: {
 		_dectype: string,
@@ -151,7 +166,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Child: (
 			self: VirtualInstance,
-			path: string | {string},
+			path: ChildPath,
 			child: CanBeObservable<Instance | VirtualInstance | nil>
 		) -> (),
 		OnMount: (
@@ -198,14 +213,5 @@ export type Root = typeof(setmetatable(
 		Destroy: (self: Root) -> (),
 	}}
 ))
-
-export type VirtualInstanceTrace = {
-	method: string,
-	source: string?,
-	traceback: {{
-		identifier: string,
-		line: number,
-	}}
-}
 
 return nil
