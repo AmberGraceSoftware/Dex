@@ -111,7 +111,7 @@ export type VirtualInstance = typeof(setmetatable(
 		_dectype: string,
 		Properties: (
 			self: VirtualInstance,
-			propertyMap: CanBeObservable<{[string]: any}>
+			propertyMap: {[string]: CanBeObservable<any>}
 		) -> (),
 		Tweens: (
 			self: VirtualInstance,
@@ -119,7 +119,7 @@ export type VirtualInstance = typeof(setmetatable(
 		) -> (),
 		Attributes: (
 			self: VirtualInstance,
-			attributeMap: CanBeObservable<{[string]: any}>
+			attributeMap: {[string]: CanBeObservable<any>}
 		) -> (),
 		Tags: (
 			self: VirtualInstance,
