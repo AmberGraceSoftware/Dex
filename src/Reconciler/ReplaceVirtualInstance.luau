@@ -23,7 +23,7 @@ local function ReplaceVirtualInstance(
     debugLevel += 1
     
     -- This is a naive implementation. In the future, we may want to support
-    -- object pooling natively via Dec's reconciler.
+    -- object pooling natively via Dec's reconciler?
     UnmountVirtualInstance(oldNode, debugLevel)
     return MountVirtualInstance(
         oldNode._rootInstance,
