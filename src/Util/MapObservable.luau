@@ -50,6 +50,27 @@ local MapObservable: ReturnType = function(...)
 	local depCount = args.n - 1
 	local map = args[args.n]
 
+	local function currentValue()
+		local values = table.create(depCount)
+		for i = 1, depCount do
+			table.insert(values, args[i]:Current())
+		end
+		return map(table.unpack(values))
+	end
+
+	local observable = Observable.new(currentValue())
+	local function onUpdate()
+		local next = currentValue()
+		if observable._current == next then
+			return
+		end
+		observable._current = next
+	end
+
+	for i = 1, depCount do
+		args[i]:Subscribe(onUpdate)
+	end
+
 	error("Not implemented yet!")
 end :: any
 

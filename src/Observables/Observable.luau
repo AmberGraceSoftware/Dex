@@ -9,13 +9,44 @@ Observable.__index = {}
 Observable.__index._dectype = "Observable"
 Observable.__index._decobservabletype = "Observable"
 
+local function beginObservingIdempotent(self: Observable<any>)
+    if self._destroyed then
+        return
+    end
+    if self._stopObserving then
+        return
+    end
+    task.spawn(function()
+        self._stopObserving = self._beginObserving(function(newValue)
+            if self._lastValue == newValue then
+                return
+            end
+            self._lastValue = newValue
+            for listener in self._listeners do
+                task.spawn(listener, newValue)
+            end
+        end)
+    end)
+end
+local function stopObservingIdempotent(self: Observable<any>)
+    if not self._stopObserving then
+        return
+    end
+    self._stopObserving()
+    self._stopObserving = nil
+end
+
 --[[
     @return T - The current value of the observable.
 
     Returns the current value of the Observable.
 ]]
 function Observable.__index.Current(self: Observable<any>): any
-    error("Not implemented yet")
+    if self._stopObserving then
+        return self._lastValue
+    else
+        return self._getCurrentUnobserved()
+    end
 end
 
 --[[
@@ -29,7 +60,19 @@ function Observable.__index.Subscribe(
     self: Observable<any>,
     callback: (value: any) -> ()
 ): Unsubscribe
-    error("Not implemented yet")
+    if self._destroyed then
+        error("Cannot subscribe to destroyed Observable")
+    end
+
+    beginObservingIdempotent(self)
+    self._listeners[callback] = true
+
+    return function()
+        self._listeners[callback] = nil
+        if not next(self._listeners) then
+            stopObservingIdempotent(self)
+        end
+    end
 end
 
 --[[
@@ -39,7 +82,11 @@ end
     listeners.
 ]]
 function Observable.__index.Destroy(self: Observable<any>)
-    error("Not implemented yet")
+    if self._destroyed then
+        return
+    end
+    stopObservingIdempotent(self)
+    self._listeners = {}
 end
 
 --[[
@@ -49,10 +96,16 @@ end
     Creates a new Dec Observable object with the given initial value.
     Observables are used to hold, derive, or map state within a Dec application.
 ]]
-function Observable.new<T>(initialValue: T): Observable<T>
+function Observable.new<T>(
+    beginObserving: (update: (value: T) -> ()) -> Unsubscribe,
+    getCurrentUnobserved: () -> T
+): Observable<T>
     return setmetatable({
-        _current = initialValue,
-        _observerCount = 0,
+        _lastValue = getCurrentUnobserved(),
+        _getCurrentUnobserved = getCurrentUnobserved,
+        _beginObserving = beginObserving,
+        _stopObserving = nil :: Unsubscribe?,
+        _listeners = {},
     }, Observable)
 end
 

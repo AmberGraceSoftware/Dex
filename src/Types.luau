@@ -6,8 +6,12 @@ export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
 export type Observable<T = any> = typeof(setmetatable(
 	{} :: {
-		_current: T,
-        _observerCount: number,
+        _lastValue: T,
+        _getCurrentUnobserved: () -> T,
+        _beginObserving: (update: (value: T) -> ()) -> Unsubscribe,
+        _stopObserving: Unsubscribe?,
+		_listeners: Set<(newValue: T) -> ()>,
+		_destroyed: boolean?,
 	},
 	{} :: {__index: {
 		_dectype: string,
