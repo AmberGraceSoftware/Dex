@@ -73,7 +73,9 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 export type Stopwatch = BaseTimer & typeof(setmetatable(
 	{} :: { },
 	{} :: {__index: {
-		Alpha: (self: Stopwatch, endElapsedTime: number) -> Alpha,
+		Alpha: ((self: Stopwatch, endElapsedTime: number) -> Alpha)
+			& ((self: Stopwatch, startElapsedTime: number,
+				endElapsedTime: number) -> Alpha),
 	}}
 ))
 export type Timer = BaseTimer & typeof(setmetatable(
@@ -82,7 +84,11 @@ export type Timer = BaseTimer & typeof(setmetatable(
 	},
 	{} :: {__index: {
 		SetDuration: (self: Timer) -> (),
-		Alpha: (self: Timer) -> Alpha,
+		Alpha: (
+			self: Timer,
+			startElapsedTime: number?,
+			endElapsedTime: number?
+		) -> Alpha,
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>

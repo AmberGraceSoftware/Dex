@@ -20,13 +20,19 @@ Timer.__index._dectype = BaseTimer.__index._dectype
 Timer.__index._decobservabletype = "Timer"
 
 --[[
+    @param durationStart: number? - The start duration which maps to 0. Defaults to 0 seconds.
+    @param durationEnd: number? - The end duration which maps to 1. Defaults to the timer's total duration.
     @return Dec.Alpha
 
     Derives an Alpha observable object that maps the duration from 0 (start) to
     1 (finish)
 ]]
-function Timer.__index.Alpha(self: Timer): Alpha
-    return Alpha.new(self, 0, self._duration)
+function Timer.__index.Alpha(
+    self: Timer,
+    startElapsed: number?,
+    endElapsed: number?
+): Alpha
+    return Alpha.new(self, durationStart or 0, durationEnd or self._duration)
 end
 
 --[[
