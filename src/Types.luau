@@ -86,24 +86,6 @@ export type Timer = BaseTimer & typeof(setmetatable(
 	}}
 ))
 export type CanBeObservable<T = any> = T | Observable<T>
-export type TweenState = Observable<{
-	info: TweenInfo,
-	startProps: {[string]: any}?,
-	goalProps: {[string]: any},
-	completed: (() -> ())?,
-}> & typeof(setmetatable(
-	{} :: {
-		_currentTween: Tween?,
-	},
-	{} :: {__index: {
-		Play: (self: TweenState) -> (),
-		Cancel: (self: TweenState) -> (),
-		SetGoal: (self: TweenState, goalProps: {[string]: any}) -> (),
-		SetInfo: (self: TweenState, info: TweenInfo) -> (),
-		SetStart: (self: TweenState, startProps: {[string]: any}?) -> (),
-		SetOnCompleted: (self: TweenState, cb: (() -> ())?) -> (),
-	}}
-))
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
 	[ChildPath]: CanBeObservable<
@@ -134,10 +116,6 @@ export type VirtualInstance = typeof(setmetatable(
 		Properties: (
 			self: VirtualInstance,
 			propertyMap: {[string]: CanBeObservable<any>}
-		) -> (),
-		Tweens: (
-			self: VirtualInstance,
-			TweenState | {TweenState}
 		) -> (),
 		Attributes: (
 			self: VirtualInstance,

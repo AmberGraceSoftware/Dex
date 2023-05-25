@@ -6,7 +6,6 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 type VirtualInstance = Types.VirtualInstance
 type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
-type TweenState = Types.TweenState
 type State<T> = Types.State<T>
 type ChildPath = Types.ChildPath
 type ChildMap = Types.ChildMap
@@ -105,35 +104,6 @@ function VirtualInstance.__index.Properties(
 end
 
 --[[
-    @param TweenState: TweenState | {TweenState} - TweenState or TweenState list to render
-    @return void
-
-    Adds Dec.TweenState objects to play on the Virtual Instance. Multiple calls
-    to this function will add TweenStates to this list.
-
-    When played, tweens will override properties set using
-    virtualInstance.Properties(), and will use Roblox Tween objects under the
-    hood.
-]]
-function VirtualInstance.__index.Tweens(
-    self: VirtualInstance,
-    tweenStates: TweenState | {TweenState}
-): ()
-    assertNotYetMounted(self)
-    local tweenList: {TweenState}
-    if (tweenStates :: any)._dectype then
-        tweenList = {tweenStates :: any}
-    else
-        tweenList = tweenStates :: any
-    end
-    table.insert(self._directives, {
-        _type = "Tweens",
-        _payload = tweenList,
-        _trace = getTrace("Dec.Tweens", 1),
-    })
-end
-
---[[
     @param attributeMap: {[string]: any} - Attribute map to render
     @return void
 
@@ -148,7 +118,7 @@ function VirtualInstance.__index.Attributes(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "Tweens",
+        _type = "Attributes",
         _payload = attributeMap,
         _trace = getTrace("Dec.Attributes", 1),
     })
