@@ -30,7 +30,7 @@ function Alpha.__index.Slice(
     startAlpha: number,
     endAlpha: number
 ): Alpha
-    return Alpha.new(self, NumberRange.new(startAlpha, endAlpha))
+    return Alpha.new(self, startAlpha, endAlpha)
 end
 
 --[[
@@ -69,15 +69,18 @@ end
 
 --[[
     @param sourceState: Dec.Observable<number> - The source state to derive an alpha from.
-    @param sourceRange: NumberRange - The range of the source state to map to the range [0, 1].
+    @param sourceRangeMin - The number in source state to maps to 0
+    @param sourceRangeMax - The number in source state to maps to 1
     @return Dec.Alpha - The new Alpha Observable.
 
     Creates a new Alpha Observable with the provided initial value.
 ]]
 function Alpha.new(
     sourceState: Observable<number>,
-    sourceRange: NumberRange
+    sourceRangeMin: number,
+    sourceRangeMax: number
 ): Alpha
+    local range = sourceRangeMax - sourceRangeMin
     local self: Alpha = MapObservable(
         sourceState,
         function(sourceCurrent)
@@ -86,8 +89,7 @@ function Alpha.new(
             end
 
             return math.clamp(
-                (sourceCurrent - sourceRange.Min)
-                    / (sourceRange.Max - sourceRange.Min),
+                (sourceCurrent - sourceRangeMin) / range,
                 0, 1
             )
         end
