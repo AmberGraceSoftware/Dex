@@ -51,7 +51,7 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 		Slice: (self: Alpha, startAlpha: number, endAlpha: number) -> Alpha,
 		Interpolate: (
 			self: Alpha,
-			easingStyle: Enum.EasingStyle?,
+			easingStyle: Enum.EasingStyle,
 			easingDirection: Enum.EasingDirection?
 		) -> Alpha
 	}}
