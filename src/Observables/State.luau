@@ -22,8 +22,8 @@ function State.__index.Set(
     self: State<any>,
     value: any
 ): ()
-    if self._updateWithListeners then
-        self._updateWithListeners(value)
+    if self._updateAndNotifyListeners then
+        self._updateAndNotifyListeners(value)
     else
         self._lastValue = value
     end
@@ -37,20 +37,23 @@ end
 ]]
 function State.new<T>(initialValue: T): State<T>
     local self: State<T>
-    self = setmetatable({
-        _lastValue = initialValue,
-        _getCurrentUnobserved = function()
-            return self._lastValue
-        end,
-        _beginObserving = function(update: (T) -> ())
-            self._updateWithListeners = update
+    local initialized = false
+    self = Observable.new(
+        function(update: (T) -> ())
+            self._updateAndNotifyListeners = update
             return function()
-                self._updateWithListeners = nil
+                self._updateAndNotifyListeners = nil
             end
         end,
-		_listeners = {}
-    }, State :: any)
-
+        function()
+            if not initialized then
+                initialized = true
+                return initialValue
+            end
+            return self._lastValue
+        end
+    ) :: any
+    setmetatable(self, State)
     return self
 end
 
