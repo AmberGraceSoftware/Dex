@@ -25,7 +25,7 @@ Stopwatch.__index._decobservabletype = "Stopwatch"
     stopwatch.
 ]]
 function Stopwatch.__index.Alpha(self: Stopwatch, endElapsedTime: number): Alpha
-    error("Not implemented yet")
+    return Alpha.new(self, 0, endElapsedTime)
 end
 
 --[[
