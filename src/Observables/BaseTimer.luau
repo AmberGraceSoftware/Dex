@@ -8,7 +8,10 @@ export type BaseTimer = Types.BaseTimer
 
 local BaseTimer = {}
 BaseTimer.__index = {}
-BaseTimer.__index._dectype = "Observable"
+BaseTimer.__index.Current = Observable.__index.Current
+BaseTimer.__index.Subscribe = Observable.__index.Subscribe
+BaseTimer.__index.Destroy = Observable.__index.Destroy
+BaseTimer.__index._dectype = Observable.__index._dectype
 BaseTimer.__index._decobservabletype = "BaseTimer"
 
 --[[
@@ -52,10 +55,6 @@ function BaseTimer.__index.Pause(self: BaseTimer): ()
         resumeAtElapsed = currentElapsed,
     })
 end
-
-BaseTimer.__index.Current = Observable.__index.Current
-BaseTimer.__index.Subscribe = Observable.__index.Subscribe
-BaseTimer.__index.Destroy = Observable.__index.Destroy
 
 --[[
     @return Dec.BaseTimer - The new BaseTimer instance.
