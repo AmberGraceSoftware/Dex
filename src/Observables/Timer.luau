@@ -1,7 +1,10 @@
 --!strict
+local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local BaseTimer = require(script.Parent.BaseTimer)
 local Alpha = require(script.Parent.Alpha)
+local State = require(script.Parent.State)
+local Observable = require(script.Parent.Observable)
 
 export type Timer = Types.Timer
 export type Alpha = Types.Alpha
@@ -23,7 +26,7 @@ Timer.__index._decobservabletype = "Timer"
     1 (finish)
 ]]
 function Timer.__index.Alpha(self: Timer): Alpha
-    error("Not implemented yet")
+    return Alpha.new(self, 0, self._duration)
 end
 
 --[[
@@ -33,7 +36,7 @@ end
     Sets the duration of the timer.
 ]]
 function Timer.__index.SetDuration(self: Timer, duration: number): ()
-    error("Not implemented yet")
+    self._duration = duration
 end
 
 
@@ -50,13 +53,66 @@ end
     Creates a new Timer observable with the given duration.
 ]]
 function Timer.new(duration: number): Timer
-    return setmetatable({
-        _duration = duration,
-        _stepConnection = nil,
-        _resumeAt = nil,
-        _current = 0,
-        _observerCount = 0,
-    }, Timer :: any)
+    local self: Timer
+    local playState = State.new({
+        playing = false,
+        startClockTime = 0,
+        resumeAtElapsed = 0,
+    })
+    local function resolveCurrent(_current: typeof(playState:Current())?)
+        -- Since we are calling the Observable constructor, _duration
+        -- initializes to nil first resolution.
+        local durationCurrent = self._duration or duration
+        local current = _current or playState:Current()
+        if current.playing then
+            local elapsed = os.clock() - current.startClockTime
+            return math.max(0, durationCurrent - elapsed)
+        end
+        return math.max(0, durationCurrent - current.resumeAtElapsed)
+    end
+    local function beginObserving(update: (number) -> ())
+        local heartbeatConn = nil
+        local function playStateChanged(current: typeof(playState:Current()))
+            if current.playing then
+                if not heartbeatConn then
+                    heartbeatConn = RunService.Heartbeat:Connect(function()
+                        local elapsed = os.clock() - current.startClockTime
+                        if elapsed >= self._duration then
+                            playState:Set({
+                                playing = false,
+                                startClockTime = 0,
+                                resumeAtElapsed = 0,
+                            })
+                        else
+                            update(math.max(0, self._duration - elapsed))
+                        end
+                    end)
+                end
+            else
+                if heartbeatConn then
+                    heartbeatConn:Disconnect()
+                end
+            end
+            update(resolveCurrent(current))
+        end
+        local unsubscribe = playState:Subscribe(playStateChanged)
+        playStateChanged(playState:Current())
+
+        return function()
+            unsubscribe()
+            if heartbeatConn then
+                heartbeatConn:Disconnect()
+            end
+        end
+    end
+    self = Observable.new(
+        beginObserving,
+        resolveCurrent
+    ) :: any
+    self._duration = duration
+    self._playState = playState
+    setmetatable(self, BaseTimer)
+    return self
 end
 
 return Timer
