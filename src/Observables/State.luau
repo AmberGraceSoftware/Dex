@@ -19,7 +19,11 @@ function State.__index.Set(
     self: State<any>,
     value: any
 ): ()
-    error("Not implemented yet")
+    if self._updateWithListeners then
+        self._updateWithListeners(value)
+    else
+        self._lastValue = value
+    end
 end
 
 State.__index.Current = Observable.__index.Current
@@ -33,10 +37,23 @@ State.__index.Destroy = Observable.__index.Destroy
     Creates a new State observable with the given initial value.
 ]]
 function State.new<T>(initialValue: T): State<T>
-    return setmetatable({
-        _current = initialValue,
-        _observerCount = 0,
+    local self: State<T>
+    self = setmetatable({
+        _lastValue = initialValue,
+        _getCurrentUnobserved = function()
+            return self._lastValue
+        end,
+        _beginObserving = function(update: (T) -> ())
+            self._updateWithListeners = update
+            update(self._lastValue)
+            return function()
+                self._updateWithListeners = nil
+            end
+        end,
+		_listeners = {}
     }, State :: any)
+
+    return self
 end
 
 return State

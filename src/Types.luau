@@ -22,7 +22,9 @@ export type Observable<T = any> = typeof(setmetatable(
 	}}
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
-	{} :: {},
+	{} :: {
+		_updateWithListeners: ((newValue: T) -> ())?,
+	},
 	{} :: {__index: {
 		Set: (self: State<T>, T) -> (),
 	}}
@@ -56,8 +58,11 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 ))
 export type BaseTimer = Observable<number> & typeof(setmetatable(
 	{} :: {
-		_stepConnection: RBXScriptConnection?,
-		_resumeAt: number?,
+		_playState: State<{
+			playing: boolean,
+			startClockTime: number,
+			resumeAtElapsed: number,
+		}>
 	},
 	{} :: {__index: {
 		Start: (self: BaseTimer) -> (),
