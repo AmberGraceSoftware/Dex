@@ -9,6 +9,20 @@ Observable.__index = {}
 Observable.__index._dectype = "Observable"
 Observable.__index._decobservabletype = "Observable"
 
+-- Safely calls a set of listeners. Listeners can remove themselves from the set
+-- during the call without causing issues.
+local function callListenersSafe(listenerSet: {[(any) -> ()]: true}, arg: any)
+    local listenerList = {}
+    for listener in listenerSet do
+        table.insert(listenerList, listener)
+    end
+
+    for _, listener in ipairs(listenerList) do
+        if listenerSet[listener] then
+            task.spawn(listener, arg)
+        end
+    end
+end
 local function beginObservingIdempotent(self: Observable<any>)
     if self._destroyed then
         return
@@ -22,10 +36,14 @@ local function beginObservingIdempotent(self: Observable<any>)
                 return
             end
             self._lastValue = newValue
-            for listener in self._listeners do
-                task.spawn(listener, newValue)
-            end
+            callListenersSafe(self._listeners, newValue)
         end)
+
+        local initValue = self._getCurrentUnobserved()
+        if self._lastValue ~= initValue then
+            self._lastValue = initValue
+            callListenersSafe(self._listeners, initValue)
+        end
     end)
 end
 local function stopObservingIdempotent(self: Observable<any>)

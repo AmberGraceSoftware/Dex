@@ -44,7 +44,6 @@ function State.new<T>(initialValue: T): State<T>
         end,
         _beginObserving = function(update: (T) -> ())
             self._updateWithListeners = update
-            update(self._lastValue)
             return function()
                 self._updateWithListeners = nil
             end
