@@ -18,7 +18,12 @@ BaseTimer.__index._decobservabletype = "BaseTimer"
     values every heartbeat in realtime until it is stopped.
 ]]
 function BaseTimer.__index.Start(self: BaseTimer): ()
-    error("Not implemented yet")
+    local elapsed = self._playState:Current().resumeAtElapsed
+    self._playState:Set({
+        playing = true,
+        startClockTime = os.clock() - elapsed,
+        resumeAtElapsed = 0,
+    })
 end
 
 --[[
@@ -27,7 +32,11 @@ end
     Stops the timing-based Observable.
 ]]
 function BaseTimer.__index.Stop(self: BaseTimer): ()
-    error("Not implemented yet")
+    self._playState:Set({
+        playing = false,
+        startClockTime = 0,
+        resumeAtElapsed = 0,
+    })
 end
 
 --[[
@@ -36,16 +45,12 @@ end
     Pauses the timing-based Observable.
 ]]
 function BaseTimer.__index.Pause(self: BaseTimer): ()
-    error("Not implemented yet")
-end
-
---[[
-    @return void
-
-    Resumes the timing-based Observable.
-]]
-function BaseTimer.__index.Resume(self: BaseTimer): ()
-    error("Not implemented yet")
+    local currentElapsed = os.clock() - self._playState:Current().startClockTime
+    self._playState:Set({
+        playing = false,
+        startClockTime = 0,
+        resumeAtElapsed = currentElapsed,
+    })
 end
 
 BaseTimer.__index.Current = Observable.__index.Current
