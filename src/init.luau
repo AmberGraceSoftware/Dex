@@ -41,7 +41,6 @@ local Dec = {}
 -- Basic State and Observables
 Dec.State = require(script.Observables.State)
 Dec.Derive = require(script.Util.MapObservable)
-Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
 Dec.Alpha = require(script.Observables.Alpha)
 Dec.CustomObservable = Observable.new
 
@@ -67,6 +66,7 @@ Dec.CreateRoot = Root.new
 Dec.Nil = Symbols.Nil
 
 -- Reflection
+Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
 -- Dec.IsObservable = require(script.Util.IsObservable)
 -- Dec.IsVirtualInstance = require(script.Util.IsVirtualInstance)
 -- Dec.GetVirtualInstanceType = require(script.Util.GetVirtualInstanceType)
