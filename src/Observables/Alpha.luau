@@ -87,16 +87,6 @@ function Alpha.__index.Invert(
     return inverted
 end
 
-
---[[
-    @param startValue: T - The start value for the lerp.
-    @param goalValue: T - The goal value for the lerp.
-    @return Observable<T> - The lerped Observable.
-
-    Creates a new Observable that outputs an interpolated value between the 
-    start value and goal value based on the current Alpha value.
-]]
-
 local function lerpUsingLinearMath(start: any, finish: any, alpha: number): any
     return start + (finish - start) * alpha
 end
@@ -147,6 +137,14 @@ local typeToInterpolator: {[string]: (
         )
     end,
 }
+--[[
+    @param startValue: T - The start value for the lerp.
+    @param goalValue: T - The goal value for the lerp.
+    @return Observable<T> - The lerped Observable.
+
+    Creates a new Observable that outputs an interpolated value between the 
+    start value and goal value based on the current Alpha value.
+]]
 function Alpha.__index.Lerp<T>(
     self: Alpha,
     startValue: T,
