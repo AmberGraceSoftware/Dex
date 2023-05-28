@@ -109,6 +109,7 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 		Start: (self: BaseTimer) -> (),
 		Stop: (self: BaseTimer) -> (),
 		Pause: (self: BaseTimer) -> (),
+		SetTimePosition: (self: BaseTimer) -> (),
 		EaseAlpha: (
 			self: Alpha,
 			easingStyle: Enum.EasingStyle,
