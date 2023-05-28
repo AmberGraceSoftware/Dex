@@ -24,10 +24,22 @@ export type Observable<T = any> = typeof(setmetatable(
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {
-		_notifyUpdate: ((newValue: T) -> ())?,
+		_notifyUpdate: (() -> ())?,
 	},
 	{} :: {__index: {
 		Set: (self: State<T>, T) -> (),
+	}}
+))
+export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
+	{} :: {
+		_notifyUpdate: (() -> ())?,
+		_notifyRecord: {[any]: {[() -> ()]: true}}
+	},
+	{} :: {__index: {
+		Set: (self: StateRecord<T>, key: any, newValue: any) -> (),
+		Current: (self: StateRecord<T>, atKey: any) -> any,
+		Replace: (self: StateRecord<T>, T) -> (),
+		Index: (self: StateRecord<T>, key: any) -> Observable<any>,
 	}}
 ))
 export type Spring<T = any> = Observable<T> & typeof(setmetatable(
