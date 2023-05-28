@@ -55,7 +55,11 @@ function Stopwatch.new(maxDuration: number): Stopwatch
     local function getCurrent(_current: typeof(playState:Current())?)
         local current = _current or playState:Current()
         if current.playing then
-            return os.clock() - current.startClockTime
+            return math.clamp(
+                os.clock() - current.startClockTime,
+                0,
+                maxDuration
+            )
         end
         return current.resumeAtElapsed
     end
