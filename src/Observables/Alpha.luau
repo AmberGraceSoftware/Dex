@@ -39,11 +39,11 @@ end
     @param easingDirection: Enum.EasingDirection? - Optional easing direction.
     @return Dec.Alpha - The interpolated Alpha Observable.
 
-    Creates a new Alpha Observable that interpolates between 0 and one using
+    Creates a new Alpha Observable that interpolates between 0 and 1 using
     the given easing style and direction. Useful for creating non-linear
     animations.
 ]]
-function Alpha.__index.Interpolate(
+function Alpha.__index.Ease(
     self: Alpha,
     easingStyle: Enum.EasingStyle,
     easingDirection: Enum.EasingDirection?
@@ -69,6 +69,104 @@ end
 
 
 --[[
+    @return Dec.Alpha - The inverted Alpha Observable.
+
+    Creates a new Alpha Observable that maps 0 to 1 and 1 to 0 from the original
+    Observable. Useful for reversing animations, output values, etc.
+]]
+function Alpha.__index.Invert(
+    self: Alpha
+): Alpha
+    local inverted = MapObservable(
+        self,
+        function(current)
+            return 1 - current
+        end
+    ) :: any
+    setmetatable(inverted, Alpha)
+    return inverted
+end
+
+
+--[[
+    @param startValue: T - The start value for the lerp.
+    @param goalValue: T - The goal value for the lerp.
+    @return Observable<T> - The lerped Observable.
+
+    Creates a new Observable that outputs an interpolated value between the 
+    start value and goal value based on the current Alpha value.
+]]
+
+local function lerpUsingLinearMath(start: any, finish: any, alpha: number): any
+    return start + (finish - start) * alpha
+end
+local typeToInterpolator: {[string]: (
+    start: any,
+    finish: any,
+    alpha: number
+) -> any} = {
+    number = lerpUsingLinearMath,
+    Vector2 = lerpUsingLinearMath,
+    Vector2int16 = lerpUsingLinearMath,
+    Vector3 = lerpUsingLinearMath,
+    Vector3int16 = lerpUsingLinearMath,
+    CFrame = function(a: CFrame, b: CFrame, alpha)
+        return a:Lerp(b, alpha)
+    end,
+    Color3 = function(a: Color3, b: Color3, alpha)
+        return a:Lerp(b, alpha)
+    end,
+    UDim = function(a: UDim, b: UDim, alpha)
+        return UDim.new(
+            lerpUsingLinearMath(a.Scale, b.Scale, alpha),
+            lerpUsingLinearMath(a.Offset, b.Offset, alpha)
+        )
+    end,
+    UDim2 = function(a: UDim2, b: UDim2, alpha)
+        return UDim2.new(
+            lerpUsingLinearMath(a.X.Scale, b.X.Scale, alpha),
+            lerpUsingLinearMath(a.X.Offset, b.X.Offset, alpha),
+            lerpUsingLinearMath(a.Y.Scale, b.Y.Scale, alpha),
+            lerpUsingLinearMath(a.Y.Offset, b.Y.Offset, alpha)
+        )
+    end,
+    -- Follows the conventions of TweenService. This is useful for tweening:
+    -- { Visible = false }
+    boolean = function(a: boolean, b: boolean, alpha)
+        if a ~= b then
+            return alpha < 1
+        end
+        return a
+    end,
+    Rect = function(a: Rect, b: Rect, alpha)
+        return Rect.new(
+            lerpUsingLinearMath(a.Min.X, b.Min.X, alpha),
+            lerpUsingLinearMath(a.Min.Y, b.Min.Y, alpha),
+            lerpUsingLinearMath(a.Max.X, b.Max.X, alpha),
+            lerpUsingLinearMath(a.Max.Y, b.Max.Y, alpha)
+        )
+    end,
+}
+function Alpha.__index.Lerp<T>(
+    self: Alpha,
+    startValue: T,
+    goalValue: T
+): Observable<T>
+    local interpolator = typeToInterpolator[typeof(startValue)]
+    if not interpolator then
+        error("Data type '" .. typeof(startValue) ..
+            "' cannot be interpolated!")
+    end
+    return MapObservable(
+        self,
+        function(current)
+            return interpolator(startValue, goalValue, current)
+        end
+    ) :: any
+end
+
+
+--[[
     @param sourceState: Dec.Observable<number> - The source state to derive an alpha from.
     @param sourceRangeMin - The number in source state to maps to 0
     @param sourceRangeMax - The number in source state to maps to 1
@@ -85,12 +183,14 @@ function Alpha.new(
     local self: Alpha = MapObservable(
         sourceState,
         function(sourceCurrent)
-            if sourceCurrent ~= sourceCurrent then
+            -- Sanitize NaN values
+            local nextValue = (sourceCurrent - sourceRangeMin) / range
+            if nextValue ~= nextValue then
                 return 0
             end
 
             return math.clamp(
-                (sourceCurrent - sourceRangeMin) / range,
+                nextValue,
                 0, 1
             )
         end

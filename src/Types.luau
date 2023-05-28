@@ -89,7 +89,8 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 			self: Alpha,
 			startValue: T,
 			goalValue: T
-		) -> Observable<T>
+		) -> Observable<T>,
+		Invert: (self: Alpha) -> Alpha,
 	}}
 ))
 export type BaseTimer = Observable<number> & typeof(setmetatable(
