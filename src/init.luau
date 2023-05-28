@@ -66,4 +66,9 @@ Dec.CreateRoot = Root.new
 -- Symbols
 Dec.Nil = Symbols.Nil
 
+-- Reflection
+-- Dec.IsObservable = require(script.Util.IsObservable)
+-- Dec.IsVirtualInstance = require(script.Util.IsVirtualInstance)
+-- Dec.GetVirtualInstanceType = require(script.Util.GetVirtualInstanceType)
+
 return Dec
