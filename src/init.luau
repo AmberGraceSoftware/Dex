@@ -15,11 +15,15 @@ local Types = require(script.Types)
 local Symbols = require(script.Symbols)
 local VirtualInstanceCreators = require(script.VirtualInstanceCreators)
 local Root = require(script.Reconciler.Root)
+local Observable = require(script.Observables.Observable)
 
 export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>
 export type State<T> = Types.State<T>
+export type StateRecord<T> = Types.StateRecord<T>
 export type Spring<T> = Types.Spring<T>
+export type IntSpring<T> = Types.IntSpring<T>
+export type EasedValue<T> = Types.EasedValue<T>
 export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
@@ -39,6 +43,7 @@ Dec.State = require(script.Observables.State)
 Dec.Derive = require(script.Util.MapObservable)
 Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
 Dec.Alpha = require(script.Observables.Alpha)
+Dec.CustomObservable = Observable.new
 
 -- Realtime simulation observable utilities
 Dec.Spring = require(script.Observables.Spring)
