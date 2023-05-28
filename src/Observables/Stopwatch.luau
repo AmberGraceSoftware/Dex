@@ -13,6 +13,7 @@ Stopwatch.__index.Stop = BaseTimer.__index.Stop
 Stopwatch.__index.Pause = BaseTimer.__index.Pause
 Stopwatch.__index.Current = BaseTimer.__index.Current
 Stopwatch.__index.Subscribe = BaseTimer.__index.Subscribe
+Stopwatch.__index.Map = BaseTimer.__index.Map
 Stopwatch.__index.Destroy = BaseTimer.__index.Destroy
 Stopwatch.__index._dectype = BaseTimer.__index._dectype
 Stopwatch.__index._decobservabletype = "Stopwatch"

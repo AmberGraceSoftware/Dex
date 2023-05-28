@@ -15,6 +15,7 @@ Timer.__index.Start = BaseTimer.__index.Start
 Timer.__index.Stop = BaseTimer.__index.Stop
 Timer.__index.Pause = BaseTimer.__index.Pause
 Timer.__index.Subscribe = BaseTimer.__index.Subscribe
+Timer.__index.Map = BaseTimer.__index.Map
 Timer.__index.Destroy = BaseTimer.__index.Destroy
 Timer.__index._dectype = BaseTimer.__index._dectype
 Timer.__index._decobservabletype = "Timer"

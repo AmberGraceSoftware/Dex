@@ -8,6 +8,7 @@ local State = {}
 State.__index = {}
 State.__index.Current = Observable.__index.Current
 State.__index.Subscribe = Observable.__index.Subscribe
+State.__index.Map = Observable.__index.Map
 State.__index.Destroy = Observable.__index.Destroy
 State.__index._dectype = Observable.__index._dectype
 State.__index._decobservabletype = "State"

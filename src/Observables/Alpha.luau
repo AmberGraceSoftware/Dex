@@ -11,6 +11,7 @@ local Alpha = {}
 Alpha.__index = {}
 Alpha.__index.Current = Observable.__index.Current
 Alpha.__index.Subscribe = Observable.__index.Subscribe
+Alpha.__index.Map = Observable.__index.Map
 Alpha.__index.Destroy = Observable.__index.Destroy
 Alpha.__index._dectype = Observable.__index._dectype
 Alpha.__index._decobservabletype = "Alpha"

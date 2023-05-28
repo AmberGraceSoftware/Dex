@@ -10,6 +10,7 @@ local BaseTimer = {}
 BaseTimer.__index = {}
 BaseTimer.__index.Current = Observable.__index.Current
 BaseTimer.__index.Subscribe = Observable.__index.Subscribe
+BaseTimer.__index.Map = Observable.__index.Map
 BaseTimer.__index.Destroy = Observable.__index.Destroy
 BaseTimer.__index._dectype = Observable.__index._dectype
 BaseTimer.__index._decobservabletype = "BaseTimer"
