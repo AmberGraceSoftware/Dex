@@ -80,7 +80,7 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 	{} :: {},
 	{} :: {__index: {
 		Slice: (self: Alpha, startAlpha: number, endAlpha: number) -> Alpha,
-		Ease: (
+		Curve: (
 			self: Alpha,
 			easingStyle: Enum.EasingStyle,
 			easingDirection: Enum.EasingDirection?
@@ -110,7 +110,7 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 		Stop: (self: BaseTimer) -> (),
 		Pause: (self: BaseTimer) -> (),
 		SetTimePosition: (self: BaseTimer) -> (),
-		EaseAlpha: (
+		CurvedAlpha: (
 			self: Alpha,
 			easingStyle: Enum.EasingStyle,
 			easingDirection: Enum.EasingDirection?

@@ -43,7 +43,7 @@ end
     the given easing style and direction. Useful for creating non-linear
     animations.
 ]]
-function Alpha.__index.Ease(
+function Alpha.__index.Curve(
     self: Alpha,
     easingStyle: Enum.EasingStyle,
     easingDirection: Enum.EasingDirection?

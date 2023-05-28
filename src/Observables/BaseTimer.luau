@@ -89,7 +89,7 @@ end
     the given easing style and direction. Useful for creating non-linear
     animations.
 ]]
-function BaseTimer.EaseAlpha(
+function BaseTimer.CurvedAlpha(
     self: BaseTimer,
     easingStyle: Enum.EasingStyle,
     easingDirection: Enum.EasingDirection?
@@ -97,7 +97,7 @@ function BaseTimer.EaseAlpha(
     -- Create Alpha observable for the current Timer/Stopwatch
     local alpha = self:Alpha()
     -- Apply easing
-    return alpha:Ease(easingStyle, easingDirection)
+    return alpha:Curve(easingStyle, easingDirection)
 end
 
 --[[
