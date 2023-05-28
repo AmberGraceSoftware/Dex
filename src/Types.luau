@@ -33,9 +33,30 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 export type Spring<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {
 		_angularFrequency: any, -- CanBeObservable<number>
-		_damping: any, -- CanBeObservable<number>
 		_target: Observable<T>,
 		_snapToGoalTheshold: any, -- CanBeObservable<number>?
+	},
+	{} :: {__index: {
+		CurrentTarget: (self: State<T>) -> T,
+		SetPosition: (self: State<T>, position: T) -> (),
+		ResetVelocity: (self: State<T>) -> (),
+	}}
+))
+export type IntSpring<T = any> = Observable<T> & typeof(setmetatable(
+	{} :: {
+		_angularFrequency: any, -- CanBeObservable<number>
+		_target: Observable<T>,
+	},
+	{} :: {__index: {
+		CurrentTarget: (self: State<T>) -> T,
+		SetPosition: (self: State<T>, position: T) -> (),
+		ResetVelocity: (self: State<T>) -> (),
+	}}
+))
+export type EasedValue<T = any> = Observable<T> & typeof(setmetatable(
+	{} :: {
+		_info: TweenInfo,
+		_target: Observable<T>,
 	},
 	{} :: {__index: {
 		CurrentTarget: (self: State<T>) -> T,

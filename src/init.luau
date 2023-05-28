@@ -34,13 +34,20 @@ export type Nil = Symbol<"Nil">
 
 local Dec = {}
 
--- State and Observable Utilities
+-- Basic State and Observables
 Dec.State = require(script.Observables.State)
-Dec.Spring = require(script.Observables.Spring)
-Dec.Stopwatch = require(script.Observables.Stopwatch)
-Dec.Timer = require(script.Observables.Timer)
 Dec.Derive = require(script.Util.MapObservable)
 Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
+Dec.Alpha = require(script.Observables.Alpha)
+
+-- Realtime simulation observable utilities
+Dec.Spring = require(script.Observables.Spring)
+Dec.IntSpring = require(script.Observable.IntSpring)
+Dec.EasedValue = require(script.Observables.EasedValue)
+Dec.Stopwatch = require(script.Observables.Stopwatch)
+Dec.Timer = require(script.Observables.Timer)
+
+-- Interop functions
 Dec.ObserveFusionState = require(script.Interop.ObserveFusionState)
 
 -- VirtualInstance Creators
