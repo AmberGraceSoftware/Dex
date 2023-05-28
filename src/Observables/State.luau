@@ -22,10 +22,9 @@ function State.__index.Set(
     self: State<any>,
     value: any
 ): ()
-    if self._updateAndNotifyListeners then
-        self._updateAndNotifyListeners(value)
-    else
-        self._cachedValue = value
+    self._cachedValue = value
+    if self._notifyUpdate then
+        self._notifyUpdate()
     end
 end
 
@@ -47,12 +46,9 @@ function State.new<T>(initialValue: T): State<T>
             return self._cachedValue
         end,
         function(notifyUpdate)
-            self._updateAndNotifyListeners = function(value: T)
-                self._cachedValue = value
-                notifyUpdate()
-            end
+            self._notifyUpdate = notifyUpdate
             return function()
-                self._updateAndNotifyListeners = nil
+                self._notifyUpdate = nil
             end
         end
     ) :: any

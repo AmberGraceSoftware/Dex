@@ -24,7 +24,7 @@ export type Observable<T = any> = typeof(setmetatable(
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {
-		_updateAndNotifyListeners: ((newValue: T) -> ())?,
+		_notifyUpdate: ((newValue: T) -> ())?,
 	},
 	{} :: {__index: {
 		Set: (self: State<T>, T) -> (),
