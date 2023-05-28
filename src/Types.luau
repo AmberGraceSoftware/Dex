@@ -124,7 +124,8 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 			self: Alpha,
 			startValue: T,
 			goalValue: T
-		) -> Observable<T>
+		) -> Observable<T>,
+		Alpha: (self: BaseTimer) -> Alpha,
 	}}
 ))
 export type Stopwatch = BaseTimer

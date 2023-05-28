@@ -1,27 +1,19 @@
 --!strict
-local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
-local Observable = require(script.Parent.Observable)
-local State = require(script.Parent.State)
 
+export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
+export type Observable<T> = Types.Observable<T>
 
 local BaseTimer = {}
-BaseTimer.__index = {}
-BaseTimer.__index.Current = Observable.__index.Current
-BaseTimer.__index.Subscribe = Observable.__index.Subscribe
-BaseTimer.__index.Map = Observable.__index.Map
-BaseTimer.__index.Destroy = Observable.__index.Destroy
-BaseTimer.__index._dectype = Observable.__index._dectype
-BaseTimer.__index._decobservabletype = "BaseTimer"
 
 --[[
     @return void
 
     Starts the timing-based Observable. The observable will update with new
-    values every heartbeat in realtime until it is stopped.
+    values every heartbeat in real-time until it is stopped.
 ]]
-function BaseTimer.__index.Start(self: BaseTimer): ()
+function BaseTimer.Start(self: BaseTimer): ()
     local elapsed = self._playState:Current().resumeAtElapsed
     self._playState:Set({
         playing = true,
@@ -35,7 +27,7 @@ end
 
     Stops the timing-based Observable.
 ]]
-function BaseTimer.__index.Stop(self: BaseTimer): ()
+function BaseTimer.Stop(self: BaseTimer): ()
     self._playState:Set({
         playing = false,
         startClockTime = 0,
@@ -48,7 +40,7 @@ end
 
     Pauses the timing-based Observable.
 ]]
-function BaseTimer.__index.Pause(self: BaseTimer): ()
+function BaseTimer.Pause(self: BaseTimer): ()
     local currentElapsed = os.clock() - self._playState:Current().startClockTime
     self._playState:Set({
         playing = false,
@@ -58,54 +50,72 @@ function BaseTimer.__index.Pause(self: BaseTimer): ()
 end
 
 --[[
-    @return Dec.BaseTimer - The new BaseTimer instance.
+    @return void
 
-    Creates a new BaseTimer.
+    Sets the current time position of the timing-based Observable.
 ]]
-function BaseTimer.new(): BaseTimer
-    local playState = State.new({
-        playing = false,
-        startClockTime = 0,
-        resumeAtElapsed = 0,
+function BaseTimer.SetTimePosition(self: BaseTimer, position: number): ()
+    local current = self._playState:Current()
+    local elapsed = position
+    self._playState:Set({
+        playing = current.playing,
+        startClockTime = os.clock() - elapsed,
+        resumeAtElapsed = current.resumeAtElapsed,
     })
-    local function getCurrent(_current: typeof(playState:Current())?)
-        local current = _current or playState:Current()
-        if current.playing then
-            return os.clock() - current.startClockTime
-        end
-        return current.resumeAtElapsed
-    end
-    local function createUpdateStream(notifyUpdate: () -> ())
-        local heartbeatConn = nil
-        local function playStateChanged(current: typeof(playState:Current()))
-            if current.playing then
-                if not heartbeatConn then
-                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
-                end
-            else
-                if heartbeatConn then
-                    heartbeatConn:Disconnect()
-                end
-            end
-            notifyUpdate()
-        end
-        local unsubscribe = playState:Subscribe(playStateChanged)
-        playStateChanged(playState:Current())
+end
 
-        return function()
-            unsubscribe()
-            if heartbeatConn then
-                heartbeatConn:Disconnect()
-            end
-        end
-    end
-    local self: BaseTimer = Observable.new(
-        getCurrent,
-        createUpdateStream
-    ) :: any
-    self._playState = playState
-    setmetatable(self, BaseTimer)
-    return self
+--[[
+    @return Dec.Alpha - The interpolated Alpha Observable.
+
+    Creates a new Alpha Observable that interpolates between 0 and one using
+    the given easing style and direction. Useful for creating non-linear
+    animations.
+]]
+function BaseTimer.EaseAlpha(
+    self: BaseTimer,
+    easingStyle: Enum.EasingStyle,
+    easingDirection: Enum.EasingDirection?
+): Alpha
+    -- Create Alpha observable for the current Timer/Stopwatch
+    local alpha = self:Alpha()
+    -- Apply easing
+    return alpha:Ease(easingStyle, easingDirection)
+end
+
+--[[
+    @return Dec.Alpha - The sliced Alpha Observable.
+
+    Creates a new Alpha Observable that starts at startTime
+    (maps to 0) and ends at endTime (maps to 1).
+
+    Useful for slicing up animation sequences into smaller slices.
+]]
+function BaseTimer.SliceAlpha(
+    self: BaseTimer,
+    startTime: number,
+    endTime: number
+): Alpha
+    -- Create Alpha observable for the current Timer/Stopwatch
+    local alpha = self:Alpha()
+    -- Create the slice
+    return alpha:Slice(startTime / self._duration, endTime / self._duration)
+end
+
+--[[
+    @return Observable<T> - The interpolated Observable.
+
+    Creates an observable that outputs an interpolated value between
+    the start value and end value based on the current elapsed (or remaining) time.
+]]
+function BaseTimer.Lerp<T>(
+    self: BaseTimer,
+    startValue: T,
+    endValue: T
+): Observable<T>
+    -- Create Alpha observable for the current Timer/Stopwatch
+    local alpha = self:Alpha()
+    -- Create the lerp observable
+    return alpha:Lerp(startValue, endValue)
 end
 
 return BaseTimer
