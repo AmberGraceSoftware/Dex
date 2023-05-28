@@ -42,6 +42,15 @@ end
 ]]
 function BaseTimer.Pause(self: BaseTimer): ()
     local currentElapsed = os.clock() - self._playState:Current().startClockTime
+    if currentElapsed ~= currentElapsed then
+        currentElapsed = 0
+    end
+    if currentElapsed < 0 then
+        currentElapsed = 0
+    end
+    if currentElapsed > self._duration then
+        currentElapsed = self._duration
+    end
     self._playState:Set({
         playing = false,
         startClockTime = 0,
@@ -57,6 +66,15 @@ end
 function BaseTimer.SetTimePosition(self: BaseTimer, position: number): ()
     local current = self._playState:Current()
     local elapsed = position
+    if position ~= position then
+        position = 0
+    end
+    if position < 0 then
+        position = 0
+    end
+    if position > self._duration then
+        position = self._duration
+    end
     self._playState:Set({
         playing = current.playing,
         startClockTime = os.clock() - elapsed,
