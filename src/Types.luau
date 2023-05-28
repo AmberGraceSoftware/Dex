@@ -68,15 +68,24 @@ export type Alpha = Observable<number> & typeof(setmetatable(
 	{} :: {},
 	{} :: {__index: {
 		Slice: (self: Alpha, startAlpha: number, endAlpha: number) -> Alpha,
-		Interpolate: (
+		Ease: (
 			self: Alpha,
 			easingStyle: Enum.EasingStyle,
 			easingDirection: Enum.EasingDirection?
-		) -> Alpha
+		) -> Alpha,
+		Lerp: <T>(
+			self: Alpha,
+			startValue: T,
+			goalValue: T
+		) -> Observable<T>
 	}}
 ))
 export type BaseTimer = Observable<number> & typeof(setmetatable(
 	{} :: {
+		-- Public
+		Looped: boolean,
+		-- Private
+		_duration: number,
 		_playState: State<{
 			playing: boolean,
 			startClockTime: number,
@@ -87,29 +96,25 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 		Start: (self: BaseTimer) -> (),
 		Stop: (self: BaseTimer) -> (),
 		Pause: (self: BaseTimer) -> (),
-	}}
-))
-export type Stopwatch = BaseTimer & typeof(setmetatable(
-	{} :: { },
-	{} :: {__index: {
-		Alpha: ((self: Stopwatch, endElapsedTime: number) -> Alpha)
-			& ((self: Stopwatch, startElapsedTime: number,
-				endElapsedTime: number) -> Alpha),
-	}}
-))
-export type Timer = BaseTimer & typeof(setmetatable(
-	{} :: {
-		_duration: number,
-	},
-	{} :: {__index: {
-		SetDuration: (self: Timer) -> (),
-		Alpha: (
-			self: Timer,
-			startElapsedTime: number?,
-			endElapsedTime: number?
+		EaseAlpha: (
+			self: Alpha,
+			easingStyle: Enum.EasingStyle,
+			easingDirection: Enum.EasingDirection?
 		) -> Alpha,
+		SliceAlpha: (
+			self: Alpha,
+			startTime: number,
+			endTime: number
+		) -> Alpha,
+		Lerp: <T>(
+			self: Alpha,
+			startValue: T,
+			goalValue: T
+		) -> Observable<T>
 	}}
 ))
+export type Stopwatch = BaseTimer
+export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
