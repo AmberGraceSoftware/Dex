@@ -32,7 +32,7 @@ function Timer.__index.Alpha(
     startElapsed: number?,
     endElapsed: number?
 ): Alpha
-    return Alpha.new(self, durationStart or 0, durationEnd or self._duration)
+    return Alpha.new(self, startElapsed or 0, endElapsed or self._duration)
 end
 
 --[[
@@ -65,7 +65,7 @@ function Timer.new(duration: number): Timer
         startClockTime = 0,
         resumeAtElapsed = 0,
     })
-    local function resolveCurrent(_current: typeof(playState:Current())?)
+    local function getCurrent(_current: typeof(playState:Current())?)
         -- Since we are calling the Observable constructor, _duration
         -- initializes to nil first resolution.
         local durationCurrent = self._duration or duration
@@ -76,7 +76,7 @@ function Timer.new(duration: number): Timer
         end
         return math.max(0, durationCurrent - current.resumeAtElapsed)
     end
-    local function beginObserving(update: (number) -> ())
+    local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
         local function playStateChanged(current: typeof(playState:Current()))
             if current.playing then
@@ -89,9 +89,8 @@ function Timer.new(duration: number): Timer
                                 startClockTime = 0,
                                 resumeAtElapsed = 0,
                             })
-                        else
-                            update(math.max(0, self._duration - elapsed))
                         end
+                        notifyUpdate()
                     end)
                 end
             else
@@ -99,7 +98,7 @@ function Timer.new(duration: number): Timer
                     heartbeatConn:Disconnect()
                 end
             end
-            update(resolveCurrent(current))
+            notifyUpdate()
         end
         local unsubscribe = playState:Subscribe(playStateChanged)
         playStateChanged(playState:Current())
@@ -112,8 +111,8 @@ function Timer.new(duration: number): Timer
         end
     end
     self = Observable.new(
-        beginObserving,
-        resolveCurrent
+        getCurrent,
+        createUpdateStream
     ) :: any
     self._duration = duration
     self._playState = playState

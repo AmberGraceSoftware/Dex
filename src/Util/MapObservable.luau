@@ -45,33 +45,31 @@ type ReturnType = (<Return, D1>(
 	The final argument is the mapping function, which takes the values of the
 	Observables and returns a new value.
 ]]
-local MapObservable: ReturnType = function(...)
+local MapObservable: ReturnType = function(...: any): Observable<any>
 	local args = table.pack(...)
 	local depCount = args.n - 1
 	local map = args[args.n]
 
-	local function currentValue()
+	local function getCurrent()
 		local values = table.create(depCount)
 		for i = 1, depCount do
 			table.insert(values, args[i]:Current())
 		end
 		return map(table.unpack(values))
 	end
-
-	local observable = Observable.new(currentValue())
-	local function onUpdate()
-		local next = currentValue()
-		if observable._current == next then
-			return
+	local function createUpdateStream(notifyUpdate: () -> ())
+		local unsubscribes = {}
+		for i = 1, depCount do
+			table.insert(unsubscribes, args[i]:Subscribe(notifyUpdate))
 		end
-		observable._current = next
+		return function()
+			for _, unsubscribe in unsubscribes do
+				unsubscribe()
+			end
+		end
 	end
 
-	for i = 1, depCount do
-		args[i]:Subscribe(onUpdate)
-	end
-
-	error("Not implemented yet!")
+	return Observable.new(getCurrent, createUpdateStream)
 end :: any
 
 return MapObservable

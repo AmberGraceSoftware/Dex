@@ -6,10 +6,10 @@ export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
 export type Observable<T = any> = typeof(setmetatable(
 	{} :: {
-        _lastValue: T,
-        _getCurrentUnobserved: () -> T,
-        _beginObserving: (update: (value: T) -> ()) -> Unsubscribe,
-        _stopObserving: Unsubscribe?,
+		_cachedValue: T,
+        _getCurrent: () -> T,
+        _createUpdateStream: (notifyChange: () -> ()) -> Unsubscribe,
+        _closeUpdateStream: Unsubscribe?,
 		_listeners: Set<(newValue: T) -> ()>,
 		_destroyed: boolean?,
 	},
@@ -19,6 +19,7 @@ export type Observable<T = any> = typeof(setmetatable(
 		Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
 		Current: (self: Observable<T>) -> T,
 		Destroy: (self: Observable<T>) -> (),
+		Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
 	}}
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
@@ -31,18 +32,15 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 ))
 export type Spring<T = any> = Observable<T> & typeof(setmetatable(
 	{} :: {
-		_angularFrequency: number,
-		_current: T,
-		_target: T,
-		_snapToGoalTheshold: number?,
+		_angularFrequency: any, -- CanBeObservable<number>
+		_damping: any, -- CanBeObservable<number>
+		_target: Observable<T>,
+		_snapToGoalTheshold: any, -- CanBeObservable<number>?
 	},
 	{} :: {__index: {
-		_snapToGoalTheshold: number,
-		SetAngularFrequency: (self: State<T>, number) -> (),
-		CurrentAngularFrequency: (self: State<T>) -> number,
-		SetTarget: (self: State<T>, target: T) -> (),
 		CurrentTarget: (self: State<T>) -> T,
 		SetPosition: (self: State<T>, position: T) -> (),
+		ResetVelocity: (self: State<T>) -> (),
 	}}
 ))
 export type Alpha = Observable<number> & typeof(setmetatable(

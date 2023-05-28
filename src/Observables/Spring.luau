@@ -2,7 +2,8 @@
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 
-export type Spring<T> = Types.Spring<T>
+type Spring<T> = Types.Spring<T>
+type State<T> = Types.State<T>
 
 local Spring = {}
 Spring.__index = {}
@@ -81,13 +82,14 @@ Spring.__index.Destroy = Observable.__index.Destroy
 
     Creates a new Spring Observable with the given initial value and angular frequency.
 ]]
-function Spring.new<T>(initialValue: T, angularFrequency: number): Spring<T>
+function Spring.new<T>(
+    initialValue: State<T> | T,
+    angularFrequency: State<number> | number
+): Spring<T>
     return setmetatable({
-        _current = initialValue,
+        _lastValue = initialValue,
         _angularFrequency = angularFrequency,
         _target = initialValue,
-        _observerCount = 0,
-        -- _snapToGoalTheshold = nil,
     }, Spring :: any)
 end
 

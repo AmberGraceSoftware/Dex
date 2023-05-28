@@ -67,28 +67,26 @@ function BaseTimer.new(): BaseTimer
         startClockTime = 0,
         resumeAtElapsed = 0,
     })
-    local function resolveCurrent(_current: typeof(playState:Current())?)
+    local function getCurrent(_current: typeof(playState:Current())?)
         local current = _current or playState:Current()
         if current.playing then
             return os.clock() - current.startClockTime
         end
         return current.resumeAtElapsed
     end
-    local function beginObserving(update: (number) -> ())
+    local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
         local function playStateChanged(current: typeof(playState:Current()))
             if current.playing then
                 if not heartbeatConn then
-                    heartbeatConn = RunService.Heartbeat:Connect(function()
-                        update(os.clock() - current.startClockTime)
-                    end)
+                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
                 end
             else
                 if heartbeatConn then
                     heartbeatConn:Disconnect()
                 end
             end
-            update(resolveCurrent(current))
+            notifyUpdate()
         end
         local unsubscribe = playState:Subscribe(playStateChanged)
         playStateChanged(playState:Current())
@@ -101,8 +99,8 @@ function BaseTimer.new(): BaseTimer
         end
     end
     local self: BaseTimer = Observable.new(
-        beginObserving,
-        resolveCurrent
+        getCurrent,
+        createUpdateStream
     ) :: any
     self._playState = playState
     setmetatable(self, BaseTimer)

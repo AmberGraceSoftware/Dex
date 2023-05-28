@@ -27,31 +27,28 @@ local function beginObservingIdempotent(self: Observable<any>)
     if self._destroyed then
         return
     end
-    if self._stopObserving then
+    if self._closeUpdateStream then
         return
     end
     task.spawn(function()
-        self._stopObserving = self._beginObserving(function(newValue)
-            if self._lastValue == newValue then
+        local function notifyUpdate()
+            local newValue = self._getCurrent()
+            if self._cachedValue == newValue then
                 return
             end
-            self._lastValue = newValue
+            self._cachedValue = newValue
             callListenersSafe(self._listeners, newValue)
-        end)
-
-        local initValue = self._getCurrentUnobserved()
-        if self._lastValue ~= initValue then
-            self._lastValue = initValue
-            callListenersSafe(self._listeners, initValue)
         end
+        notifyUpdate()
+        self._closeUpdateStream = self._createUpdateStream(notifyUpdate)
     end)
 end
 local function stopObservingIdempotent(self: Observable<any>)
-    if not self._stopObserving then
+    if not self._closeUpdateStream then
         return
     end
-    self._stopObserving()
-    self._stopObserving = nil
+    self._closeUpdateStream()
+    self._closeUpdateStream = nil
 end
 
 --[[
@@ -60,12 +57,28 @@ end
     Returns the current value of the Observable.
 ]]
 function Observable.__index.Current(self: Observable<any>): any
-    if self._stopObserving then
-        return self._lastValue
+    if self._closeUpdateStream then
+        return self._cachedValue
     else
-        return self._getCurrentUnobserved()
+        return self._getCurrent()
     end
 end
+
+--[[
+    @param mappingFunction: (value: T) -> any - The function to map the value of the observable.
+    @return Observable<any> - An Observable that emits the mapped values.
+
+    Creates a new Observable that emits the values from the original Observable mapped by the provided function.
+]]
+function Observable.__index.Map(
+    self: Observable<any>,
+    mappingFunction: (value: any) -> any
+): Observable<any>
+    -- Lazy-load to prevent circular dependency.
+    local MapObservable = (require :: any)(script.Parent.Parent.Util.MapObservable)
+    return MapObservable(self, mappingFunction)
+end
+
 
 --[[
     @param callback: (value: T) -> () - The function to call when the observable changes.
@@ -115,14 +128,14 @@ end
     Observables are used to hold, derive, or map state within a Dec application.
 ]]
 function Observable.new<T>(
-    beginObserving: (update: (value: T) -> ()) -> Unsubscribe,
-    getCurrentUnobserved: () -> T
+    getCurrent: () -> T,
+    createUpdateStream: (notifyChange: () -> ()) -> Unsubscribe
 ): Observable<T>
     return setmetatable({
-        _lastValue = getCurrentUnobserved(),
-        _getCurrentUnobserved = getCurrentUnobserved,
-        _beginObserving = beginObserving,
-        _stopObserving = nil :: Unsubscribe?,
+        _cachedValue = getCurrent(),
+        _getCurrent = getCurrent,
+        _closeUpdateStream = nil :: Unsubscribe?,
+        _createUpdateStream = createUpdateStream,
         _listeners = {},
     }, Observable)
 end
