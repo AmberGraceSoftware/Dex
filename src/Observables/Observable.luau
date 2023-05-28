@@ -98,7 +98,12 @@ function Observable.__index.Subscribe(
     beginObservingIdempotent(self)
     self._listeners[callback] = true
 
+    local unsubscribed = false
     return function()
+        if unsubscribed then
+            return
+        end
+        unsubscribed = true
         self._listeners[callback] = nil
         if not next(self._listeners) then
             stopObservingIdempotent(self)
