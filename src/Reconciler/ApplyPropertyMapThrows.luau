@@ -10,13 +10,12 @@ local function applyNilSymbol(value: any): any
 end
 
 --[[
-    @param reconciledNode: Dec.ReconciledNode - The reconciled node to apply
-        the property map to. Connections and observable cleanups are stored
-        here.
-    @param propMap: {[string]: any} - The property map to apply to the
-        VirtualInstance.
-    Applies a property map to a VirtualInstance, catching any Roblox engine
-    errors. If an error occurs, it will be logged to the console traced to
+    @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
+    @param propMAp: {[string]: any} - The property map to apply to the VirtualInstance
+    @return void
+
+    Applies a property map to a VirtualInstance, throwing any Roblox engine
+    errors. If an error occurs, it should be logged to the console traced to
     the line of code where the VirtualInstance was created.
 
     Certain properties (such as Parent) will be applied last.

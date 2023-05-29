@@ -1,7 +1,7 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Parent.Observables.Observable)
-local IsObservable = require(script.Parent.IsObservable)
+local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
 
 export type Observable<T> = Types.Observable<T>
 export type CanBeObservable<T> = Types.CanBeObservable<T>
