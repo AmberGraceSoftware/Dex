@@ -18,12 +18,19 @@ local linearSpringStep: StepMethod = function(angularFrequency, easingFrame)
     local deltaTime = easingFrame.previousElapsed
     local position = easingFrame.previousValue
     local velocity = easingFrame.previousVelocity
-    local offset = position - easingFrame.goalValue
+    local goalPosition = easingFrame.goalValue
+    local offset = position - goalPosition
     local divisorCoefficient = (1 + angularFrequency * deltaTime)
     local nextVelocity =
         (velocity - angularFrequency * angularFrequency * deltaTime * offset)
         / (divisorCoefficient * divisorCoefficient)
     local nextPosition = position + nextVelocity * deltaTime
+
+    -- Snap to target value within certain threshold range
+    local epsilon = 0.01 / angularFrequency
+    if math.abs(nextPosition - goalPosition) < epsilon then
+        return goalPosition
+    end
 
     return nextPosition, nextVelocity
 end
