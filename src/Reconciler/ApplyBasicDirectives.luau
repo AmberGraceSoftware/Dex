@@ -6,6 +6,8 @@ local ApplyAttributeMapThrows = require(script.Parent.ApplyAttributeMapThrows)
 local ApplyTagListThrows = require(script.Parent.ApplyTagListThrows)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
 local OutputPropertyThrows = require(script.Parent.OutputPropertyThrows)
+local OutputAttributeThrows = require(script.Parent.OutputAttributeThrows)
+local OutputInstanceRefThrows = require(script.Parent.OutputInstanceRefThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -26,19 +28,27 @@ handleDirective.Attributes = ApplyAttributeMapThrows
 handleDirective.TagList = ApplyTagListThrows
 handleDirective.Connect = ConnectEventThrows
 handleDirective.OutProperty = OutputPropertyThrows
+handleDirective.OutAttribute = OutputAttributeThrows
+handleDirective.OutInstance = OutputInstanceRefThrows
 
+local typeToPriority: {[string]: (payload: any) -> number} = {
+    ["OutProperty"] = function(payload)
+        return if payload.once then 1 else 3
+    end,
+    ["OutAttribute"] = function(payload)
+        return if payload.once then 1 else 3
+    end,
+    ["OutInstance"] = function()
+        return 3
+    end,
+    ["default"] = function()
+        return 2
+    end,
+}
 local function getDirectivePriority(directive: {_type: string, _payload: any})
-    if (directive._type == "OutProperty")
-    or (directive._type == "OutAttribute")
-    or (directive._type == "OutInstance") then
-        if directive._payload.once then
-            return 1
-        else
-            return 3
-        end
-    end
-
-    return 2
+    local getPriority = typeToPriority[directive._type]
+        or typeToPriority.default
+    return getPriority(directive._payload)
 end
 
 local function ApplyBasicDirectives(
