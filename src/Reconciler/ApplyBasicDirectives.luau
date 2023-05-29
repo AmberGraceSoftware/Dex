@@ -8,6 +8,8 @@ local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
 local OutputPropertyThrows = require(script.Parent.OutputPropertyThrows)
 local OutputAttributeThrows = require(script.Parent.OutputAttributeThrows)
 local OutputInstanceRefThrows = require(script.Parent.OutputInstanceRefThrows)
+local HandleOnMountCallbackThrows = require(script.Parent.HandleOnMountCallbackThrows)
+local HandleOnUnmountCallbackThrows = require(script.Parent.HandleOnUnmountCallbackThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -30,6 +32,8 @@ handleDirective.Connect = ConnectEventThrows
 handleDirective.OutProperty = OutputPropertyThrows
 handleDirective.OutAttribute = OutputAttributeThrows
 handleDirective.OutInstance = OutputInstanceRefThrows
+handleDirective.OnMount = HandleOnMountCallbackThrows
+handleDirective.OnUnmount = HandleOnUnmountCallbackThrows
 
 local typeToPriority: {[string]: (payload: any) -> number} = {
     ["OutProperty"] = function(payload)
@@ -40,6 +44,9 @@ local typeToPriority: {[string]: (payload: any) -> number} = {
     end,
     ["OutInstance"] = function()
         return 3
+    end,
+    ["OnMount"] = function()
+        return 4
     end,
     ["default"] = function()
         return 2
