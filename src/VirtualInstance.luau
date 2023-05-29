@@ -140,7 +140,7 @@ function VirtualInstance.__index.AddTags(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "Tags",
+        _type = "TagList",
         _payload = tags,
         _trace = getTrace("VirtualInstance:AddTags", 1),
     })

@@ -1,6 +1,9 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
 local EmitTracedError = require(script.Parent.EmitTracedError)
+local ApplyPropertyMapThrows = require(script.Parent.ApplyPropertyMapThrows)
+local ApplyAttributeMapThrows = require(script.Parent.ApplyAttributeMapThrows)
+local ApplyTagListThrows = require(script.Parent.ApplyTagListThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -13,12 +16,14 @@ type ReconciledNode = Types.ReconciledNode
     process.
 ]]
 local handleDirective: {[string]: (
-    instance: Instance,
     node: ReconciledNode,
     payload: any
 ) -> ()} = {}
+handleDirective.Properties = ApplyPropertyMapThrows
+handleDirective.Attributes = ApplyAttributeMapThrows
+handleDirective.TagList = ApplyTagListThrows
+
 local function ApplyBasicDirectives(
-    instance: Instance,
     virtualInstance: VirtualInstance,
     node: ReconciledNode,
     debugLevel: number
@@ -33,7 +38,7 @@ local function ApplyBasicDirectives(
             )
         end
         local success, err = pcall(
-            handler :: any, instance, node, directive._payload
+            handler :: any, node, directive._payload
         )
         if not success then
             EmitTracedError(
