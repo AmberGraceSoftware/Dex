@@ -25,20 +25,13 @@ end
 Stopwatch.__index._decobservabletype = "Stopwatch"
 
 --[[
-    @param endElapsedTime: number - The end elapsed time.
-    @return Dec.Alpha - An Alpha observable object that maps the elapsed time from 0 (start) to 1 (end).
-    
-    Derives an Alpha observable object based on the current elapsed time of this
-    stopwatch.
+    @return Dec.Alpha
+
+    Derives an Alpha observable object that maps the duration from 0 (start) to
+    1 (finish)
 ]]
-function Stopwatch.__index.Alpha(
-    self: Stopwatch,
-    param1: number,
-    param2: number?
-): Alpha
-    local startElapsedTime = param2 or 0
-    local endElapsedTime = if param2 then param2 else param1
-    return Alpha.new(self, startElapsedTime, endElapsedTime)
+function Stopwatch.__index.Alpha(self: Stopwatch): Alpha
+    return Alpha.new(self, 0, self._duration)
 end
 
 --[[
