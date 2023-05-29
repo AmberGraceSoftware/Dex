@@ -61,7 +61,7 @@ local function AngleSpring<T>(
         )
     end
 
-    local _angularFrequency = angularFrequency or 10
+    local _angularFrequency = angularFrequency or math.pi * 2
     return CreateEasedObject(
         target,
         function(easingFrame)
