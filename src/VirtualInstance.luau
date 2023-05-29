@@ -62,23 +62,6 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
         )
     end
 end
-local function parsePath(path: ChildPath): {string}
-    if typeof(path) == "table" then
-        local parsed = table.create(#path)
-        for _, pathKey in path do
-            if typeof(pathKey) == "string" then
-                table.insert(parsed, pathKey)
-            else
-                table.insert(parsed, tostring(pathKey))
-            end
-        end
-        return parsed
-    elseif typeof(path) == "number" then
-        return {tostring(path)}
-    else
-        return {path}
-    end
-end
 
 local VirtualInstance = {}
 VirtualInstance.__index = {}
@@ -342,11 +325,7 @@ function VirtualInstance.__index.DeepCopy(
     assertNotYetMounted(self)
     local copy = self:Copy()
     for _, directive in copy._directives do
-        if directive._type == "Child" then
-            if directive._payload._dectype == "VirtualInstance" then
-                directive._payload.child = directive._payload.child:DeepCopy()
-            end
-        elseif directive._type == "Children" then
+        if directive._type == "Children" then
             for _, child in directive._payload do
                 if child._dectype == "VirtualInstance" then
                     child = child:DeepCopy()
@@ -380,11 +359,8 @@ function VirtualInstance.__index.AddChild(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "Child",
-        _payload = {
-            path = parsePath(path),
-            child = child,
-        },
+        _type = "Children",
+        _payload = {[path] = child},
         _trace = getTrace("VirtualInstance:AddChild", 1),
     })
 end

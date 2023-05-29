@@ -34,6 +34,7 @@ handleDirective.OutAttribute = OutputAttributeThrows
 handleDirective.OutInstance = OutputInstanceRefThrows
 handleDirective.OnMount = HandleOnMountCallbackThrows
 handleDirective.OnUnmount = HandleOnUnmountCallbackThrows
+handleDirective.Children = function() end
 
 local typeToPriority: {[string]: (payload: any) -> number} = {
     ["OutProperty"] = function(payload)
