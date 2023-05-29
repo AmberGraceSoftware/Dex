@@ -1,6 +1,7 @@
 --!strict
 
 local Types = require(script.Parent.Types)
+local State = require(script.Parent.Observables.State)
 
 type VirtualInstanceTrace = Types.VirtualInstanceTrace
 type VirtualInstance = Types.VirtualInstance
@@ -176,12 +177,13 @@ end
 
     Outputs a property from the reconciled instance to a Dec State object.
 ]]
-function VirtualInstance.__index.OutProperty(
+function VirtualInstance.__index.OutProperty<T>(
     self: VirtualInstance,
     propertyName: string,
-    outState: State<any>
-): ()
+    initialValue: T
+): Observable<T>
     assertNotYetMounted(self)
+    local outState = State.new(initialValue)
     table.insert(self._directives, {
         _type = "OutProperty",
         _payload = {
@@ -190,6 +192,7 @@ function VirtualInstance.__index.OutProperty(
         },
         _trace = getTrace("VirtualInstance:OutProperty", 1),
     })
+    return outState
 end
 
 --[[
@@ -199,11 +202,12 @@ end
 
     Outputs an attribute from the reconciled instance to a Dec State object.
 ]]
-function VirtualInstance.__index.OutAttribute(
+function VirtualInstance.__index.OutAttribute<T>(
     self: VirtualInstance,
     propertyName: string,
-    outState: State<any>
-): ()
+    initialValue: T
+): Observable<T>
+    local outState = State.new(initialValue)
     assertNotYetMounted(self)
     table.insert(self._directives, {
         _type = "OutAttribute",
@@ -213,6 +217,7 @@ function VirtualInstance.__index.OutAttribute(
         },
         _trace = getTrace("VirtualInstance:OutAttribute", 1),
     })
+    return outState
 end
 
 --[[
@@ -222,15 +227,16 @@ end
     Outputs a reference to the reconciled instance to a Dec State object.
 ]]
 function VirtualInstance.__index.OutInstance(
-    self: VirtualInstance,
-    outState: State<Instance> | State<Instance?>
-): ()
+    self: VirtualInstance
+): Observable<any?>
     assertNotYetMounted(self)
+    local outState = State.new(nil :: Instance?)
     table.insert(self._directives, {
         _type = "OutInstance",
         _payload = outState,
         _trace = getTrace("VirtualInstance:OutInstance", 1),
     })
+    return outState
 end
 
 --[[
