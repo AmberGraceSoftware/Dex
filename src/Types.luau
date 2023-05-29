@@ -231,20 +231,15 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
     }}
 ))
-export type ReconciledNode = typeof(setmetatable(
-    {} :: {
-        _connections: {RBXScriptConnection},
-        _unsubscribes: {Unsubscribe},
-        _instances: {Instance},
-        _instance: Instance,
-        _rootInstance: Instance,
-        _childPath: string?,
-    },
-    {} :: {__index: {
-        _dectype: string,
-        Destroy: (self: ReconciledNode) -> (),
-    }}
-))
+export type ReconciledNode = {
+    _connections: {RBXScriptConnection},
+    _unsubscribes: {Unsubscribe},
+    _instances: {Instance},
+    _instance: Instance,
+    _rootInstance: Instance,
+    _childPath: string?,
+    _dectype: string,
+}
 export type Symbol<Name> = typeof(setmetatable(
     {} :: {
         _name: Name,

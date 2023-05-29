@@ -24,14 +24,21 @@ local function parsePath(path: ChildPath): {string}
 end
 
 --[[
-    @param instance: Instance - The instance to apply virtual instance directives on
+    @param node: ReconciledNode - The reconciled node to apply child directives on
     @param vInst: VirtualInstance - The virtual instances to read directives from
-    @param node: ReconciledNode - The reconciled node to output unmount tasks to
+    @param debugLevel: number - The error level to emit any errors when encountered
 
-    Reconciles all Child directives on a virtual instance during the mounting
+    Reconciles all Children directives on a virtual instance during the mounting
     process.
 ]]
-local function ApplyChildDirectives()
+local function ApplyChildDirectives(
+    node: ReconciledNode,
+    virtualInstance: VirtualInstance,
+    debugLevel: number
+)
+    local RenderVirtualInstance = (require :: any)(script.Parent.RenderVirtualInstance)
+
+    error("Not Implemented Yet!")
 end
 
 return ApplyChildDirectives

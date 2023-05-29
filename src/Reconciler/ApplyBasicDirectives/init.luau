@@ -63,8 +63,8 @@ local function getDirectivePriority(directive: {_type: string, _payload: any})
 end
 
 local function ApplyBasicDirectives(
-    virtualInstance: VirtualInstance,
     node: ReconciledNode,
+    virtualInstance: VirtualInstance,
     debugLevel: number
 )
     debugLevel += 1

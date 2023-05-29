@@ -1,5 +1,8 @@
 --!strict
 
+local ApplyBasicDirectives = require(script.Parent.ApplyBasicDirectives)
+local ApplyChildDirectives = require(script.Parent.ApplyChildDirectives)
+local CreateReconciledNode = require(script.Parent.CreateReconciledNode)
 local Types = require(script.Parent.Parent.Types)
 
 type VirtualInstance = Types.VirtualInstance
@@ -22,7 +25,16 @@ local function MountVirtualInstance(
 ): ReconciledNode
     debugLevel += 1
     
-    error("Not implemented yet")
+    local instance: Instance
+    local node = CreateReconciledNode(
+        instance,
+        rootInstance,
+        childPath
+    )
+    ApplyBasicDirectives(node, virtualInstance, debugLevel)
+    ApplyChildDirectives(node, virtualInstance, debugLevel)
+    
+    return node
 end
 
 return MountVirtualInstance
