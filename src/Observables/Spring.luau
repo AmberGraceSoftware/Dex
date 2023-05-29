@@ -12,13 +12,12 @@ type StepMethod = (
 local linearSpringStep: StepMethod = function(angularFrequency, easingFrame)
     local deltaTime = easingFrame.previousElapsed
     local position = easingFrame.previousValue
+    local velocity = easingFrame.previousVelocity
     local offset = position - easingFrame.goalValue
-    local divisorCoefficient
-        = (1 + angularFrequency * deltaTime)
-    local nextVelocity = (
-        easingFrame.previousVelocity
-            - angularFrequency * angularFrequency * deltaTime * offset
-    ) / (divisorCoefficient * divisorCoefficient)
+    local divisorCoefficient = (1 + angularFrequency * deltaTime)
+    local nextVelocity =
+        (velocity - angularFrequency * angularFrequency * deltaTime * offset)
+        / (divisorCoefficient * divisorCoefficient)
     local nextPosition = position + nextVelocity * deltaTime
 
     return nextPosition, nextVelocity
