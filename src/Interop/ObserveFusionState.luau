@@ -1,6 +1,6 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
-local State = require(script.Parent.Parent.Observables.State)
+local Observable = require(script.Parent.Parent.Observables.Observable)
 
 export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
@@ -24,14 +24,15 @@ export type Unsubscribe = Types.Unsubscribe
 local function ObserveFusionState<T>(
     Fusion: {Observer: any},
     fusionStateObject: {get: (self: any) -> T}
-): (Observable<T>, Unsubscribe)
-    local state = State.new(fusionStateObject:get())
-
-    local unsubscribe = Fusion.Observer(fusionStateObject):onChange(function()
-        state:Set(fusionStateObject:get())
-    end)
-    
-    return state, unsubscribe
+): Observable<T>
+    return Observable.new(
+        function()
+            return fusionStateObject:get()
+        end,
+        function(notifyUpdate)
+            return Fusion.Observer(fusionStateObject):onChange(notifyUpdate)
+        end
+    )
 end
 
 return ObserveFusionState
