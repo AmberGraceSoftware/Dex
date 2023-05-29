@@ -194,6 +194,7 @@ function VirtualInstance.__index.OutProperty(
         _payload = {
             property = propertyName,
             state = outState,
+            once = false,
         },
         _trace = getTrace("VirtualInstance:OutProperty", 1),
     })
@@ -221,10 +222,11 @@ function VirtualInstance.__index.OutInitialProperty(
     assertNotYetMounted(self)
     local outState = State.new(initialValue)
     table.insert(self._directives, {
-        _type = "OutInitialProperty",
+        _type = "OutProperty",
         _payload = {
             property = propertyName,
             state = outState,
+            once = true,
         },
         _trace = getTrace("VirtualInstance:OutInitialProperty", 1),
     })
@@ -255,6 +257,7 @@ function VirtualInstance.__index.OutAttribute(
         _payload = {
             attribute = propertyName,
             state = outState,
+            once = false,
         },
         _trace = getTrace("VirtualInstance:OutAttribute", 1),
     })
@@ -282,10 +285,11 @@ function VirtualInstance.__index.OutInitialAttribute(
     local outState = State.new(initialValue)
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "OutInitialAttribute",
+        _type = "OutAttribute",
         _payload = {
             attribute = propertyName,
             state = outState,
+            once = true
         },
         _trace = getTrace("VirtualInstance:OutInitialAttribute", 1),
     })

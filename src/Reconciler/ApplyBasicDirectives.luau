@@ -5,6 +5,7 @@ local ApplyPropertyMapThrows = require(script.Parent.ApplyPropertyMapThrows)
 local ApplyAttributeMapThrows = require(script.Parent.ApplyAttributeMapThrows)
 local ApplyTagListThrows = require(script.Parent.ApplyTagListThrows)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
+local OutputPropertyThrows = require(script.Parent.OutputPropertyThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -24,6 +25,21 @@ handleDirective.Properties = ApplyPropertyMapThrows
 handleDirective.Attributes = ApplyAttributeMapThrows
 handleDirective.TagList = ApplyTagListThrows
 handleDirective.Connect = ConnectEventThrows
+handleDirective.OutProperty = OutputPropertyThrows
+
+local function getDirectivePriority(directive: {_type: string, _payload: any})
+    if (directive._type == "OutProperty")
+    or (directive._type == "OutAttribute")
+    or (directive._type == "OutInstance") then
+        if directive._payload.once then
+            return 1
+        else
+            return 3
+        end
+    end
+
+    return 2
+end
 
 local function ApplyBasicDirectives(
     virtualInstance: VirtualInstance,
@@ -31,23 +47,32 @@ local function ApplyBasicDirectives(
     debugLevel: number
 )
     debugLevel += 1
+    local directivesByPriority = {{}, {}, {}}
     for _, directive in virtualInstance._directives do
-        local handler = handleDirective[directive._type]
-        if not handler then
+        if not handleDirective[directive._type] then
             error(
                 "Reconciler method not implemented yet for directive type '"
                 .. directive._type .. "'"
             )
         end
-        local success, err = pcall(
-            handler :: any, node, directive._payload
+        table.insert(
+            directivesByPriority[getDirectivePriority(directive)],
+            directive
         )
-        if not success then
-            EmitTracedError(
-                "Error when mounting VirtualInstance:\n" .. err,
-                directive._trace,
-                debugLevel
+    end
+    for _, directiveList in directivesByPriority do
+        for _, directive in directiveList do
+            local handler = handleDirective[directive._type]
+            local success, err = pcall(
+                handler :: any, node, directive._payload
             )
+            if not success then
+                EmitTracedError(
+                    "Error when mounting VirtualInstance:\n" .. err,
+                    directive._trace,
+                    debugLevel
+                )
+            end
         end
     end
 end
