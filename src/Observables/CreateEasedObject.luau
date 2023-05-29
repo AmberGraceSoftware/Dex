@@ -16,6 +16,7 @@ export type EasingFunction<T> = (
 type LastGradient<T> = {
     startTime: number,
     startValue: T,
+    lastValue: any,
     goalValue: T,
     startVelocity: any,
     targetMet: boolean
@@ -30,7 +31,7 @@ local function getCurrent<T>(
     local goalValue = target:Current()
 
     if goalValue ~= lastGradient.goalValue then
-        lastGradient.startTime = currentTime
+        lastGradient.startTime = lastGradient.lastValue
         lastGradient.goalValue = goalValue
         lastGradient.startVelocity = 0
         lastGradient.targetMet = false
@@ -52,6 +53,7 @@ local function getCurrent<T>(
         else
             lastGradient.startVelocity = currentVelocity
         end
+        lastGradient.lastValue = currentValue
 
         return currentValue
     end
@@ -120,6 +122,7 @@ local function CreateEasedObject<T>(
     local lastGradient = {
         startTime = os.clock(),
         startValue = initialValue,
+        lastValue = initialValue,
         goalValue = initialValue,
         startVelocity = 0,
         targetMet = true

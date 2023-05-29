@@ -47,7 +47,7 @@ Dec.CustomObservable = Observable.new
 -- Realtime simulation observable utilities
 Dec.Spring = require(script.Observables.Spring)
 Dec.IntSpring = require(script.Observable.IntSpring)
-Dec.EasedValue = require(script.Observables.EasedValue)
+Dec.Eased = require(script.Observables.Eased)
 Dec.Stopwatch = require(script.Observables.Stopwatch)
 Dec.Timer = require(script.Observables.Timer)
 

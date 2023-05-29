@@ -1,37 +1,36 @@
 --!strict
 
 
-local function lerpUsingLinearMath(start: any, finish: any, alpha: number): any
+local function mathExpresionLerp(start: any, finish: any, alpha: number): any
     return start + (finish - start) * alpha
+end
+local function classMethodLerp(start: any, finish: any, alpha: number): any
+    return start:Lerp(finish, alpha)
 end
 local typeToInterpolator: {[string]: (
     start: any,
     finish: any,
     alpha: number
 ) -> any} = {
-    number = lerpUsingLinearMath,
-    Vector2 = lerpUsingLinearMath,
-    Vector2int16 = lerpUsingLinearMath,
-    Vector3 = lerpUsingLinearMath,
-    Vector3int16 = lerpUsingLinearMath,
-    CFrame = function(a: CFrame, b: CFrame, alpha)
-        return a:Lerp(b, alpha)
-    end,
-    Color3 = function(a: Color3, b: Color3, alpha)
-        return a:Lerp(b, alpha)
-    end,
+    number = mathExpresionLerp,
+    Vector2 = mathExpresionLerp,
+    Vector2int16 = mathExpresionLerp,
+    Vector3 = mathExpresionLerp,
+    Vector3int16 = mathExpresionLerp,
+    CFrame = classMethodLerp,
+    Color3 = classMethodLerp,
     UDim = function(a: UDim, b: UDim, alpha)
         return UDim.new(
-            lerpUsingLinearMath(a.Scale, b.Scale, alpha),
-            lerpUsingLinearMath(a.Offset, b.Offset, alpha)
+            mathExpresionLerp(a.Scale, b.Scale, alpha),
+            mathExpresionLerp(a.Offset, b.Offset, alpha)
         )
     end,
     UDim2 = function(a: UDim2, b: UDim2, alpha)
         return UDim2.new(
-            lerpUsingLinearMath(a.X.Scale, b.X.Scale, alpha),
-            lerpUsingLinearMath(a.X.Offset, b.X.Offset, alpha),
-            lerpUsingLinearMath(a.Y.Scale, b.Y.Scale, alpha),
-            lerpUsingLinearMath(a.Y.Offset, b.Y.Offset, alpha)
+            mathExpresionLerp(a.X.Scale, b.X.Scale, alpha),
+            mathExpresionLerp(a.X.Offset, b.X.Offset, alpha),
+            mathExpresionLerp(a.Y.Scale, b.Y.Scale, alpha),
+            mathExpresionLerp(a.Y.Offset, b.Y.Offset, alpha)
         )
     end,
     -- Follows the conventions of TweenService. This is useful for tweening:
@@ -44,10 +43,10 @@ local typeToInterpolator: {[string]: (
     end,
     Rect = function(a: Rect, b: Rect, alpha)
         return Rect.new(
-            lerpUsingLinearMath(a.Min.X, b.Min.X, alpha),
-            lerpUsingLinearMath(a.Min.Y, b.Min.Y, alpha),
-            lerpUsingLinearMath(a.Max.X, b.Max.X, alpha),
-            lerpUsingLinearMath(a.Max.Y, b.Max.Y, alpha)
+            mathExpresionLerp(a.Min.X, b.Min.X, alpha),
+            mathExpresionLerp(a.Min.Y, b.Min.Y, alpha),
+            mathExpresionLerp(a.Max.X, b.Max.X, alpha),
+            mathExpresionLerp(a.Max.Y, b.Max.Y, alpha)
         )
     end,
 }
