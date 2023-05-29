@@ -124,7 +124,7 @@ local function Spring<T>(
     local stepMethod = typeToSpringStepMethod[targetType]
     if not stepMethod then
         error(
-            "Invalid type for Spring easing observable: '" .. targetType .. "'"
+            "Data type '" .. targetType .. "' cannot be eased using Spring"
         )
     end
 
