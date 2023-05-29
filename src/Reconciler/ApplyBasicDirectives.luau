@@ -48,6 +48,9 @@ local typeToPriority: {[string]: (payload: any) -> number} = {
     ["OnMount"] = function()
         return 4
     end,
+    ["OnUnmount"] = function()
+        return 4
+    end,
     ["default"] = function()
         return 2
     end,
