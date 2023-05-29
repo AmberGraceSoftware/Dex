@@ -7,7 +7,10 @@ type State<T> = Types.State<T>
 
 local Spring = {}
 Spring.__index = {}
-Spring.__index._dectype = "Observable"
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Spring.__index :: any)[k] = v
+end
 Spring.__index._decobservabletype = "Spring"
 
 --[[

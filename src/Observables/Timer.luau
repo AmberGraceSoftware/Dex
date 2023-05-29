@@ -5,19 +5,23 @@ local BaseTimer = require(script.Parent.BaseTimer)
 local Alpha = require(script.Parent.Alpha)
 local State = require(script.Parent.State)
 local Observable = require(script.Parent.Observable)
+local MapObservable = require(script.Parent.Parent.Util.MapObservable)
+local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
-export type Timer = Types.Timer
-export type Alpha = Types.Alpha
+type Timer = Types.Timer
+type Alpha = Types.Alpha
+type Observable<T> = Types.Observable<T>
 
 local Timer = {}
 Timer.__index = {}
-Timer.__index.Start = BaseTimer.__index.Start
-Timer.__index.Stop = BaseTimer.__index.Stop
-Timer.__index.Pause = BaseTimer.__index.Pause
-Timer.__index.Subscribe = BaseTimer.__index.Subscribe
-Timer.__index.Map = BaseTimer.__index.Map
-Timer.__index.Destroy = BaseTimer.__index.Destroy
-Timer.__index._dectype = BaseTimer.__index._dectype
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Timer.__index :: any)[k] = v
+end
+-- Inherits BaseTimer
+for k, v in BaseTimer :: any do
+    (Timer.__index :: any)[k] = v
+end
 Timer.__index._decobservabletype = "Timer"
 
 --[[
@@ -46,10 +50,28 @@ function Timer.__index.SetDuration(self: Timer, duration: number): ()
     self._duration = duration
 end
 
+--[[
+    @return Observable<T> - The interpolated Observable.
 
-function Timer.__index.Current(self: Timer): number
-    local baseCurrent = BaseTimer.__index.Current(self)
-    return math.max(self._duration - baseCurrent, 0)
+    Creates an observable that outputs an interpolated value between
+    the start value and end value based on the current remaining time.
+]]
+function Timer.__index.Lerp<T>(
+    self: Timer,
+    startValue: T,
+    endValue: T
+): Observable<T>
+    local interpolator = PolymorphicLerp(typeof(startValue))
+    return MapObservable(
+        self,
+        function(current)
+            local alpha = 1 - math.clamp(
+                current / self._duration,
+                0, 1
+            )
+            return interpolator(startValue, endValue, alpha)
+        end
+    ) :: any
 end
 
 
@@ -117,7 +139,7 @@ function Timer.new(duration: number): Timer
     ) :: any
     self._duration = duration
     self._playState = playState
-    setmetatable(self, BaseTimer)
+    setmetatable(self, Timer)
     return self
 end
 

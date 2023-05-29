@@ -1,5 +1,6 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
+local Alpha = require(script.Parent.Alpha)
 
 export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
@@ -94,6 +95,7 @@ function BaseTimer.CurvedAlpha(
     easingStyle: Enum.EasingStyle,
     easingDirection: Enum.EasingDirection?
 ): Alpha
+
     -- Create Alpha observable for the current Timer/Stopwatch
     local alpha = self:Alpha()
     -- Apply easing
@@ -113,27 +115,11 @@ function BaseTimer.SliceAlpha(
     startTime: number,
     endTime: number
 ): Alpha
-    -- Create Alpha observable for the current Timer/Stopwatch
-    local alpha = self:Alpha()
-    -- Create the slice
-    return alpha:Slice(startTime / self._duration, endTime / self._duration)
-end
-
---[[
-    @return Observable<T> - The interpolated Observable.
-
-    Creates an observable that outputs an interpolated value between
-    the start value and end value based on the current elapsed (or remaining) time.
-]]
-function BaseTimer.Lerp<T>(
-    self: BaseTimer,
-    startValue: T,
-    endValue: T
-): Observable<T>
-    -- Create Alpha observable for the current Timer/Stopwatch
-    local alpha = self:Alpha()
-    -- Create the lerp observable
-    return alpha:Lerp(startValue, endValue)
+    return Alpha.new(
+        self,
+        startTime,
+        endTime
+    )
 end
 
 return BaseTimer

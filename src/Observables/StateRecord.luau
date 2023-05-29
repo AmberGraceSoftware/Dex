@@ -6,11 +6,10 @@ export type StateRecord<T> = Types.StateRecord<T>
 
 local StateRecord = {}
 StateRecord.__index = {}
--- StateRecord.__index.Current = Observable.__index.Current -- Overloaded
-StateRecord.__index.Subscribe = Observable.__index.Subscribe
-StateRecord.__index.Map = Observable.__index.Map
-StateRecord.__index.Destroy = Observable.__index.Destroy
-StateRecord.__index._dectype = Observable.__index._dectype
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (StateRecord.__index :: any)[k] = v
+end
 StateRecord.__index._decobservabletype = "StateRecord"
 
 --[[

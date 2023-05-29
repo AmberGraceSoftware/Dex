@@ -5,23 +5,23 @@ local Observable = require(script.Parent.Observable)
 local BaseTimer = require(script.Parent.BaseTimer)
 local Alpha = require(script.Parent.Alpha)
 local State = require(script.Parent.State)
+local MapObservable = require(script.Parent.Parent.Util.MapObservable)
+local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
-export type Stopwatch = Types.Stopwatch
-export type Alpha = Types.Alpha
+type Stopwatch = Types.Stopwatch
+type Alpha = Types.Alpha
+type Observable<T> = Types.Observable<T>
 
 local Stopwatch = {}
 Stopwatch.__index = {}
-Stopwatch.__index.Start = BaseTimer.Start
-Stopwatch.__index.Stop = BaseTimer.Stop
-Stopwatch.__index.Pause = BaseTimer.Pause
-Stopwatch.__index.EaseAlpha = BaseTimer.EaseAlpha
-Stopwatch.__index.SliceAlpha = BaseTimer.SliceAlpha
-Stopwatch.__index.Lerp = BaseTimer.Lerp
-Stopwatch.__index.Current = Observable.__index.Current
-Stopwatch.__index.Subscribe = Observable.__index.Subscribe
-Stopwatch.__index.Map = Observable.__index.Map
-Stopwatch.__index.Destroy = Observable.__index.Destroy
-Stopwatch.__index._dectype = Observable.__index._dectype
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Stopwatch.__index :: any)[k] = v
+end
+-- Inherits BaseTimer
+for k, v in BaseTimer :: any do
+    (Stopwatch.__index :: any)[k] = v
+end
 Stopwatch.__index._decobservabletype = "Stopwatch"
 
 --[[
@@ -39,6 +39,30 @@ function Stopwatch.__index.Alpha(
     local startElapsedTime = param2 or 0
     local endElapsedTime = if param2 then param2 else param1
     return Alpha.new(self, startElapsedTime, endElapsedTime)
+end
+
+--[[
+    @return Observable<T> - The interpolated Observable.
+
+    Creates an observable that outputs an interpolated value between
+    the start value and end value based on the current elapsed time.
+]]
+function Stopwatch.__index.Lerp<T>(
+    self: Stopwatch,
+    startValue: T,
+    endValue: T
+): Observable<T>
+    local interpolator = PolymorphicLerp(typeof(startValue))
+    return MapObservable(
+        self,
+        function(current)
+            local alpha = math.clamp(
+                current / self._duration,
+                0, 1
+            )
+            return interpolator(startValue, endValue, alpha)
+        end
+    ) :: any
 end
 
 --[[

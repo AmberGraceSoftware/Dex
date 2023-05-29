@@ -6,11 +6,10 @@ export type State<T> = Types.State<T>
 
 local State = {}
 State.__index = {}
-State.__index.Current = Observable.__index.Current
-State.__index.Subscribe = Observable.__index.Subscribe
-State.__index.Map = Observable.__index.Map
-State.__index.Destroy = Observable.__index.Destroy
-State.__index._dectype = Observable.__index._dectype
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (State.__index :: any)[k] = v
+end
 State.__index._decobservabletype = "State"
 
 --[[

@@ -3,17 +3,17 @@ local TweenService = game:GetService("TweenService")
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 local MapObservable = require(script.Parent.Parent.Util.MapObservable)
+local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 local Alpha = {}
 Alpha.__index = {}
-Alpha.__index.Current = Observable.__index.Current
-Alpha.__index.Subscribe = Observable.__index.Subscribe
-Alpha.__index.Map = Observable.__index.Map
-Alpha.__index.Destroy = Observable.__index.Destroy
-Alpha.__index._dectype = Observable.__index._dectype
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Alpha.__index :: any)[k] = v
+end
 Alpha.__index._decobservabletype = "Alpha"
 
 --[[
@@ -87,56 +87,6 @@ function Alpha.__index.Invert(
     return inverted
 end
 
-local function lerpUsingLinearMath(start: any, finish: any, alpha: number): any
-    return start + (finish - start) * alpha
-end
-local typeToInterpolator: {[string]: (
-    start: any,
-    finish: any,
-    alpha: number
-) -> any} = {
-    number = lerpUsingLinearMath,
-    Vector2 = lerpUsingLinearMath,
-    Vector2int16 = lerpUsingLinearMath,
-    Vector3 = lerpUsingLinearMath,
-    Vector3int16 = lerpUsingLinearMath,
-    CFrame = function(a: CFrame, b: CFrame, alpha)
-        return a:Lerp(b, alpha)
-    end,
-    Color3 = function(a: Color3, b: Color3, alpha)
-        return a:Lerp(b, alpha)
-    end,
-    UDim = function(a: UDim, b: UDim, alpha)
-        return UDim.new(
-            lerpUsingLinearMath(a.Scale, b.Scale, alpha),
-            lerpUsingLinearMath(a.Offset, b.Offset, alpha)
-        )
-    end,
-    UDim2 = function(a: UDim2, b: UDim2, alpha)
-        return UDim2.new(
-            lerpUsingLinearMath(a.X.Scale, b.X.Scale, alpha),
-            lerpUsingLinearMath(a.X.Offset, b.X.Offset, alpha),
-            lerpUsingLinearMath(a.Y.Scale, b.Y.Scale, alpha),
-            lerpUsingLinearMath(a.Y.Offset, b.Y.Offset, alpha)
-        )
-    end,
-    -- Follows the conventions of TweenService. This is useful for tweening:
-    -- { Visible = false }
-    boolean = function(a: boolean, b: boolean, alpha)
-        if a ~= b then
-            return alpha < 1
-        end
-        return a
-    end,
-    Rect = function(a: Rect, b: Rect, alpha)
-        return Rect.new(
-            lerpUsingLinearMath(a.Min.X, b.Min.X, alpha),
-            lerpUsingLinearMath(a.Min.Y, b.Min.Y, alpha),
-            lerpUsingLinearMath(a.Max.X, b.Max.X, alpha),
-            lerpUsingLinearMath(a.Max.Y, b.Max.Y, alpha)
-        )
-    end,
-}
 --[[
     @param startValue: T - The start value for the lerp.
     @param goalValue: T - The goal value for the lerp.
@@ -150,11 +100,7 @@ function Alpha.__index.Lerp<T>(
     startValue: T,
     goalValue: T
 ): Observable<T>
-    local interpolator = typeToInterpolator[typeof(startValue)]
-    if not interpolator then
-        error("Data type '" .. typeof(startValue) ..
-            "' cannot be interpolated!")
-    end
+    local interpolator = PolymorphicLerp(typeof(startValue))
     return MapObservable(
         self,
         function(current)
