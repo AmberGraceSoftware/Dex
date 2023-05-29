@@ -19,7 +19,7 @@ local function CreateReconciledNode(
         _instance = instance,
         _rootInstance = rootInstance,
         _childPath = childPath,
-        _instances = {},
+        _instancesToCleanup = {},
         _connections = {},
         _unsubscribes = {},
     }
