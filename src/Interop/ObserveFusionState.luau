@@ -10,12 +10,9 @@ export type Unsubscribe = Types.Unsubscribe
     @param fusionStateObject: Fusion.StateObject<T> - The Fusion StateObject to map.
     @return observable: Dec.Observable<T> - The Dec Observable created
 
-    Interoperability function for mapping Fusion StateObjects to Dec Observables.
-
-    Returns the Observable, and an unsubscribe function. If this Observable
-    object is instantiated within a Dec Component, you must ensure that you
-    call virtualInstance:OnUnmount(unsubscribe) within the component's return
-    VirtualInstance in order to prevent memory leaks.
+    Interoperability function that maps a Fusion StateObject to a Dec
+    Observable object. The returned observable is garbage collected once
+    dereferenced and unsubscribed/unmounted.
 
     The Fusion library must be provided, as Fusion StateObjects only work when
     embedded in a Fusion runtime.
