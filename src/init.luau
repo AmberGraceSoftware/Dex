@@ -15,16 +15,19 @@ local Types = require(script.Types)
 local Symbols = require(script.Symbols)
 local VirtualInstanceCreators = require(script.VirtualInstanceCreators)
 local Root = require(script.Reconciler.Root)
+local Observable = require(script.Observables.Observable)
 
 export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>
 export type State<T> = Types.State<T>
+export type StateRecord<T> = Types.StateRecord<T>
 export type Spring<T> = Types.Spring<T>
+export type IntSpring<T> = Types.IntSpring<T>
+export type EasedValue<T> = Types.EasedValue<T>
 export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
-export type TweenState = Types.TweenState
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type ChildMap = Types.ChildMap
 export type VirtualInstance = Types.VirtualInstance
@@ -35,14 +38,21 @@ export type Nil = Symbol<"Nil">
 
 local Dec = {}
 
--- State and Observable Utilities
+-- Basic State and Observables
 Dec.State = require(script.Observables.State)
-Dec.Spring = require(script.Observables.Spring)
+Dec.Derive = require(script.Util.MapObservable)
+Dec.Alpha = require(script.Observables.Alpha)
+Dec.CustomObservable = Observable.new
+
+-- Realtime simulation observable utilities
+Dec.Spring = require(script.Observables.Spring).new
+Dec.IntSpring = require(script.Observables.IntSpring)
+Dec.AngleSpring = require(script.Observables.AngleSpring)
+Dec.Eased = require(script.Observables.Eased)
 Dec.Stopwatch = require(script.Observables.Stopwatch)
 Dec.Timer = require(script.Observables.Timer)
-Dec.Tween = require(script.Observables.TweenState)
-Dec.Derive = require(script.Util.MapObservable)
-Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
+
+-- Interop functions
 Dec.ObserveFusionState = require(script.Interop.ObserveFusionState)
 
 -- VirtualInstance Creators
@@ -55,5 +65,11 @@ Dec.CreateRoot = Root.new
 
 -- Symbols
 Dec.Nil = Symbols.Nil
+
+-- Reflection
+Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
+-- Dec.IsObservable = require(script.Util.IsObservable)
+-- Dec.IsVirtualInstance = require(script.Util.IsVirtualInstance)
+-- Dec.GetVirtualInstanceType = require(script.Util.GetVirtualInstanceType)
 
 return Dec

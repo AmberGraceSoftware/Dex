@@ -1,94 +1,160 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
-local Observable = require(script.Parent.Observable)
+local CreateEasedObject = require(script.Parent.CreateEasedObject)
 
-export type Spring<T> = Types.Spring<T>
+type EasingFrame<T> = CreateEasedObject.EasingFrame<T>
+type Observable<T> = Types.Observable<T>
+
+type StepMethod = (
+    angularFrequency: number,
+    easingFrame: {
+        previousElapsed: any,
+        previousValue: any,
+        previousVelocity: any,
+        goalValue: any,
+    }
+) -> (any, any)
+local linearSpringStep: StepMethod = function(angularFrequency, easingFrame)
+    local deltaTime = easingFrame.previousElapsed
+    local position = easingFrame.previousValue
+    local velocity = easingFrame.previousVelocity
+    local goalPosition = easingFrame.goalValue
+    local offset = position - goalPosition
+    local divisorCoefficient = (1 + angularFrequency * deltaTime)
+    local nextVelocity =
+        (velocity - angularFrequency * angularFrequency * deltaTime * offset)
+        / (divisorCoefficient * divisorCoefficient)
+    local nextPosition = position + nextVelocity * deltaTime
+
+    -- Snap to target value within certain threshold range
+    local epsilon = 0.01 / angularFrequency
+    if math.abs(nextPosition - goalPosition) < epsilon then
+        return goalPosition
+    end
+
+    return nextPosition, nextVelocity
+end
+
+local function wrappedLinearSpringStep(
+    unwrapPosition: (any) -> {any},
+    wrapPosition: ({any}) -> any,
+    unwrapVelocity: ((any) -> {any})?,
+    wrapVelocity: (({any}) -> any)?
+): StepMethod
+    local _unwrapVelocity = unwrapVelocity or unwrapPosition
+    local _wrapVelocity = wrapVelocity or wrapPosition
+    return function(angularFrequency, easingFrame)
+        local previousVelocities = _unwrapVelocity(easingFrame.previousVelocity)
+        local previousValues = unwrapPosition(easingFrame.previousValue)
+        local previousElapsed = easingFrame.previousElapsed
+        local goalValues = unwrapPosition(easingFrame.goalValue)
+
+        local outPositions = table.create(#goalValues)
+        local outVelocities = table.create(#goalValues)
+        for i = 1, #goalValues do
+            local pos, vel = linearSpringStep(
+                angularFrequency,
+                {
+                    previousVelocity = previousVelocities[i],
+                    previousElapsed = previousElapsed,
+                    previousValue = previousValues[i],
+                    goalValue = goalValues[i],
+                }
+            )
+            table.insert(outPositions, pos)
+            table.insert(outVelocities, vel)
+        end
+        return wrapPosition(outPositions), _wrapVelocity(outVelocities)
+    end
+end
+
+local typeToSpringStepMethod = {
+    ["number"] = linearSpringStep,
+    ["Vector3"] = linearSpringStep,
+    ["Vector2"] = linearSpringStep,
+    ["Vector2int16"] = linearSpringStep,
+    ["Vector3int16"] = linearSpringStep,
+    ["UDim"] = wrappedLinearSpringStep(
+        function(udimPos: UDim)
+            return {
+                udimPos.Scale,
+                udimPos.Offset
+            }
+        end,
+        function(wrapped: {number})
+            return UDim.new(unpack(wrapped))
+        end
+    ),
+    ["UDim2"] = wrappedLinearSpringStep(
+        function(udim2Pos: UDim2)
+            return {
+                udim2Pos.X.Scale,
+                udim2Pos.X.Offset,
+                udim2Pos.Y.Scale,
+                udim2Pos.Y.Offset
+            }
+        end,
+        function(wrapped: {number})
+            return UDim2.new(unpack(wrapped))
+        end
+    ),
+    ["Color3"] = wrappedLinearSpringStep(
+        function(color3Pos: Color3)
+            return {color3Pos:ToHSV()}
+        end,
+        function(wrapped: {number})
+            return Color3.fromHSV(unpack(wrapped))
+        end
+    ),
+    ["Rect"] = wrappedLinearSpringStep(
+        function(rectPos: Rect)
+            return {rectPos.Min, rectPos.Max}
+        end,
+        function(wrapped: {Vector2})
+            return Rect.new(unpack(wrapped))
+        end
+    ),
+}
 
 local Spring = {}
-Spring.__index = {}
-Spring.__index._dectype = "Observable"
-Spring.__index._decobservabletype = "Spring"
+
+Spring.StepMethods = typeToSpringStepMethod
 
 --[[
-    @param frequency: number - The angular frequency to set.
-    @return void
+    Creates an easing observable that simulates the behavior of a critically
+    damped spring. The spring simulates in realtime until the target value is
+    reached. NOTE: Spring must have at lease one Subscriber (or be mounted on at
+    least one VirtualInstance) to simulate properly! Observables automatically
+    garbage collect once the object is dereferenced and all subscribers are
+    disconnected (and VirtualInstances unmounted)
 
-    Sets the angular frequency of the spring.
+    @param target: Observable<T> - The target observable to apply the easing to.
+    @param angularFrequency: number? - The angular frequency of the spring
+        oscillation. Defaults to Tau (2 * pi) if not provided.
+    @return Observable<T> - The resulting easing observable.
 ]]
-function Spring.__index.SetAngularFrequency(
-    self: Spring<any>,
-    frequency: number
-): ()
-    error("Not implemented yet")
-end
+function Spring.new<T>(
+    target: Observable<T>,
+    angularFrequency: number?
+): Observable<T>
+    local targetType = typeof(target:Current())
+    local stepMethod = typeToSpringStepMethod[targetType]
+    if not stepMethod then
+        error(
+            "Data type '" .. targetType .. "' cannot be eased using Spring"
+        )
+    end
 
---[[
-    @return number - The current angular frequency of the spring.
-    
-    Returns the current angular frequency of the spring.
-]]
-function Spring.__index.CurrentAngularFrequency(
-    self: Spring<any>
-): number
-    error("Not implemented yet")
-end
-
---[[
-    @param target: any - The target to set for the spring.
-    @return void
-
-    Sets the target of the spring.
-]]
-function Spring.__index.SetTarget(
-    self: Spring<any>,
-    target: any
-): ()
-    error("Not implemented yet")
-end
-
---[[
-    @return any - The current target of the spring.
-
-    Returns the current target of the spring.
-]]
-function Spring.__index.CurrentTarget(
-    self: Spring<any>
-): any
-    error("Not implemented yet")
-end
-
---[[
-    @param position: any - The position to set for the spring.
-    @return void
-
-    Sets the position of the spring.
-]]
-function Spring.__index.SetPosition(
-    self: Spring<any>,
-    position: any
-): ()
-    error("Not implemented yet")
-end
-
-Spring.__index.Current = Observable.__index.Current
-Spring.__index.Subscribe = Observable.__index.Subscribe
-Spring.__index.Destroy = Observable.__index.Destroy
-
---[[
-    @param initialValue: T - The initial value of the spring.
-    @param angularFrequency: number - The angular frequency of the spring.
-    @return Dec.Spring<T> - The new spring instance.
-
-    Creates a new Spring Observable with the given initial value and angular frequency.
-]]
-function Spring.new<T>(initialValue: T, angularFrequency: number): Spring<T>
-    return setmetatable({
-        _current = initialValue,
-        _angularFrequency = angularFrequency,
-        _target = initialValue,
-        _observerCount = 0,
-        -- _snapToGoalTheshold = nil,
-    }, Spring :: any)
+    local _angularFrequency = angularFrequency or math.pi * 2
+    return CreateEasedObject(
+        target,
+        function(easingFrame)
+            return stepMethod(
+                _angularFrequency,
+                easingFrame
+            )
+        end
+    )
 end
 
 return Spring

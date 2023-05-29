@@ -6,7 +6,10 @@ export type State<T> = Types.State<T>
 
 local State = {}
 State.__index = {}
-State.__index._dectype = "Observable"
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (State.__index :: any)[k] = v
+end
 State.__index._decobservabletype = "State"
 
 --[[
@@ -19,12 +22,11 @@ function State.__index.Set(
     self: State<any>,
     value: any
 ): ()
-    error("Not implemented yet")
+    self._cachedValue = value
+    if self._notifyUpdate then
+        self._notifyUpdate()
+    end
 end
-
-State.__index.Current = Observable.__index.Current
-State.__index.Subscribe = Observable.__index.Subscribe
-State.__index.Destroy = Observable.__index.Destroy
 
 --[[
     @param initialValue: T - The initial value of the state.
@@ -33,10 +35,25 @@ State.__index.Destroy = Observable.__index.Destroy
     Creates a new State observable with the given initial value.
 ]]
 function State.new<T>(initialValue: T): State<T>
-    return setmetatable({
-        _current = initialValue,
-        _observerCount = 0,
-    }, State :: any)
+    local self: State<T>
+    local initialized = false
+    self = Observable.new(
+        function()
+            if not initialized then
+                initialized = true
+                return initialValue
+            end
+            return self._cachedValue
+        end,
+        function(notifyUpdate)
+            self._notifyUpdate = notifyUpdate
+            return function()
+                self._notifyUpdate = nil
+            end
+        end
+    ) :: any
+    setmetatable(self, State)
+    return self
 end
 
 return State

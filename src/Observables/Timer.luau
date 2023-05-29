@@ -1,14 +1,27 @@
 --!strict
+local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local BaseTimer = require(script.Parent.BaseTimer)
 local Alpha = require(script.Parent.Alpha)
+local State = require(script.Parent.State)
+local Observable = require(script.Parent.Observable)
+local MapObservable = require(script.Parent.Parent.Util.MapObservable)
+local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
-export type Timer = Types.Timer
-export type Alpha = Types.Alpha
+type Timer = Types.Timer
+type Alpha = Types.Alpha
+type Observable<T> = Types.Observable<T>
 
 local Timer = {}
 Timer.__index = {}
-Timer.__index._dectype = "Observable"
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Timer.__index :: any)[k] = v
+end
+-- Inherits BaseTimer
+for k, v in BaseTimer :: any do
+    (Timer.__index :: any)[k] = v
+end
 Timer.__index._decobservabletype = "Timer"
 
 --[[
@@ -18,7 +31,7 @@ Timer.__index._decobservabletype = "Timer"
     1 (finish)
 ]]
 function Timer.__index.Alpha(self: Timer): Alpha
-    error("Not implemented yet")
+    return Alpha.new(self, self._duration, 0)
 end
 
 --[[
@@ -28,21 +41,33 @@ end
     Sets the duration of the timer.
 ]]
 function Timer.__index.SetDuration(self: Timer, duration: number): ()
-    error("Not implemented yet")
+    self._duration = duration
 end
 
-Timer.__index.Start = BaseTimer.__index.Start
-Timer.__index.Stop = BaseTimer.__index.Stop
-Timer.__index.Pause = BaseTimer.__index.Pause
-Timer.__index.Resume = BaseTimer.__index.Resume
+--[[
+    @return Observable<T> - The interpolated Observable.
 
-function Timer.__index.Current(self: Timer): number
-    local baseCurrent = BaseTimer.__index.Current(self)
-    return math.max(self._duration - baseCurrent, 0)
+    Creates an observable that outputs an interpolated value between
+    the start value and end value based on the current remaining time.
+]]
+function Timer.__index.Lerp<T>(
+    self: Timer,
+    startValue: T,
+    endValue: T
+): Observable<T>
+    local interpolator = PolymorphicLerp(typeof(startValue))
+    return MapObservable(
+        self,
+        function(current)
+            local alpha = 1 - math.clamp(
+                current / self._duration,
+                0, 1
+            )
+            return interpolator(startValue, endValue, alpha)
+        end
+    ) :: any
 end
 
-Timer.__index.Subscribe = BaseTimer.__index.Subscribe
-Timer.__index.Destroy = BaseTimer.__index.Destroy
 
 --[[
     @param duration: number
@@ -51,13 +76,54 @@ Timer.__index.Destroy = BaseTimer.__index.Destroy
     Creates a new Timer observable with the given duration.
 ]]
 function Timer.new(duration: number): Timer
-    return setmetatable({
-        _duration = duration,
-        _stepConnection = nil,
-        _resumeAt = nil,
-        _current = 0,
-        _observerCount = 0,
-    }, Timer :: any)
+    local playState = State.new({
+        playing = false,
+        startClockTime = 0,
+        resumeAtTime = 0,
+    })
+    local function getCurrent(_current: typeof(playState:Current())?)
+        local current = _current or playState:Current()
+        if current.playing then
+            return math.clamp(
+                duration - (os.clock() - current.startClockTime),
+                0,
+                duration
+            )
+        end
+        return current.resumeAtTime
+    end
+    local function createUpdateStream(notifyUpdate: () -> ())
+        local heartbeatConn = nil
+        local function playStateChanged(current: typeof(playState:Current()))
+            if current.playing then
+                if not heartbeatConn then
+                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
+                end
+            else
+                if heartbeatConn then
+                    heartbeatConn:Disconnect()
+                end
+            end
+            notifyUpdate()
+        end
+        local unsubscribe = playState:Subscribe(playStateChanged)
+        playStateChanged(playState:Current())
+
+        return function()
+            unsubscribe()
+            if heartbeatConn then
+                heartbeatConn:Disconnect()
+            end
+        end
+    end
+    local self: Timer = Observable.new(
+        getCurrent,
+        createUpdateStream
+    ) :: any
+    self._duration = duration
+    self._playState = playState
+    setmetatable(self, Timer)
+    return self
 end
 
 return Timer

@@ -6,6 +6,11 @@ local IsObservable = require(script.Parent.IsObservable)
 export type Observable<T> = Types.Observable<T>
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 
+local function staticUpdateStream()
+    return function()
+    end
+end
+
 --[[
     @param passedIn: unknown - The value to coerce.
     @return Dec.Observable<T> - An Observable.
@@ -19,7 +24,12 @@ local function CoerceAsObservable<T>(passedIn: CanBeObservable<T>): Observable<T
         return passedIn :: Observable<T>
     else
         -- Passed in value is a raw value, so create a new Observable
-        return Observable.new(passedIn :: T)
+        return Observable.new(
+            function()
+                return passedIn :: T
+            end,
+            staticUpdateStream
+        )
     end
 end
 
