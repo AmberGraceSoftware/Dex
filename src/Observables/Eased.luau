@@ -45,9 +45,6 @@ local function easingFunction<T>(
             info.EasingStyle,
             info.EasingDirection
         )
-        if inReverse then
-            alpha = 1 - alpha -- reverse the alpha if we're in a reverse cycle
-        end
     end
 
     return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
