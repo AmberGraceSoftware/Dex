@@ -55,7 +55,8 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
             "Cannoy modify a VirtualInstance after it has been mounted. " .. 
             "Please verify your code to make sure you are only defining " ..
             "properties, attributes, tags, etc. before mounting the " .. 
-            "VirtualInstance (See Dec docs).",
+            "VirtualInstance (See Dec docs). You should utilize Observables " ..
+            "instead of modifying a VirtaulInstance after it is mounted.",
             2
         )
     end
@@ -91,7 +92,7 @@ VirtualInstance.__index._dectype = "VirtualInstance"
     Multiple calls to this function will merge the provided property map with
     the existing one, prioritizing the later call.
 ]]
-function VirtualInstance.__index.Properties(
+function VirtualInstance.__index.SetProperties(
     self: VirtualInstance,
     propertyMap: {[string]: CanBeObservable<any>}
 ): ()
@@ -99,7 +100,7 @@ function VirtualInstance.__index.Properties(
     table.insert(self._directives, {
         _type = "Properties",
         _payload = propertyMap,
-        _trace = getTrace("Dec.Properties", 1),
+        _trace = getTrace("VirtualInstance:SetProperties", 1),
     })
 end
 
@@ -112,7 +113,7 @@ end
     Multiple calls to this function will merge the provided attribute map with
     the existing one, prioritizing the latest calls.
 ]]
-function VirtualInstance.__index.Attributes(
+function VirtualInstance.__index.SetAttributes(
     self: VirtualInstance,
     attributeMap: {[string]: CanBeObservable<any>}
 ): ()
@@ -120,7 +121,7 @@ function VirtualInstance.__index.Attributes(
     table.insert(self._directives, {
         _type = "Attributes",
         _payload = attributeMap,
-        _trace = getTrace("Dec.Attributes", 1),
+        _trace = getTrace("VirtualInstance:SetAttributes", 1),
     })
 end
 
@@ -132,7 +133,7 @@ end
     this function will add extra tags to the VirtualInstance if they do not
     exist.
 ]]
-function VirtualInstance.__index.Tags(
+function VirtualInstance.__index.AddTags(
     self: VirtualInstance,
     tags: CanBeObservable<{string}>
 ): ()
@@ -140,7 +141,7 @@ function VirtualInstance.__index.Tags(
     table.insert(self._directives, {
         _type = "Tags",
         _payload = tags,
-        _trace = getTrace("Dec.Tags", 1),
+        _trace = getTrace("VirtualInstance:AddTags", 1),
     })
 end
 
@@ -164,7 +165,7 @@ function VirtualInstance.__index.Connect(
             event = eventName,
             listener = listener,
         },
-        _trace = getTrace("Dec.Connect", 1),
+        _trace = getTrace("VirtualInstance:Connect", 1),
     })
 end
 
@@ -187,7 +188,7 @@ function VirtualInstance.__index.OutProperty(
             property = propertyName,
             state = outState,
         },
-        _trace = getTrace("Dec.OutProperty", 1),
+        _trace = getTrace("VirtualInstance:OutProperty", 1),
     })
 end
 
@@ -210,7 +211,7 @@ function VirtualInstance.__index.OutAttribute(
             attribute = propertyName,
             state = outState,
         },
-        _trace = getTrace("Dec.OutAttribute", 1),
+        _trace = getTrace("VirtualInstance:OutAttribute", 1),
     })
 end
 
@@ -228,7 +229,7 @@ function VirtualInstance.__index.OutInstance(
     table.insert(self._directives, {
         _type = "OutInstance",
         _payload = outState,
-        _trace = getTrace("Dec.OutInstance", 1),
+        _trace = getTrace("VirtualInstance:OutInstance", 1),
     })
 end
 
@@ -290,7 +291,7 @@ end
     If the child is a VirtualInstance, it will be created or found depending on
     the type of VirtualInstance passed in.
 ]]
-function VirtualInstance.__index.Child(
+function VirtualInstance.__index.AddChild(
     self: VirtualInstance,
     path: ChildPath,
     child: CanBeObservable<Instance | VirtualInstance | nil>
@@ -302,7 +303,7 @@ function VirtualInstance.__index.Child(
             path = parsePath(path),
             child = child,
         },
-        _trace = getTrace("Dec.Chlid", 1),
+        _trace = getTrace("VirtualInstance:AddChild", 1),
     })
 end
 
@@ -314,7 +315,7 @@ end
     Adds multiple children to the VirtualInstance given a child map. See
     VirtualInstance:Child() for API reference
 ]]
-function VirtualInstance.__index.Children(
+function VirtualInstance.__index.AddChildren(
     self: VirtualInstance,
     childMap: ChildMap
 ): ()
@@ -322,7 +323,7 @@ function VirtualInstance.__index.Children(
     table.insert(self._directives, {
         _type = "Children",
         _payload = childMap,
-        _trace = getTrace("Dec.Children", 1),
+        _trace = getTrace("VirtualInstance:AddChildren", 1),
     })
 end
 

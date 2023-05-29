@@ -158,15 +158,15 @@ export type VirtualInstance = typeof(setmetatable(
     },
     {} :: {__index: {
         _dectype: string,
-        Properties: (
+        SetProperties: (
             self: VirtualInstance,
             propertyMap: {[string]: CanBeObservable<any>}
         ) -> (),
-        Attributes: (
+        SetAttributes: (
             self: VirtualInstance,
             attributeMap: {[string]: CanBeObservable<any>}
         ) -> (),
-        Tags: (
+        AddTags: (
             self: VirtualInstance,
             tags: CanBeObservable<{string}>
         ) -> (),
@@ -191,11 +191,11 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
         Copy: (self: VirtualInstance) -> VirtualInstance,
         DeepCopy: (self: VirtualInstance) -> VirtualInstance,
-        Children: (
+        AddChildren: (
             self: VirtualInstance,
             childMap: ChildMap
         ) -> (),
-        Child: (
+        AddChild: (
             self: VirtualInstance,
             path: ChildPath,
             child: CanBeObservable<Instance | VirtualInstance | nil>
