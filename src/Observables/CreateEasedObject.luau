@@ -95,6 +95,19 @@ local function createUpdateStream<T>(
     end
 end
 
+local typeToInitialVelocity: {[string]: any?} = {
+    ["number"] = 0,
+    ["Vector2"] = Vector2.zero,
+    ["Vector3"] = Vector3.zero,
+    ["Vector2Int16"] = Vector2int16.new(0, 0),
+    ["Vector3Int16"] = Vector3int16.new(0, 0),
+    ["UDim"] = UDim.new(),
+    ["UDim2"] = UDim2.new(),
+    ["Color3"] = Color3.new(),
+    ["Rect"] = Rect.new(0, 0, 0, 0),
+    ["CFrame"] = CFrame.identity,
+}
+
 --[[
     Creates an eased Observable object based on a target Observable and an
     easing function. This function returns an Observable that smoothly
@@ -112,6 +125,10 @@ local function CreateEasedObject<T>(
     easingFunction: EasingFunction<T>
 ): Observable<T>
     local initialValue = target:Current()
+    local initialVelocity = typeToInitialVelocity[typeof(initialValue)]
+    if not initialVelocity then
+        error("Data type '" .. typeof(initialValue) .. "' can't be eased")
+    end
     local initialTime = os.clock()
     local easingFrame: EasingFrame<any> = {
         startTime = initialTime,
@@ -120,7 +137,7 @@ local function CreateEasedObject<T>(
         previousTime = initialTime,
         previousElapsed = 0,
         previousValue = initialValue,
-        previousVelocity = nil,
+        previousVelocity = initialVelocity,
         goalValue = initialValue,
         targetMet = true
     }

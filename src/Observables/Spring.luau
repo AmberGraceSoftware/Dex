@@ -72,8 +72,8 @@ local typeToSpringStepMethod = {
     ["number"] = linearSpringStep,
     ["Vector3"] = linearSpringStep,
     ["Vector2"] = linearSpringStep,
-    ["Vector2Int16"] = linearSpringStep,
-    ["Vector3Int16"] = linearSpringStep,
+    ["Vector2int16"] = linearSpringStep,
+    ["Vector3int16"] = linearSpringStep,
     ["UDim"] = wrappedLinearSpringStep(
         function(udimPos: UDim)
             return {
