@@ -116,6 +116,10 @@ local typeToSpringStepMethod = {
     ),
 }
 
+local Spring = {}
+
+Spring.StepMethods = typeToSpringStepMethod
+
 --[[
     Creates an easing observable that simulates the behavior of a critically
     damped spring. The spring simulates in realtime until the target value is
@@ -129,7 +133,7 @@ local typeToSpringStepMethod = {
         oscillation. Defaults to Tau (2 * pi) if not provided.
     @return Observable<T> - The resulting easing observable.
 ]]
-local function Spring<T>(
+function Spring.new<T>(
     target: Observable<T>,
     angularFrequency: number?
 ): Observable<T>
