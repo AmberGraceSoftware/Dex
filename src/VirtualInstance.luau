@@ -171,11 +171,16 @@ function VirtualInstance.__index.Connect(
 end
 
 --[[
-    @param propertyName: string - The name of the property to output.
-    @param outState: State<any> - The state to output the property to.
-    @return void
+    @param propName: string - The name of the property to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
 
-    Outputs a property from the reconciled instance to a Dec State object.
+    Creates an Observable object that updates to the current value of an
+    property on the virtual instance once when it is mounted, and listens to
+    updates on this property.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
 ]]
 function VirtualInstance.__index.OutProperty<T>(
     self: VirtualInstance,
@@ -196,11 +201,47 @@ function VirtualInstance.__index.OutProperty<T>(
 end
 
 --[[
-    @param propertyName: string - The name of the attribute to output.
-    @param outState: State<any> - The state to output the attribute to.
-    @return void
+    @param propName: string - The name of the property to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
 
-    Outputs an attribute from the reconciled instance to a Dec State object.
+    Creates an Observable object that updates to the original value of an
+    property on the virtual instance once when it is mounted. This is useful
+    for referencing properties on a premade instance without hardcoding them in
+    a Dec component.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
+]]
+function VirtualInstance.__index.OutInitialProperty<T>(
+    self: VirtualInstance,
+    propertyName: string,
+    initialValue: T
+): Observable<T>
+    assertNotYetMounted(self)
+    local outState = State.new(initialValue)
+    table.insert(self._directives, {
+        _type = "OutInitialProperty",
+        _payload = {
+            property = propertyName,
+            state = outState,
+        },
+        _trace = getTrace("VirtualInstance:OutInitialProperty", 1),
+    })
+    return outState
+end
+
+--[[
+    @param attributeName: string - The name of the attribute to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
+
+    Creates an Observable object that updates to the current value of an
+    attribute on the virtual instance once when it is mounted, and listens to
+    updates on this attribute.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
 ]]
 function VirtualInstance.__index.OutAttribute<T>(
     self: VirtualInstance,
@@ -216,6 +257,37 @@ function VirtualInstance.__index.OutAttribute<T>(
             state = outState,
         },
         _trace = getTrace("VirtualInstance:OutAttribute", 1),
+    })
+    return outState
+end
+
+--[[
+    @param attributeName: string - The name of the attribute to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
+
+    Creates an Observable object that updates to the original value of an
+    attribute on the virtual instance once when it is mounted. This is useful
+    for referencing attributes on a premade instance without hardcoding them in
+    a Dec component.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
+]]
+function VirtualInstance.__index.OutInitialAttribute<T>(
+    self: VirtualInstance,
+    propertyName: string,
+    initialValue: T
+): Observable<T>
+    local outState = State.new(initialValue)
+    assertNotYetMounted(self)
+    table.insert(self._directives, {
+        _type = "OutInitialAttribute",
+        _payload = {
+            attribute = propertyName,
+            state = outState,
+        },
+        _trace = getTrace("VirtualInstance:OutInitialAttribute", 1),
     })
     return outState
 end

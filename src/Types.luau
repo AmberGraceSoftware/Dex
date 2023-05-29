@@ -178,12 +178,22 @@ export type VirtualInstance = typeof(setmetatable(
         OutProperty: <T>(
             self: VirtualInstance,
             propertyName: string,
-            initialValue: T
+            initializedValue: T
+        ) -> Observable<T>,
+        OutInitialProperty: <T>(
+            self: VirtualInstance,
+            propertyName: string,
+            initializedValue: T
         ) -> Observable<T>,
         OutAttribute: <T>(
             self: VirtualInstance,
             attributeName: string,
-            initialValue: T
+            initializedValue: T
+        ) -> Observable<T>,
+        OutInitialAttribute: <T>(
+            self: VirtualInstance,
+            propertyName: string,
+            initializedValue: T
         ) -> Observable<T>,
         OutInstance: (
             self: VirtualInstance
