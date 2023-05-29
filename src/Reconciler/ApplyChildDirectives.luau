@@ -1,5 +1,5 @@
 --!strict
-local Types = require(script.Parent.Parent.Parent.Types)
+local Types = require(script.Parent.Parent.Types)
 -- local EmitTracedError = require(script.Parent.EmitTracedError)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
