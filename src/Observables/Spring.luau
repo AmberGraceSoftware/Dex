@@ -116,6 +116,19 @@ local typeToSpringStepMethod = {
     ),
 }
 
+--[[
+    Creates an easing observable that simulates the behavior of a critically
+    damped spring. The spring simulates in realtime until the target value is
+    reached. NOTE: Spring must have at lease one Subscriber (or be mounted on at
+    least one VirtualInstance) to simulate properly! Observables automatically
+    garbage collect once the object is dereferenced and all subscribers are
+    disconnected (and VirtualInstances unmounted)
+
+    @param target: Observable<T> - The target observable to apply the easing to.
+    @param angularFrequency: number? - The angular frequency of the spring
+        oscillation. Defaults to Tau (2 * pi) if not provided.
+    @return Observable<T> - The resulting easing observable.
+]]
 local function Spring<T>(
     target: Observable<T>,
     angularFrequency: number?
