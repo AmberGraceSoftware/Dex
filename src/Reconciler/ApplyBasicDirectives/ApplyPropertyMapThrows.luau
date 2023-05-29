@@ -1,7 +1,7 @@
 --!strict
 
-local Symbols = require(script.Parent.Parent.Symbols)
-local Types = require(script.Parent.Parent.Types)
+local Symbols = require(script.Parent.Parent.Parent.Symbols)
+local Types = require(script.Parent.Parent.Parent.Types)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
 type Set<T> = Types.Set<T>
 local NilSymbol = Symbols.Nil

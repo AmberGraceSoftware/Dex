@@ -1,5 +1,5 @@
 --!strict
-local Types = require(script.Parent.Parent.Types)
+local Types = require(script.Parent.Parent.Parent.Types)
 type ReconciledNode = Types.ReconciledNode
 type State<T> = Types.State<T>
 

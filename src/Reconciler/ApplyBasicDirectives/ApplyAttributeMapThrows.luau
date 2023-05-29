@@ -1,8 +1,8 @@
 --!strict
 
-local Symbols = require(script.Parent.Parent.Symbols)
-local Types = require(script.Parent.Parent.Types)
-local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
+local Symbols = require(script.Parent.Parent.Parent.Symbols)
+local Types = require(script.Parent.Parent.Parent.Types)
+local IsObservable = require(script.Parent.Parent.Parent.Reflection.IsObservable)
 type Set<T> = Types.Set<T>
 local NilSymbol = Symbols.Nil
 

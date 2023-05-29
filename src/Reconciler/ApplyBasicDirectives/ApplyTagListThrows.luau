@@ -1,8 +1,8 @@
 --!strict
 
 local CollectionService = game:GetService("CollectionService")
-local Types = require(script.Parent.Parent.Types)
-local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
+local Types = require(script.Parent.Parent.Parent.Types)
+local IsObservable = require(script.Parent.Parent.Parent.Reflection.IsObservable)
 type Set<T> = Types.Set<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type Observable<T> = Types.Observable<T>

@@ -1,5 +1,5 @@
 --!strict
-local Types = require(script.Parent.Parent.Types)
+local Types = require(script.Parent.Parent.Parent.Types)
 type ReconciledNode = Types.ReconciledNode
 
 --[[
@@ -10,14 +10,11 @@ type ReconciledNode = Types.ReconciledNode
     Immediately spawns the given OnMount callback with the reconciled instanc
      as an argument
 ]]
-local function HandleOnUnmountCallbackThrows(
+local function HandleOnMountCallbackThrows(
     reconciledNode: ReconciledNode,
     payload: (instance: any) -> ()
 )
-    local instance = reconciledNode._instance
-    table.insert(reconciledNode._unsubscribes, function()
-        task.spawn(payload, instance)
-    end)
+    task.spawn(payload, reconciledNode._instance)
 end
 
-return HandleOnUnmountCallbackThrows
+return HandleOnMountCallbackThrows

@@ -1,15 +1,15 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
 local EmitTracedError = require(script.Parent.EmitTracedError)
-local ApplyPropertyMapThrows = require(script.Parent.ApplyPropertyMapThrows)
-local ApplyAttributeMapThrows = require(script.Parent.ApplyAttributeMapThrows)
-local ApplyTagListThrows = require(script.Parent.ApplyTagListThrows)
-local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
-local OutputPropertyThrows = require(script.Parent.OutputPropertyThrows)
-local OutputAttributeThrows = require(script.Parent.OutputAttributeThrows)
-local OutputInstanceRefThrows = require(script.Parent.OutputInstanceRefThrows)
-local HandleOnMountCallbackThrows = require(script.Parent.HandleOnMountCallbackThrows)
-local HandleOnUnmountCallbackThrows = require(script.Parent.HandleOnUnmountCallbackThrows)
+local ApplyPropertyMapThrows = require(script.ApplyPropertyMapThrows)
+local ApplyAttributeMapThrows = require(script.ApplyAttributeMapThrows)
+local ApplyTagListThrows = require(script.ApplyTagListThrows)
+local ConnectEventThrows = require(script.ConnectEventThrows)
+local OutputPropertyThrows = require(script.OutputPropertyThrows)
+local OutputAttributeThrows = require(script.OutputAttributeThrows)
+local OutputInstanceRefThrows = require(script.OutputInstanceRefThrows)
+local HandleOnMountCallbackThrows = require(script.HandleOnMountCallbackThrows)
+local HandleOnUnmountCallbackThrows = require(script.HandleOnUnmountCallbackThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -18,8 +18,8 @@ type ReconciledNode = Types.ReconciledNode
     @param vInst: VirtualInstance - The virtual instances to read directives from
     @param node: ReconciledNode - The reconciled node to output unmount tasks to
 
-    Reconciles the basic directives on a virtual instance during the mounting
-    process.
+    Reconciles the basic (non-child) directives on a virtual instance during the
+    mounting process.
 ]]
 local handleDirective: {[string]: (
     node: ReconciledNode,
