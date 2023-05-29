@@ -1,18 +1,16 @@
 --!strict
+local TweenService = game:GetService("TweenService")
 local Types = require(script.Parent.Parent.Types)
 local CreateEasedObject = require(script.Parent.CreateEasedObject)
-local TweenService = game:GetService("TweenService")
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
+type EasingFrame<T> = CreateEasedObject.EasingFrame<T>
 type Observable<T> = Types.Observable<T>
 
 local function easingFunction<T>(
     info: TweenInfo,
     lerp: (T, T, number) -> T,
-    startValue: T,
-    goalValue: T,
-    elapsed: number,
-    _startVelocity: T
+    easingFrame: EasingFrame<any>
 )
     local cycleLength
     if info.Reverses then
@@ -21,12 +19,12 @@ local function easingFunction<T>(
         cycleLength = info.DelayTime + info.Time
     end
     local totalCycles = info.RepeatCount + 1
-    local cycleElapsed = elapsed % cycleLength
-    local cycleNumber = math.floor(elapsed / cycleLength)
+    local cycleElapsed = easingFrame.startElapsed % cycleLength
+    local cycleNumber = math.floor(easingFrame.startElapsed / cycleLength)
 
     -- if we're past the total cycles, snap to the final value and return
     if cycleNumber >= totalCycles then
-        return goalValue, 0
+        return easingFrame.goalValue, 0
     end
 
     local inReverse = info.Reverses
@@ -52,7 +50,7 @@ local function easingFunction<T>(
         end
     end
 
-    return lerp(startValue, goalValue, alpha), 0
+    return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
 end
 
 --[[
@@ -72,9 +70,8 @@ local function Eased<T>(input: Observable<T>, info: TweenInfo): Observable<T>
     local lerp = PolymorphicLerp(typeof(input:Current()))
     return CreateEasedObject(
         input,
-        function(startValue, goalValue, elapsed, startVelocity)
-            return easingFunction(info, lerp, startValue, goalValue, elapsed,
-                startVelocity)
+        function(easingFrame)
+            return easingFunction(info, lerp, easingFrame)
         end
     )
 end

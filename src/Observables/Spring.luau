@@ -1,99 +1,59 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
-local Observable = require(script.Parent.Observable)
+local CreateEasedObject = require(script.Parent.CreateEasedObject)
 
-type Spring<T> = Types.Spring<T>
-type State<T> = Types.State<T>
+type EasingFrame<T> = CreateEasedObject.EasingFrame<T>
+type Observable<T> = Types.Observable<T>
 
-local Spring = {}
-Spring.__index = {}
--- Inherits Observable
-for k, v in Observable.__index :: any do
-    (Spring.__index :: any)[k] = v
-end
-Spring.__index._decobservabletype = "Spring"
+type StepMethod = (
+    angularFrequency: number,
+    easingFrame: EasingFrame<any>
+) -> (any, any)
+local linearSpringStep: StepMethod = function(angularFrequency, easingFrame)
+    local deltaTime = easingFrame.previousElapsed
+    local position = easingFrame.previousValue
+    local offset = position - easingFrame.goalValue
+    local divisorCoefficient
+        = (1 + angularFrequency * deltaTime)
+    local nextVelocity = (
+        easingFrame.previousVelocity
+            - angularFrequency * angularFrequency * deltaTime * offset
+    ) / (divisorCoefficient * divisorCoefficient)
+    local nextPosition = position + nextVelocity * deltaTime
 
---[[
-    @param frequency: number - The angular frequency to set.
-    @return void
-
-    Sets the angular frequency of the spring.
-]]
-function Spring.__index.SetAngularFrequency(
-    self: Spring<any>,
-    frequency: number
-): ()
-    error("Not implemented yet")
+    return nextPosition, nextVelocity
 end
 
---[[
-    @return number - The current angular frequency of the spring.
-    
-    Returns the current angular frequency of the spring.
-]]
-function Spring.__index.CurrentAngularFrequency(
-    self: Spring<any>
-): number
-    error("Not implemented yet")
-end
+local typeToSpringStepMethod = {
+    ["number"] = linearSpringStep,
+    ["Vector3"] = linearSpringStep,
+    ["Vector2"] = linearSpringStep,
+    ["Vector2Int16"] = linearSpringStep,
+    ["Vector3Int16"] = linearSpringStep,
+}
 
---[[
-    @param target: any - The target to set for the spring.
-    @return void
+local function Spring<T>(
+    target: Observable<T>,
+    angularFrequency: number?
+): Observable<T>
+    local targetType = typeof(target:Current())
+    local stepMethod = typeToSpringStepMethod[targetType]
+    if not stepMethod then
+        error(
+            "Invalid type for Spring easing observable: '" .. targetType .. "'"
+        )
+    end
 
-    Sets the target of the spring.
-]]
-function Spring.__index.SetTarget(
-    self: Spring<any>,
-    target: any
-): ()
-    error("Not implemented yet")
-end
-
---[[
-    @return any - The current target of the spring.
-
-    Returns the current target of the spring.
-]]
-function Spring.__index.CurrentTarget(
-    self: Spring<any>
-): any
-    error("Not implemented yet")
-end
-
---[[
-    @param position: any - The position to set for the spring.
-    @return void
-
-    Sets the position of the spring.
-]]
-function Spring.__index.SetPosition(
-    self: Spring<any>,
-    position: any
-): ()
-    error("Not implemented yet")
-end
-
-Spring.__index.Current = Observable.__index.Current
-Spring.__index.Subscribe = Observable.__index.Subscribe
-Spring.__index.Destroy = Observable.__index.Destroy
-
---[[
-    @param initialValue: T - The initial value of the spring.
-    @param angularFrequency: number - The angular frequency of the spring.
-    @return Dec.Spring<T> - The new spring instance.
-
-    Creates a new Spring Observable with the given initial value and angular frequency.
-]]
-function Spring.new<T>(
-    initialValue: State<T> | T,
-    angularFrequency: State<number> | number
-): Spring<T>
-    return setmetatable({
-        _lastValue = initialValue,
-        _angularFrequency = angularFrequency,
-        _target = initialValue,
-    }, Spring :: any)
+    local _angularFrequency = angularFrequency or 10
+    return CreateEasedObject(
+        target,
+        function(easingFrame)
+            return stepMethod(
+                _angularFrequency,
+                easingFrame
+            )
+        end
+    )
 end
 
 return Spring
