@@ -86,6 +86,10 @@ end
 
     Subscribes to changes in the Observable. Returns a function that, when
     called, will unsubscribe the callback from the Observable updates.
+
+    WARNING: Make sure you handle the Unsubscribe function whenever a calling
+    Subscribe! Observables do not garbage collect until all external listeners
+    are unsubscribed.
 ]]
 function Observable.__index.Subscribe(
     self: Observable<any>,
