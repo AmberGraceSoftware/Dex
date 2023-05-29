@@ -16,7 +16,7 @@ end
 
     Applies a property map to a VirtualInstance, throwing any Roblox engine
     errors. If an error occurs, it should be logged to the console traced to
-    the line of code where the VirtualInstance was created.
+    the line of code where VirtualInstance:SetProperties was called.
 
     Certain properties (such as Parent) will be applied last.
 ]]
@@ -28,7 +28,8 @@ local function ApplyPropertyMapThrows(
     propMap: {[string]: any}
 )
     local instance = reconciledNode._instance :: any
-    local reconciledConns = reconciledNode._connections :: any
+    local reconciledConns = reconciledNode._connections
+    local reconciledUnsubs = reconciledNode._unsubscribes
     local deferredKeys: {string} = {}
     for key, value in propMap do
         if KEYS_TO_DEFER[key] then
@@ -43,7 +44,7 @@ local function ApplyPropertyMapThrows(
             )
         elseif typeof(value) == "table" and value._dectype == "Observable" then
             table.insert(
-                reconciledConns,
+                reconciledUnsubs,
                 value:Subscribe(function(current)
                     instance[key] = applyNilSymbol(current)
                 end)

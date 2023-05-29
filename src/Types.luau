@@ -234,6 +234,7 @@ export type VirtualInstance = typeof(setmetatable(
 export type ReconciledNode = typeof(setmetatable(
     {} :: {
         _connections: {RBXScriptConnection},
+        _unsubscribes: {Unsubscribe},
         _instances: {Instance},
         _instance: Instance,
         _rootInstance: Instance,

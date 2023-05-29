@@ -17,18 +17,18 @@ end
 
     Applies an attribute map to a VirtualInstance, throwing any Roblox engine
     errors. If an error occurs, it should be logged to the console traced to
-    the line of code where the VirtualInstance was created.
+    the line of code where VirtualInstance:SetAttributes was called.
 ]]
 local function ApplyAttributeMapThrows(
     reconciledNode: Types.ReconciledNode,
     attributeMap: {[string]: any}
 )
-    local instance = reconciledNode._instance :: any
-    local reconciledConns = reconciledNode._connections :: any
+    local instance = reconciledNode._instance
+    local reconciledUnsubs = reconciledNode._unsubscribes
     for key, value in attributeMap do
         if IsObservable(value) then
             table.insert(
-                reconciledConns,
+                reconciledUnsubs,
                 value:Subscribe(function(current)
                     instance:SetAttribute(key, applyNilSymbol(current))
                 end)
