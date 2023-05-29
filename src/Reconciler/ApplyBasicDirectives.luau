@@ -4,6 +4,7 @@ local EmitTracedError = require(script.Parent.EmitTracedError)
 local ApplyPropertyMapThrows = require(script.Parent.ApplyPropertyMapThrows)
 local ApplyAttributeMapThrows = require(script.Parent.ApplyAttributeMapThrows)
 local ApplyTagListThrows = require(script.Parent.ApplyTagListThrows)
+local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
 type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
@@ -22,6 +23,7 @@ local handleDirective: {[string]: (
 handleDirective.Properties = ApplyPropertyMapThrows
 handleDirective.Attributes = ApplyAttributeMapThrows
 handleDirective.TagList = ApplyTagListThrows
+handleDirective.Connect = ConnectEventThrows
 
 local function ApplyBasicDirectives(
     virtualInstance: VirtualInstance,

@@ -2,6 +2,7 @@
 
 local Symbols = require(script.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Types)
+local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
 type Set<T> = Types.Set<T>
 local NilSymbol = Symbols.Nil
 
@@ -28,7 +29,6 @@ local function ApplyPropertyMapThrows(
     propMap: {[string]: any}
 )
     local instance = reconciledNode._instance :: any
-    local reconciledConns = reconciledNode._connections
     local reconciledUnsubs = reconciledNode._unsubscribes
     local deferredKeys: {string} = {}
     for key, value in propMap do
@@ -38,10 +38,10 @@ local function ApplyPropertyMapThrows(
         end
 
         if typeof(value) == "function" then
-            table.insert(
-                reconciledConns,
-                instance[key]:Connect(value)
-            )
+            ConnectEventThrows(reconciledNode, {
+                event = key,
+                listener = value
+            })
         elseif typeof(value) == "table" and value._dectype == "Observable" then
             table.insert(
                 reconciledUnsubs,
