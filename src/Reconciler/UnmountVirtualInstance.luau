@@ -19,7 +19,15 @@ local function UnmountVirtualInstance(
 )
     debugLevel += 1
     
-    error("Not implemented yet")
+    for _, connection in node._connections do
+        connection:Disconnect()
+    end
+    for _, unsubscribe in node._unsubscribes do
+        task.spawn(unsubscribe)
+    end
+    for _, instance in node._instancesToCleanup do
+        instance:Destroy()
+    end
 end
 
 return UnmountVirtualInstance
