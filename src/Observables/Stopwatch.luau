@@ -67,7 +67,7 @@ function Stopwatch.new(maxDuration: number): Stopwatch
     local playState = State.new({
         playing = false,
         startClockTime = 0,
-        resumeAtElapsed = 0,
+        resumeAtTime = 0,
     })
     local function getCurrent(_current: typeof(playState:Current())?)
         local current = _current or playState:Current()
@@ -78,7 +78,7 @@ function Stopwatch.new(maxDuration: number): Stopwatch
                 maxDuration
             )
         end
-        return current.resumeAtElapsed
+        return current.resumeAtTime
     end
     local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
@@ -110,7 +110,7 @@ function Stopwatch.new(maxDuration: number): Stopwatch
     ) :: any
     self._duration = maxDuration
     self._playState = playState
-    setmetatable(self, BaseTimer)
+    setmetatable(self, Stopwatch)
     return self
 end
 

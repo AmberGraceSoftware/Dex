@@ -15,11 +15,11 @@ local BaseTimer = {}
     values every heartbeat in real-time until it is stopped.
 ]]
 function BaseTimer.Start(self: BaseTimer): ()
-    local elapsed = self._playState:Current().resumeAtElapsed
+    local elapsed = self._playState:Current().resumeAtTime
     self._playState:Set({
         playing = true,
         startClockTime = os.clock() - elapsed,
-        resumeAtElapsed = 0,
+        resumeAtTime = 0,
     })
 end
 
@@ -32,7 +32,7 @@ function BaseTimer.Stop(self: BaseTimer): ()
     self._playState:Set({
         playing = false,
         startClockTime = 0,
-        resumeAtElapsed = 0,
+        resumeAtTime = 0,
     })
 end
 
@@ -42,20 +42,20 @@ end
     Pauses the timing-based Observable.
 ]]
 function BaseTimer.Pause(self: BaseTimer): ()
-    local currentElapsed = os.clock() - self._playState:Current().startClockTime
-    if currentElapsed ~= currentElapsed then
-        currentElapsed = 0
+    local currentTime = self:Current()
+    if currentTime ~= currentTime then
+        currentTime = 0
     end
-    if currentElapsed < 0 then
-        currentElapsed = 0
+    if currentTime < 0 then
+        currentTime = 0
     end
-    if currentElapsed > self._duration then
-        currentElapsed = self._duration
+    if currentTime > self._duration then
+        currentTime = self._duration
     end
     self._playState:Set({
         playing = false,
         startClockTime = 0,
-        resumeAtElapsed = currentElapsed,
+        resumeAtTime = currentTime,
     })
 end
 
@@ -79,7 +79,7 @@ function BaseTimer.SetTimePosition(self: BaseTimer, position: number): ()
     self._playState:Set({
         playing = current.playing,
         startClockTime = os.clock() - elapsed,
-        resumeAtElapsed = current.resumeAtElapsed,
+        resumeAtTime = current.resumeAtTime,
     })
 end
 

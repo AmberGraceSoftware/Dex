@@ -76,39 +76,28 @@ end
     Creates a new Timer observable with the given duration.
 ]]
 function Timer.new(duration: number): Timer
-    local self: Timer
     local playState = State.new({
         playing = false,
         startClockTime = 0,
-        resumeAtElapsed = 0,
+        resumeAtTime = 0,
     })
     local function getCurrent(_current: typeof(playState:Current())?)
-        -- Since we are calling the Observable constructor, _duration
-        -- initializes to nil first resolution.
-        local durationCurrent = self._duration or duration
         local current = _current or playState:Current()
         if current.playing then
-            local elapsed = os.clock() - current.startClockTime
-            return math.max(0, durationCurrent - elapsed)
+            return math.clamp(
+                duration - (os.clock() - current.startClockTime),
+                0,
+                duration
+            )
         end
-        return math.max(0, durationCurrent - current.resumeAtElapsed)
+        return current.resumeAtTime
     end
     local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
         local function playStateChanged(current: typeof(playState:Current()))
             if current.playing then
                 if not heartbeatConn then
-                    heartbeatConn = RunService.Heartbeat:Connect(function()
-                        local elapsed = os.clock() - current.startClockTime
-                        if elapsed >= self._duration then
-                            playState:Set({
-                                playing = false,
-                                startClockTime = 0,
-                                resumeAtElapsed = 0,
-                            })
-                        end
-                        notifyUpdate()
-                    end)
+                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
                 end
             else
                 if heartbeatConn then
@@ -127,7 +116,7 @@ function Timer.new(duration: number): Timer
             end
         end
     end
-    self = Observable.new(
+    local self: Timer = Observable.new(
         getCurrent,
         createUpdateStream
     ) :: any

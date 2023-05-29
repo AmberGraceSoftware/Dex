@@ -102,7 +102,7 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 		_playState: State<{
 			playing: boolean,
 			startClockTime: number,
-			resumeAtElapsed: number,
+			resumeAtTime: number,
 		}>
 	},
 	{} :: {__index: {
