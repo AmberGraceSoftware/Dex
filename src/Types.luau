@@ -175,26 +175,38 @@ export type VirtualInstance = typeof(setmetatable(
             eventName: string,
             signal: (...any) -> ()
         ) -> (),
-        OutProperty: <T>(
+        OutProperty: (<T>(
             self: VirtualInstance,
             propertyName: string,
             initializedValue: T
-        ) -> Observable<T>,
-        OutInitialProperty: <T>(
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            propertyName: string
+        ) -> Observable<any?>,
+        OutInitialProperty: (<T>(
             self: VirtualInstance,
             propertyName: string,
             initializedValue: T
-        ) -> Observable<T>,
-        OutAttribute: <T>(
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            propertyName: string
+        ) -> Observable<any?>,
+        OutAttribute: (<T>(
             self: VirtualInstance,
             attributeName: string,
             initializedValue: T
-        ) -> Observable<T>,
-        OutInitialAttribute: <T>(
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            attributeName: string
+        ) -> Observable<any?>,
+        OutInitialAttribute: (<T>(
             self: VirtualInstance,
             propertyName: string,
             initializedValue: T
-        ) -> Observable<T>,
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            attributeName: string
+        ) -> Observable<any?>,
         OutInstance: (
             self: VirtualInstance
         ) -> Observable<any?>,

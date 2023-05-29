@@ -182,11 +182,11 @@ end
     Give initialValue a type annotation if initializing to nil
     (e.g. nil :: string?)
 ]]
-function VirtualInstance.__index.OutProperty<T>(
+function VirtualInstance.__index.OutProperty(
     self: VirtualInstance,
     propertyName: string,
-    initialValue: T
-): Observable<T>
+    initialValue: any
+): Observable<any>
     assertNotYetMounted(self)
     local outState = State.new(initialValue)
     table.insert(self._directives, {
@@ -213,11 +213,11 @@ end
     Give initialValue a type annotation if initializing to nil
     (e.g. nil :: string?)
 ]]
-function VirtualInstance.__index.OutInitialProperty<T>(
+function VirtualInstance.__index.OutInitialProperty(
     self: VirtualInstance,
     propertyName: string,
-    initialValue: T
-): Observable<T>
+    initialValue: any
+): Observable<any>
     assertNotYetMounted(self)
     local outState = State.new(initialValue)
     table.insert(self._directives, {
@@ -243,11 +243,11 @@ end
     Give initialValue a type annotation if initializing to nil
     (e.g. nil :: string?)
 ]]
-function VirtualInstance.__index.OutAttribute<T>(
+function VirtualInstance.__index.OutAttribute(
     self: VirtualInstance,
     propertyName: string,
-    initialValue: T
-): Observable<T>
+    initialValue: any
+): Observable<any>
     local outState = State.new(initialValue)
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -274,11 +274,11 @@ end
     Give initialValue a type annotation if initializing to nil
     (e.g. nil :: string?)
 ]]
-function VirtualInstance.__index.OutInitialAttribute<T>(
+function VirtualInstance.__index.OutInitialAttribute(
     self: VirtualInstance,
     propertyName: string,
-    initialValue: T
-): Observable<T>
+    initialValue: any
+): Observable<any>
     local outState = State.new(initialValue)
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -324,7 +324,7 @@ function VirtualInstance.__index.Copy(
         _directives = table.clone(self._directives),
         _constructorType = self._constructorType,
         _constructorTypeArgument = self._constructorTypeArgument,
-    }, VirtualInstance)
+    }, VirtualInstance :: any)
 end
 
 --[[
@@ -487,7 +487,7 @@ function VirtualInstance.new(
         _directives = directives,
         _constructorType = constructorType :: string,
         _constructorTypePayload = constructorPayload :: any
-    }, VirtualInstance)
+    }, VirtualInstance :: any)
 end
 
 return VirtualInstance
