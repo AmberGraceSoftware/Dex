@@ -1,6 +1,7 @@
 --!strict
 
 local Types = require(script.Parent.Types)
+local State = require(script.Parent.Observables.State)
 
 type VirtualInstanceTrace = Types.VirtualInstanceTrace
 type VirtualInstance = Types.VirtualInstance
@@ -59,23 +60,6 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
             "instead of modifying a VirtaulInstance after it is mounted.",
             2
         )
-    end
-end
-local function parsePath(path: ChildPath): {string}
-    if typeof(path) == "table" then
-        local parsed = table.create(#path)
-        for _, pathKey in path do
-            if typeof(pathKey) == "string" then
-                table.insert(parsed, pathKey)
-            else
-                table.insert(parsed, tostring(pathKey))
-            end
-        end
-        return parsed
-    elseif typeof(path) == "number" then
-        return {tostring(path)}
-    else
-        return {path}
     end
 end
 
@@ -139,7 +123,7 @@ function VirtualInstance.__index.AddTags(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "Tags",
+        _type = "TagList",
         _payload = tags,
         _trace = getTrace("VirtualInstance:AddTags", 1),
     })
@@ -170,49 +154,129 @@ function VirtualInstance.__index.Connect(
 end
 
 --[[
-    @param propertyName: string - The name of the property to output.
-    @param outState: State<any> - The state to output the property to.
-    @return void
+    @param propName: string - The name of the property to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
 
-    Outputs a property from the reconciled instance to a Dec State object.
+    Creates an Observable object that updates to the current value of an
+    property on the virtual instance once when it is mounted, and listens to
+    updates on this property.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
 ]]
 function VirtualInstance.__index.OutProperty(
     self: VirtualInstance,
     propertyName: string,
-    outState: State<any>
-): ()
+    initialValue: any
+): Observable<any>
     assertNotYetMounted(self)
+    local outState = State.new(initialValue)
     table.insert(self._directives, {
         _type = "OutProperty",
         _payload = {
             property = propertyName,
             state = outState,
+            once = false,
         },
         _trace = getTrace("VirtualInstance:OutProperty", 1),
     })
+    return outState
 end
 
 --[[
-    @param propertyName: string - The name of the attribute to output.
-    @param outState: State<any> - The state to output the attribute to.
-    @return void
+    @param propName: string - The name of the property to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
 
-    Outputs an attribute from the reconciled instance to a Dec State object.
+    Creates an Observable object that updates to the original value of an
+    property on the virtual instance once when it is mounted. This is useful
+    for referencing properties on a premade instance without hardcoding them in
+    a Dec component.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
+]]
+function VirtualInstance.__index.OutInitialProperty(
+    self: VirtualInstance,
+    propertyName: string,
+    initialValue: any
+): Observable<any>
+    assertNotYetMounted(self)
+    local outState = State.new(initialValue)
+    table.insert(self._directives, {
+        _type = "OutProperty",
+        _payload = {
+            property = propertyName,
+            state = outState,
+            once = true,
+        },
+        _trace = getTrace("VirtualInstance:OutInitialProperty", 1),
+    })
+    return outState
+end
+
+--[[
+    @param attributeName: string - The name of the attribute to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
+
+    Creates an Observable object that updates to the current value of an
+    attribute on the virtual instance once when it is mounted, and listens to
+    updates on this attribute.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
 ]]
 function VirtualInstance.__index.OutAttribute(
     self: VirtualInstance,
     propertyName: string,
-    outState: State<any>
-): ()
+    initialValue: any
+): Observable<any>
+    local outState = State.new(initialValue)
     assertNotYetMounted(self)
     table.insert(self._directives, {
         _type = "OutAttribute",
         _payload = {
             attribute = propertyName,
             state = outState,
+            once = false,
         },
         _trace = getTrace("VirtualInstance:OutAttribute", 1),
     })
+    return outState
+end
+
+--[[
+    @param attributeName: string - The name of the attribute to output.
+    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+    @return Observable<T> - An observable with the same output type as initialValue.
+
+    Creates an Observable object that updates to the original value of an
+    attribute on the virtual instance once when it is mounted. This is useful
+    for referencing attributes on a premade instance without hardcoding them in
+    a Dec component.
+
+    Give initialValue a type annotation if initializing to nil
+    (e.g. nil :: string?)
+]]
+function VirtualInstance.__index.OutInitialAttribute(
+    self: VirtualInstance,
+    propertyName: string,
+    initialValue: any
+): Observable<any>
+    local outState = State.new(initialValue)
+    assertNotYetMounted(self)
+    table.insert(self._directives, {
+        _type = "OutAttribute",
+        _payload = {
+            attribute = propertyName,
+            state = outState,
+            once = true
+        },
+        _trace = getTrace("VirtualInstance:OutInitialAttribute", 1),
+    })
+    return outState
 end
 
 --[[
@@ -222,15 +286,16 @@ end
     Outputs a reference to the reconciled instance to a Dec State object.
 ]]
 function VirtualInstance.__index.OutInstance(
-    self: VirtualInstance,
-    outState: State<Instance> | State<Instance?>
-): ()
+    self: VirtualInstance
+): Observable<any?>
     assertNotYetMounted(self)
+    local outState = State.new(nil :: Instance?)
     table.insert(self._directives, {
         _type = "OutInstance",
         _payload = outState,
         _trace = getTrace("VirtualInstance:OutInstance", 1),
     })
+    return outState
 end
 
 --[[
@@ -246,7 +311,7 @@ function VirtualInstance.__index.Copy(
         _directives = table.clone(self._directives),
         _constructorType = self._constructorType,
         _constructorTypeArgument = self._constructorTypeArgument,
-    }, VirtualInstance)
+    }, VirtualInstance :: any)
 end
 
 --[[
@@ -260,11 +325,7 @@ function VirtualInstance.__index.DeepCopy(
     assertNotYetMounted(self)
     local copy = self:Copy()
     for _, directive in copy._directives do
-        if directive._type == "Child" then
-            if directive._payload._dectype == "VirtualInstance" then
-                directive._payload.child = directive._payload.child:DeepCopy()
-            end
-        elseif directive._type == "Children" then
+        if directive._type == "Children" then
             for _, child in directive._payload do
                 if child._dectype == "VirtualInstance" then
                     child = child:DeepCopy()
@@ -298,11 +359,8 @@ function VirtualInstance.__index.AddChild(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "Child",
-        _payload = {
-            path = parsePath(path),
-            child = child,
-        },
+        _type = "Children",
+        _payload = {[path] = child},
         _trace = getTrace("VirtualInstance:AddChild", 1),
     })
 end
@@ -409,7 +467,7 @@ function VirtualInstance.new(
         _directives = directives,
         _constructorType = constructorType :: string,
         _constructorTypePayload = constructorPayload :: any
-    }, VirtualInstance)
+    }, VirtualInstance :: any)
 end
 
 return VirtualInstance

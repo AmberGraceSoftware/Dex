@@ -68,7 +68,7 @@ Dec.Nil = Symbols.Nil
 
 -- Reflection
 Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
--- Dec.IsObservable = require(script.Util.IsObservable)
+Dec.IsObservable = require(script.Reflection.IsObservable)
 -- Dec.IsVirtualInstance = require(script.Util.IsVirtualInstance)
 -- Dec.GetVirtualInstanceType = require(script.Util.GetVirtualInstanceType)
 

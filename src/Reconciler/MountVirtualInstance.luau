@@ -1,5 +1,9 @@
 --!strict
 
+local ApplyBasicDirectives = require(script.Parent.ApplyBasicDirectives)
+local ApplyChildDirectives = require(script.Parent.ApplyChildDirectives)
+local CreateReconciledNode = require(script.Parent.CreateReconciledNode)
+local CreateOrFindReconciledInstance = require(script.Parent.CreateOrFindReconciledInstance)
 local Types = require(script.Parent.Parent.Types)
 
 type VirtualInstance = Types.VirtualInstance
@@ -22,7 +26,28 @@ local function MountVirtualInstance(
 ): ReconciledNode
     debugLevel += 1
     
-    error("Not implemented yet")
+    local instancePromise = CreateOrFindReconciledInstance(rootInstance,
+        childPath, virtualInstance, debugLevel)
+    local node = CreateReconciledNode(
+        nil,
+        rootInstance,
+        childPath
+    )
+    instancePromise.andThen(function(instance, innerDebugLevel)
+        innerDebugLevel += 1
+        node._instance = instance
+        if (virtualInstance._constructorType == "New")
+        or (virtualInstance._constructorType == "Clone") then
+            table.insert(node._instancesToCleanup, instance)
+        end 
+        ApplyBasicDirectives(node, virtualInstance, innerDebugLevel)
+        ApplyChildDirectives(node, virtualInstance, innerDebugLevel)
+    end)
+    if not node._instance then
+        table.insert(node._unsubscribes, instancePromise.cancel)
+    end
+    
+    return node
 end
 
 return MountVirtualInstance

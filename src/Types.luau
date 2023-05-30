@@ -145,16 +145,17 @@ export type VirtualInstanceTrace = {
         line: number,
     }}
 }
+export type VirtualInstanceDirective = {
+    _type: string,
+    _payload: any,
+    _trace: VirtualInstanceTrace?,
+}
 export type VirtualInstance = typeof(setmetatable(
     {} :: {
         _current: Instance?,
         _constructorType: string,
         _constructorTypeArgument: any,
-        _directives: {{
-            _type: string,
-            _payload: any,
-            _trace: VirtualInstanceTrace?,
-        }},
+        _directives: {VirtualInstanceDirective},
     },
     {} :: {__index: {
         _dectype: string,
@@ -175,20 +176,41 @@ export type VirtualInstance = typeof(setmetatable(
             eventName: string,
             signal: (...any) -> ()
         ) -> (),
-        OutProperty: (
+        OutProperty: (<T>(
             self: VirtualInstance,
             propertyName: string,
-            outState: State<any>
-        ) -> (),
-        OutAttribute: (
+            initializedValue: T
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            propertyName: string
+        ) -> Observable<any?>,
+        OutInitialProperty: (<T>(
             self: VirtualInstance,
             propertyName: string,
-            outState: State<any>
-        ) -> (),
+            initializedValue: T
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            propertyName: string
+        ) -> Observable<any?>,
+        OutAttribute: (<T>(
+            self: VirtualInstance,
+            attributeName: string,
+            initializedValue: T
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            attributeName: string
+        ) -> Observable<any?>,
+        OutInitialAttribute: (<T>(
+            self: VirtualInstance,
+            propertyName: string,
+            initializedValue: T
+        ) -> Observable<T>) & (
+            self: VirtualInstance,
+            attributeName: string
+        ) -> Observable<any?>,
         OutInstance: (
-            self: VirtualInstance,
-            outState: State<Instance> | State<Instance?>
-        ) -> (),
+            self: VirtualInstance
+        ) -> Observable<any?>,
         Copy: (self: VirtualInstance) -> VirtualInstance,
         DeepCopy: (self: VirtualInstance) -> VirtualInstance,
         AddChildren: (
@@ -210,19 +232,16 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
     }}
 ))
-export type ReconciledNode = typeof(setmetatable(
-    {} :: {
-        _connections: {RBXScriptConnection},
-        _instances: {Instance},
-        _instance: Instance,
-        _rootInstance: Instance,
-        _childPath: string?,
-    },
-    {} :: {__index: {
-        _dectype: string,
-        Destroy: (self: ReconciledNode) -> (),
-    }}
-))
+export type ReconciledNode = {
+    _connections: {RBXScriptConnection},
+    _unsubscribes: {Unsubscribe},
+    _instancesToCleanup: {Instance},
+    _instance: Instance?,
+    _rootInstance: Instance,
+    _childPath: string?,
+    _dectype: string,
+    _childMap: {[string]: ReconciledNode},
+}
 export type Symbol<Name> = typeof(setmetatable(
     {} :: {
         _name: Name,

@@ -39,7 +39,7 @@ local function beginObservingIdempotent(self: Observable<any>)
             self._cachedValue = newValue
             callListenersSafe(self._listeners, newValue)
         end
-        notifyUpdate()
+        self._cachedValue = self._getCurrent()
         self._closeUpdateStream = self._createUpdateStream(notifyUpdate)
     end)
 end
@@ -81,11 +81,14 @@ end
 
 
 --[[
-    @param callback: (value: T) -> () - The function to call when the observable changes.
+    @param listener: (value: T) -> () - The callback function to call when the observable changes.
+    @param immediatelyCallListener: boolean? - If true, will call the listener once immediately.
     @return () -> () - Function to stop receiving updates.
 
     Subscribes to changes in the Observable. Returns a function that, when
-    called, will unsubscribe the callback from the Observable updates.
+    called, will unsubscribe the callback from the Observable updates. If `true`
+    is provided as a second argument, will also call the callback once
+    immediately with the current value.
 
     WARNING: Make sure you handle the Unsubscribe function whenever a calling
     Subscribe! Observables do not garbage collect until all external listeners
@@ -93,14 +96,19 @@ end
 ]]
 function Observable.__index.Subscribe(
     self: Observable<any>,
-    callback: (value: any) -> ()
+    listener: (value: any) -> (),
+    immediatelyCallListener: boolean?
 ): Unsubscribe
     if self._destroyed then
         error("Cannot subscribe to destroyed Observable")
     end
 
     beginObservingIdempotent(self)
-    self._listeners[callback] = true
+    self._listeners[listener] = true
+
+    if immediatelyCallListener then
+        task.spawn(listener, self:Current())
+    end
 
     local unsubscribed = false
     return function()
@@ -108,7 +116,7 @@ function Observable.__index.Subscribe(
             return
         end
         unsubscribed = true
-        self._listeners[callback] = nil
+        self._listeners[listener] = nil
         if not next(self._listeners) then
             stopObservingIdempotent(self)
         end
