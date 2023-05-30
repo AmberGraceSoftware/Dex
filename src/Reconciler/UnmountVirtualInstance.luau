@@ -19,6 +19,9 @@ local function UnmountVirtualInstance(
 )
     debugLevel += 1
     
+    for _, childNode in node._childMap do
+        UnmountVirtualInstance(childNode, debugLevel)
+    end
     for _, connection in node._connections do
         connection:Disconnect()
     end
