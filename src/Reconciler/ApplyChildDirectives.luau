@@ -31,7 +31,7 @@ end
 local function RenderChild(
     parentNode: ReconciledNode,
     childKey: string,
-    childVirtualInstance: CanBeObservable<VirtualInstance>,
+    childVirtualInstance: VirtualInstance?,
     debugLevel: number
 )
     local RenderVirtualInstance = (require :: any)(script.Parent.RenderVirtualInstance)
@@ -48,7 +48,7 @@ end
 local function RenderChildObservable(
     parentNode: ReconciledNode,
     childKey: string,
-    childVirtualInstance: Observable<VirtualInstance>,
+    childVirtualInstance: Observable<VirtualInstance?>,
     debugLevel: number
 )
     debugLevel += 1
