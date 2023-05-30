@@ -1,4 +1,7 @@
 # Dec
+| WARNING: Dec is a work in progress, and does NOT currently have a stable release or any testing. Please be patient. |
+| --- |
+
 Dec is a reactive UI library for Roblox.
 
 It combines all of the best features of modern libraries like Roact, Fusion, and more for building reusable, performant, declarative UI components.
@@ -13,12 +16,13 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 ## Project Progress
 - [X] API, concepts, and types defined
 - [X] Basic Public API Skeleton Structure
-- [ ] Reconciler API Skeleton Structure (Currently In Progress)
+- [X] Reconciler API Skeleton Structure
 - [ ] CI Workflows
 - [X] VirtualInstance API Implementation
 - [X] State and Observables API Implementation
-- [ ] Reconciler Full Implementation
-- [ ] Full Fusion and Roact interop
+- [X] Reconciler Full Implementation
+- [ ] First Stable Release (In Progress)
+- [ ] Full Fusion and Roact interop (In Progress)
 - [ ] Unit Test Skeleton Structure
 - [ ] Complete Code Coverage of Most Modules
 - [ ] Documentation Site using Moonwave
