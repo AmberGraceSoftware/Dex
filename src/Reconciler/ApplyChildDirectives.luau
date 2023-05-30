@@ -28,13 +28,16 @@ local function parsePath(path: ChildPath): {string}
         return {path}
     end
 end
+local RenderVirtualInstance: any = nil
 local function RenderChild(
     parentNode: ReconciledNode,
     childKey: string,
     childVirtualInstance: VirtualInstance?,
     debugLevel: number
 )
-    local RenderVirtualInstance = (require :: any)(script.Parent.RenderVirtualInstance)
+    if not RenderVirtualInstance then
+        RenderVirtualInstance = (require :: any)(script.Parent.RenderVirtualInstance)
+    end
     debugLevel += 1
     local existingChildNode = parentNode._childMap[childKey]
     parentNode._childMap[childKey] = RenderVirtualInstance(
