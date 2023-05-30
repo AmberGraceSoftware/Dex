@@ -2,6 +2,9 @@
 
 local Types = require(script.Parent.Types)
 local VirtualInstance = require(script.Parent.VirtualInstance)
+type VirtualInstance = Types.VirtualInstance
+type CanBeObservable<T> = Types.CanBeObservable<T>
+type ChildMap = Types.ChildMap
 
 local VirtualInstanceCreators = {}
 
@@ -17,8 +20,8 @@ local VirtualInstanceCreators = {}
 function VirtualInstanceCreators.New(
     className: string,
     props: {[string]: any}?,
-    children: Types.ChildMap?
-): Types.VirtualInstance
+    children: ChildMap?
+): VirtualInstance
     return VirtualInstance.new(
         "New",
         className,
@@ -38,10 +41,10 @@ end
     from a given template instance (via template:Clone()).
 ]]
 function VirtualInstanceCreators.Clone(
-    template: Instance,
+    template: CanBeObservable<Instance | VirtualInstance>,
     props: {[string]: any}?,
-    children: Types.ChildMap?
-): Types.VirtualInstance
+    children: ChildMap?
+): VirtualInstance
     return VirtualInstance.new(
         "Clone",
         template,
@@ -67,8 +70,8 @@ end
 ]]
 function VirtualInstanceCreators.Premade(
     props: {[string]: any}?,
-    children: Types.ChildMap?
-): Types.VirtualInstance
+    children: ChildMap?
+): VirtualInstance
     return VirtualInstance.new(
         "Premade",
         nil,

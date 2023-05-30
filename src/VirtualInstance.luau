@@ -433,7 +433,7 @@ end
 ]]
 function VirtualInstance.new(
     constructorType: "New" | "Clone" | "Premade",
-    constructorPayload: Instance | string?,
+    constructorPayload: any?,
     defaultProperties: {[string]: CanBeObservable<any>}?,
     defaultChildMap: ChildMap?,
     debugTraceLevel: number?
