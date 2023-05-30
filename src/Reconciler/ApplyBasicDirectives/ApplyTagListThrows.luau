@@ -20,7 +20,7 @@ local function ApplyTagListThrows(
     reconciledNode: Types.ReconciledNode,
     tagList: CanBeObservable<{string}>
 )
-    local instance = reconciledNode._instance
+    local instance = reconciledNode._instance :: Instance
     local reconciledUnsubs = reconciledNode._unsubscribes
     if IsObservable(tagList) then
         local lastTagList: {string} = {}

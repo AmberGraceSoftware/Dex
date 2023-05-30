@@ -23,7 +23,7 @@ local function ApplyAttributeMapThrows(
     reconciledNode: Types.ReconciledNode,
     attributeMap: {[string]: any}
 )
-    local instance = reconciledNode._instance
+    local instance = reconciledNode._instance :: Instance
     local reconciledUnsubs = reconciledNode._unsubscribes
     for key, value in attributeMap do
         if IsObservable(value) then

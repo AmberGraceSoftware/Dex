@@ -15,7 +15,7 @@ local function OutputInstanceRefThrows(
     reconciledNode: ReconciledNode,
     payload: {attribute: string, state: State<any>, once: boolean}
 )
-    payload.state:Set(reconciledNode._instance)
+    payload.state:Set(reconciledNode._instance :: Instance)
 end
 
 return OutputInstanceRefThrows

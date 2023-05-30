@@ -10,7 +10,7 @@ type ReconciledNode = Types.ReconciledNode
     Creates a reconciled node from simpler parameters
 ]]
 local function CreateReconciledNode(
-    instance: Instance,
+    instance: Instance?,
     rootInstance: Instance,
     childPath: string?
 ): ReconciledNode

@@ -16,7 +16,7 @@ local function OutputAttributeThrows(
     reconciledNode: ReconciledNode,
     payload: {attribute: string, state: State<any>, once: boolean}
 )
-    local instance = reconciledNode._instance
+    local instance = reconciledNode._instance :: Instance
     local reconciledConns = reconciledNode._connections
 
     payload.state:Set(instance:GetAttribute(payload.attribute))

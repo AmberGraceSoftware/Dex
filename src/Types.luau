@@ -235,7 +235,7 @@ export type ReconciledNode = {
     _connections: {RBXScriptConnection},
     _unsubscribes: {Unsubscribe},
     _instancesToCleanup: {Instance},
-    _instance: Instance,
+    _instance: Instance?,
     _rootInstance: Instance,
     _childPath: string?,
     _dectype: string,

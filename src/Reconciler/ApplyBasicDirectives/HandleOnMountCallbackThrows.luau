@@ -14,7 +14,7 @@ local function HandleOnMountCallbackThrows(
     reconciledNode: ReconciledNode,
     payload: (instance: any) -> ()
 )
-    task.spawn(payload, reconciledNode._instance)
+    task.spawn(payload, reconciledNode._instance :: Instance)
 end
 
 return HandleOnMountCallbackThrows

@@ -14,7 +14,7 @@ local function HandleOnUnmountCallbackThrows(
     reconciledNode: ReconciledNode,
     payload: (instance: any) -> ()
 )
-    local instance = reconciledNode._instance
+    local instance = reconciledNode._instance :: Instance
     table.insert(reconciledNode._unsubscribes, function()
         task.spawn(payload, instance)
     end)
