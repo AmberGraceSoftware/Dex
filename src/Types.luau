@@ -239,6 +239,7 @@ export type ReconciledNode = {
     _rootInstance: Instance,
     _childPath: string?,
     _dectype: string,
+    _childMap: {[string]: ReconciledNode},
 }
 export type Symbol<Name> = typeof(setmetatable(
     {} :: {

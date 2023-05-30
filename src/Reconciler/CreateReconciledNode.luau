@@ -22,6 +22,7 @@ local function CreateReconciledNode(
         _instancesToCleanup = {},
         _connections = {},
         _unsubscribes = {},
+        _childMap = {},
     }
 end
 

@@ -37,6 +37,10 @@ local function MountVirtualInstance(
 
     instancePromise.andThen(function(instance)
         node._instance = instance
+        if (virtualInstance._constructorType == "New")
+        or (virtualInstance._constructorType == "Clone") then
+            table.insert(node._instancesToCleanup, instance)
+        end 
         ApplyBasicDirectives(node, virtualInstance, debugLevel)
         ApplyChildDirectives(node, virtualInstance, debugLevel)
     end)
