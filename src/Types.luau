@@ -145,16 +145,17 @@ export type VirtualInstanceTrace = {
         line: number,
     }}
 }
+export type VirtualInstanceDirective = {
+    _type: string,
+    _payload: any,
+    _trace: VirtualInstanceTrace?,
+}
 export type VirtualInstance = typeof(setmetatable(
     {} :: {
         _current: Instance?,
         _constructorType: string,
         _constructorTypeArgument: any,
-        _directives: {{
-            _type: string,
-            _payload: any,
-            _trace: VirtualInstanceTrace?,
-        }},
+        _directives: {VirtualInstanceDirective},
     },
     {} :: {__index: {
         _dectype: string,

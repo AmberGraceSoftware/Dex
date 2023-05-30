@@ -24,7 +24,7 @@ local function CreateOrFindReconciledInstance(
 )
     debugLevel += 1
     local result: Instance? = nil
-    local onResultCallbacks: {(Instance) -> ()} = {}
+    local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
 
     local childAddedConn: RBXScriptConnection? = nil
     local cancelled = false
@@ -47,7 +47,7 @@ local function CreateOrFindReconciledInstance(
                     if child.Name == childPath then
                         result = child
                         for _, cb in onResultCallbacks do
-                            task.spawn(cb, child)
+                            task.spawn(cb, child, debugLevel + 1)
                         end
                     end
                 end)
@@ -70,7 +70,7 @@ local function CreateOrFindReconciledInstance(
     return {
         andThen = function(callback)
             if result then
-                callback(result)
+                callback(result, debugLevel + 1)
             else
                 table.insert(onResultCallbacks, callback)
             end

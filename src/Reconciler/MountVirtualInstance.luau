@@ -28,21 +28,20 @@ local function MountVirtualInstance(
     
     local instancePromise = CreateOrFindReconciledInstance(rootInstance,
         childPath, virtualInstance, debugLevel)
-
     local node = CreateReconciledNode(
         nil,
         rootInstance,
         childPath
     )
-
-    instancePromise.andThen(function(instance)
+    instancePromise.andThen(function(instance, innerDebugLevel)
+        innerDebugLevel += 1
         node._instance = instance
         if (virtualInstance._constructorType == "New")
         or (virtualInstance._constructorType == "Clone") then
             table.insert(node._instancesToCleanup, instance)
         end 
-        ApplyBasicDirectives(node, virtualInstance, debugLevel)
-        ApplyChildDirectives(node, virtualInstance, debugLevel)
+        ApplyBasicDirectives(node, virtualInstance, innerDebugLevel)
+        ApplyChildDirectives(node, virtualInstance, innerDebugLevel)
     end)
     if not node._instance then
         table.insert(node._unsubscribes, instancePromise.cancel)
