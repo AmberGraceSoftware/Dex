@@ -33,6 +33,12 @@ local function MountVirtualInstance(
         rootInstance,
         childPath
     )
+    -- Freeze all VirtualInstances on mount
+    if virtualInstance._reconciledNode then
+        error("VirtualInstance cannot be mounted more than once", debugLevel)
+    end
+    virtualInstance._reconciledNode = node
+    table.freeze(virtualInstance)
     instancePromise.andThen(function(instance, innerDebugLevel)
         innerDebugLevel += 1
         node._instance = instance

@@ -156,6 +156,7 @@ export type VirtualInstance = typeof(setmetatable(
         _constructorType: string,
         _constructorTypeArgument: any,
         _directives: {VirtualInstanceDirective},
+        _reconciledNode: ReconciledNode?
     },
     {} :: {__index: {
         _dectype: string,

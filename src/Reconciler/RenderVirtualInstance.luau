@@ -28,11 +28,6 @@ local function RenderVirtualInstance(
     debugLevel += 1
     
     if virtualInstance then
-        -- Freeze all VirtualInstances on reconciliation
-        if not table.isfrozen(virtualInstance :: any) then
-            table.freeze(virtualInstance)
-        end
-
         if oldReconciledNode then
             return ReplaceVirtualInstance(
                 oldReconciledNode,
