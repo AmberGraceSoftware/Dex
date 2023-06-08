@@ -99,7 +99,7 @@ local function ApplyChildrenDirective(
             local chainedVirtualInstance: any = virtualInstance
             local finalChildKey: string
 
-            -- Flaten list of multiple names to a chain of Premade
+            -- De-Sugar/Flaten list of multiple names to a chain of Premade
             -- VirtualInstances with each nested child as a VirtualInstance.
             local nameList = parsePath(childPath)
             for i = #nameList, 1, -1 do
@@ -111,6 +111,9 @@ local function ApplyChildrenDirective(
                     local parent = VirtualInstanceCreators.Premade()
                     parent:AddChild(name, child)
                     chainedVirtualInstance = parent
+                    for _, parentDirective in parent._directives do
+                        parentDirective._trace = directive._trace
+                    end
                 end
             end
             if not finalChildKey then

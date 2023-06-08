@@ -156,6 +156,7 @@ export type VirtualInstance = typeof(setmetatable(
         _constructorType: string,
         _constructorTypeArgument: any,
         _directives: {VirtualInstanceDirective},
+        _reconciledNode: ReconciledNode?
     },
     {} :: {__index: {
         _dectype: string,
@@ -217,6 +218,17 @@ export type VirtualInstance = typeof(setmetatable(
             self: VirtualInstance,
             childMap: ChildMap
         ) -> (),
+        FindChild: (
+            self: VirtualInstance,
+            childPath: ChildPath
+        ) -> VirtualInstance,
+        ExtractChildTemplate: ((
+            self: VirtualInstance,
+            childPath: ChildPath
+        ) -> VirtualInstance) & ((
+            self: VirtualInstance,
+            condition: (child: Instance) -> boolean
+        ) -> VirtualInstance),
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
@@ -237,6 +249,7 @@ export type ReconciledNode = {
     _unsubscribes: {Unsubscribe},
     _instancesToCleanup: {Instance},
     _instance: Instance?,
+    _instanceResolvedCallbacks: {[(Instance) -> ()]: boolean},
     _rootInstance: Instance,
     _childPath: string?,
     _dectype: string,

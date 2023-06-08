@@ -423,6 +423,99 @@ function VirtualInstance.__index.OnUnmount(
 end
 
 --[[
+    @param nameOrPredicate: string | {string} - The name of the child to be extracted as a template
+    @return Dec.VirtualInstance - A new VirtualInstance, cloned from a child of the parent instance
+    Specifies that when the VirtualInstance is mounted, returns a new
+    VirtualInstance which automatically mounts on the first child matching
+    the name (or predicate) defined in the first argument to this method.
+    
+    Upon mount, all other children matching this name will be destroyed,
+    and the template will be parented to `nil` by defalt. On unmount, it will be
+    reparented to its original location if possible.
+
+    Usage example:
+
+```lua
+local function CardListUI()
+    -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
+    local rootUI = Dec.Premade()
+
+    -- Index a ScrollingFrame containing template cards
+    local cardList = rootUI:FindChild("ScrollingFrame")
+
+    -- Extract the first template named "CardTemplate", and destroy all other
+    -- premade templates with that same name
+    local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
+
+    -- Generate 10 cards from the template
+    local cards = {}
+    for i = 1, 10 do
+        table.insert(cards, Dec.Clone(cardTemplate, {
+            LayoutOrder = i
+        }))
+    end
+
+    return rootUI
+end
+```
+]]
+function VirtualInstance.__index.ExtractChildTemplate(
+    self: VirtualInstance,
+    childPath: string | {string}
+): ()
+    assertNotYetMounted(self)
+    local childVInst = self:FindChild(childPath)
+    local templateParent = nil
+    childVInst:OnMount(function(instance)
+        templateParent = instance.Parent
+        instance.Parent = nil
+    end)
+    childVInst:OnUnmount(function(instance)
+        pcall(function()
+            instance.Parent = templateParent
+        end)
+    end)
+    return childVInst
+end
+
+--[[
+    @param nameOrPredicate: string | (Instance) -> boolean - The name of the child instance to find (or predicate)
+    @return Dec.VirtualInstance - A new VirtualInstance representing the child of the parent VirtualInstance
+
+    Creates a new VirtualInstance that automatically mounts on the child of the
+    parent VirtualInstance. Will wait until a child with the given name is
+    found, or if a function is provided, will wait until a child is found for
+    which the provided callback returns true.
+
+    The following blocks of code are equivalent:
+```lua
+local parent = Dec.Premade()
+local child = Dec.Premade()
+parent:AddChild("ChildName", child)
+```
+
+```lua
+local parent = Dec.Premade()
+local child = parent:FindChild("ChildName")
+```
+]]
+function VirtualInstance.__index.FindChild(
+    self: VirtualInstance,
+    path: string | {string}
+): VirtualInstance
+    assertNotYetMounted(self)
+
+    -- De-sugar argument
+    local VirtualInstanceCreators = (require :: any)(
+        script.Parent.VirtualInstanceCreators)
+
+    local childVInst = VirtualInstanceCreators.Premade()
+    self:AddChild(path, childVInst)
+    
+    return childVInst
+end
+
+--[[
     @return Dec.VirtualInstance - A new, empty Virtual Instance.
 
     A mutable element that Dec reconciles into a Roblox Instance.
@@ -432,8 +525,8 @@ end
     been reconciled.
 ]]
 function VirtualInstance.new(
-    constructorType: "New" | "Clone" | "Premade",
-    constructorPayload: Instance | string?,
+    constructorType: "New" | "Clone" | "Premade" | "Extract",
+    constructorPayload: any?,
     defaultProperties: {[string]: CanBeObservable<any>}?,
     defaultChildMap: ChildMap?,
     debugTraceLevel: number?

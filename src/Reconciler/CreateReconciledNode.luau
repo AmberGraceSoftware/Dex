@@ -17,6 +17,7 @@ local function CreateReconciledNode(
     return {
         _dectype = "ReconciledNode",
         _instance = instance,
+        _instanceResolvedCallbacks = {},
         _rootInstance = rootInstance,
         _childPath = childPath,
         _instancesToCleanup = {},
