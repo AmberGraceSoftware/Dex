@@ -249,6 +249,7 @@ export type ReconciledNode = {
     _unsubscribes: {Unsubscribe},
     _instancesToCleanup: {Instance},
     _instance: Instance?,
+    _instanceResolvedCallbacks: {[(Instance) -> ()]: boolean},
     _rootInstance: Instance,
     _childPath: string?,
     _dectype: string,

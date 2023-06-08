@@ -41,7 +41,7 @@ end
     from a given template instance (via template:Clone()).
 ]]
 function VirtualInstanceCreators.Clone(
-    template: CanBeObservable<Instance | VirtualInstance>,
+    template: Instance | VirtualInstance,
     props: {[string]: any}?,
     children: ChildMap?
 ): VirtualInstance

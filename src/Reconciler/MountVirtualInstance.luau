@@ -48,6 +48,9 @@ local function MountVirtualInstance(
         end 
         ApplyBasicDirectives(node, virtualInstance, innerDebugLevel)
         ApplyChildDirectives(node, virtualInstance, innerDebugLevel)
+        for callback in node._instanceResolvedCallbacks do
+            task.spawn(callback, instance)
+        end
     end)
     if not node._instance then
         table.insert(node._unsubscribes, instancePromise.cancel)

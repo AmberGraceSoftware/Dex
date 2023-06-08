@@ -113,11 +113,13 @@ local function CloneTemplateReconciledInstance(
             }
         else
             -- In the case that we passed in a latent-mounted VirtualInstance,
-            -- check if it has resolved into an instance this frame. If not,
-            -- raise an exception.
+            -- check if the template VInstance was mounted this frame and wait
+            -- for the template at least to resolve. Otherwise, raise an
+            -- exception.
             local result: Instance? = nil
             local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
             local cancelled = false
+            local stopTrackingLatentResolve: (() -> ())? = nil
             task.defer(function()
                 if cancelled then
                     return
@@ -125,8 +127,7 @@ local function CloneTemplateReconciledInstance(
                 local instance
                 if templateArg._reconciledNode then
                     instance = templateArg._reconciledNode._instance
-                end
-                if not instance then
+                else
                     local firstEncounteredTrace = nil
                     for _, directive in virtualInstance._directives do
                         if directive._trace then
@@ -153,9 +154,29 @@ local function CloneTemplateReconciledInstance(
                         1
                     )
                 end
-                result = instance
-                for _, cb in onResultCallbacks do
-                    task.spawn(cb, instance, 1)
+                if instance then
+                    local newInstance = instance:Clone()
+                    newInstance.Name = childPath
+                        or DEFAULT_CREATED_CHILD_NAME
+                    result = newInstance
+                    for _, cb in onResultCallbacks do
+                        task.spawn(cb, newInstance, 1)
+                    end
+                else
+                    local function onResolve(template: Instance)
+                        local newInstance = template:Clone()
+                        newInstance.Name = childPath
+                            or DEFAULT_CREATED_CHILD_NAME
+                        for _, cb in onResultCallbacks do
+                            task.spawn(cb, newInstance, 1)
+                        end
+                    end
+                    templateArg._reconciledNode._instanceResolvedCallbacks
+                        [onResolve] = true
+                    stopTrackingLatentResolve = function()
+                        templateArg._reconciledNode._instanceResolvedCallbacks
+                            [onResolve] = nil
+                    end
                 end
             end)
             return {
@@ -168,6 +189,9 @@ local function CloneTemplateReconciledInstance(
                 end,
                 cancel = function()
                     cancelled = true
+                    if stopTrackingLatentResolve then
+                        stopTrackingLatentResolve()
+                    end
                 end,
             }
         end
@@ -201,7 +225,7 @@ local function CreateOrFindReconciledInstance(
     childPath: string?,
     virtualInstance: VirtualInstance,
     debugLevel: number
-)
+): PseudoPromise
     debugLevel += 1
 
     if virtualInstance._constructorType == "New" then

@@ -423,13 +423,13 @@ function VirtualInstance.__index.OnUnmount(
 end
 
 --[[
-    @param nameOrPredicate: string | (Instance) -> boolean - The condition for extracting the template
+    @param nameOrPredicate: string | {string} - The name of the child to be extracted as a template
     @return Dec.VirtualInstance - A new VirtualInstance, cloned from a child of the parent instance
     Specifies that when the VirtualInstance is mounted, returns a new
     VirtualInstance which automatically mounts on the first child matching
     the name (or predicate) defined in the first argument to this method.
     
-    Upon mount, all other children matching this condition will be destroyed,
+    Upon mount, all other children matching this name will be destroyed,
     and the template will be parented to `nil` by defalt. On unmount, it will be
     reparented to its original location if possible.
 
@@ -461,14 +461,21 @@ end
 ]]
 function VirtualInstance.__index.ExtractChildTemplate(
     self: VirtualInstance,
-    nameOrPredicate: string | (instance: Instance) -> ()
+    childPath: string | {string}
 ): ()
     assertNotYetMounted(self)
-    table.insert(self._directives, {
-        _type = "ExtractChildTemplate",
-        _payload = nameOrPredicate,
-        _trace = getTrace("Dec.ExtractChildTemplate", 1),
-    })
+    local childVInst = self:FindChild(childPath)
+    local templateParent = nil
+    childVInst:OnMount(function(instance)
+        templateParent = instance.Parent
+        instance.Parent = nil
+    end)
+    childVInst:OnUnmount(function(instance)
+        pcall(function()
+            instance.Parent = templateParent
+        end)
+    end)
+    return childVInst
 end
 
 --[[
@@ -480,10 +487,11 @@ end
     found, or if a function is provided, will wait until a child is found for
     which the provided callback returns true.
 
-    The following statements are equivalent:
+    The following blocks of code are equivalent:
 ```lua
+local parent = Dec.Premade()
 local child = Dec.Premade()
-local parent = Dec.Premade({}, {ChildName = child})
+parent:AddChild("ChildName", child)
 ```
 
 ```lua
@@ -493,14 +501,18 @@ local child = parent:FindChild("ChildName")
 ]]
 function VirtualInstance.__index.FindChild(
     self: VirtualInstance,
-    nameOrPredicate: string | (instance: Instance) -> ()
-): ()
+    path: string | {string}
+): VirtualInstance
     assertNotYetMounted(self)
-    table.insert(self._directives, {
-        _type = "FindChild",
-        _payload = nameOrPredicate,
-        _trace = getTrace("Dec.FindChild", 1),
-    })
+
+    -- De-sugar argument
+    local VirtualInstanceCreators = (require :: any)(
+        script.Parent.VirtualInstanceCreators)
+
+    local childVInst = VirtualInstanceCreators.Premade()
+    self:AddChild(path, childVInst)
+    
+    return childVInst
 end
 
 --[[
@@ -513,7 +525,7 @@ end
     been reconciled.
 ]]
 function VirtualInstance.new(
-    constructorType: "New" | "Clone" | "Premade",
+    constructorType: "New" | "Clone" | "Premade" | "Extract",
     constructorPayload: any?,
     defaultProperties: {[string]: CanBeObservable<any>}?,
     defaultChildMap: ChildMap?,
