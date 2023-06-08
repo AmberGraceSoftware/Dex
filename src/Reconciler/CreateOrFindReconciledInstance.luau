@@ -84,6 +84,92 @@ local function FindChildReconciledInstance(
     }
 end
 
+local function CloneLatentResolvedTemplate(
+    childPath: string?,
+    virtualInstance: VirtualInstance,
+    templateArg: VirtualInstance,
+    debugLevel: number
+): PseudoPromise
+    debugLevel += 1
+    local result: Instance? = nil
+    local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
+    local cancelled = false
+    local stopTrackingLatentResolve: (() -> ())? = nil
+    task.defer(function()
+        if cancelled then
+            return
+        end
+        local templateNode = templateArg._reconciledNode
+        if not templateNode then
+            local firstEncounteredTrace = nil
+            for _, directive in virtualInstance._directives do
+                if directive._trace then
+                    firstEncounteredTrace = directive._trace
+                    break
+                end
+            end
+            if not firstEncounteredTrace then
+                for _, directive in templateArg._directives do
+                    if directive._trace then
+                        firstEncounteredTrace = directive._trace
+                        break
+                    end
+                end
+            end
+            EmitTracedError(
+                "Error when mounting cloned VirtualInstance: The " .. 
+                "provided template must be an Instance, or a " .. 
+                "VirtualInstance that has already been mounted or " .. 
+                "will be mounted within the same frame. Perhaps you " ..
+                "passed an unmounted VirtualInstance as a template " .. 
+                "for Dec.Clone()?",
+                firstEncounteredTrace,
+                1
+            )
+            return
+        end
+
+        local instance = templateNode._instance
+        if instance then
+            local newInstance = instance:Clone()
+            newInstance.Name = childPath
+                or DEFAULT_CREATED_CHILD_NAME
+            result = newInstance
+            for _, cb in onResultCallbacks do
+                task.spawn(cb, newInstance, 1)
+            end
+        else
+            local function onResolve(template: Instance)
+                local newInstance = template:Clone()
+                newInstance.Name = childPath
+                    or DEFAULT_CREATED_CHILD_NAME
+                for _, cb in onResultCallbacks do
+                    task.spawn(cb, newInstance, 1)
+                end
+            end
+            templateNode._instanceResolvedCallbacks[onResolve] = true
+            stopTrackingLatentResolve = function()
+                templateNode._instanceResolvedCallbacks[onResolve] = nil
+            end
+        end
+    end)
+    return {
+        andThen = function(callback)
+            if result then
+                callback(result, debugLevel + 1)
+            else
+                table.insert(onResultCallbacks, callback)
+            end
+        end,
+        cancel = function()
+            cancelled = true
+            if stopTrackingLatentResolve then
+                stopTrackingLatentResolve()
+            end
+        end,
+    }
+end
+
 local function CloneTemplateReconciledInstance(
     childPath: string?,
     virtualInstance: VirtualInstance,
@@ -116,84 +202,8 @@ local function CloneTemplateReconciledInstance(
             -- check if the template VInstance was mounted this frame and wait
             -- for the template at least to resolve. Otherwise, raise an
             -- exception.
-            local result: Instance? = nil
-            local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
-            local cancelled = false
-            local stopTrackingLatentResolve: (() -> ())? = nil
-            task.defer(function()
-                if cancelled then
-                    return
-                end
-                local instance
-                if templateArg._reconciledNode then
-                    instance = templateArg._reconciledNode._instance
-                else
-                    local firstEncounteredTrace = nil
-                    for _, directive in virtualInstance._directives do
-                        if directive._trace then
-                            firstEncounteredTrace = directive._trace
-                            break
-                        end
-                    end
-                    if not firstEncounteredTrace then
-                        for _, directive in templateArg._directives do
-                            if directive._trace then
-                                firstEncounteredTrace = directive._trace
-                                break
-                            end
-                        end
-                    end
-                    EmitTracedError(
-                        "Error when mounting cloned VirtualInstance: The " .. 
-                        "provided template must be an Instance, or a " .. 
-                        "VirtualInstance that has already been mounted or " .. 
-                        "will be mounted within the same frame. Perhaps you " ..
-                        "passed an unmounted VirtualInstance as a template " .. 
-                        "for Dec.Clone()?",
-                        firstEncounteredTrace,
-                        1
-                    )
-                end
-                if instance then
-                    local newInstance = instance:Clone()
-                    newInstance.Name = childPath
-                        or DEFAULT_CREATED_CHILD_NAME
-                    result = newInstance
-                    for _, cb in onResultCallbacks do
-                        task.spawn(cb, newInstance, 1)
-                    end
-                else
-                    local function onResolve(template: Instance)
-                        local newInstance = template:Clone()
-                        newInstance.Name = childPath
-                            or DEFAULT_CREATED_CHILD_NAME
-                        for _, cb in onResultCallbacks do
-                            task.spawn(cb, newInstance, 1)
-                        end
-                    end
-                    templateArg._reconciledNode._instanceResolvedCallbacks
-                        [onResolve] = true
-                    stopTrackingLatentResolve = function()
-                        templateArg._reconciledNode._instanceResolvedCallbacks
-                            [onResolve] = nil
-                    end
-                end
-            end)
-            return {
-                andThen = function(callback)
-                    if result then
-                        callback(result, debugLevel + 1)
-                    else
-                        table.insert(onResultCallbacks, callback)
-                    end
-                end,
-                cancel = function()
-                    cancelled = true
-                    if stopTrackingLatentResolve then
-                        stopTrackingLatentResolve()
-                    end
-                end,
-            }
+            return CloneLatentResolvedTemplate(childPath, virtualInstance,
+                templateArg, debugLevel)
         end
     else
         -- In standard case, use template instance provided
