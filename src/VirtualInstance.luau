@@ -461,7 +461,7 @@ end
 ]]
 function VirtualInstance.__index.ExtractChildTemplate(
     self: VirtualInstance,
-    childPath: string | {string}
+    childPath: ChildPath
 ): ()
     assertNotYetMounted(self)
     local childVInst = self:FindChild(childPath)
@@ -479,13 +479,12 @@ function VirtualInstance.__index.ExtractChildTemplate(
 end
 
 --[[
-    @param nameOrPredicate: string | (Instance) -> boolean - The name of the child instance to find (or predicate)
+    @param childPath: string - The name of the child to find
     @return Dec.VirtualInstance - A new VirtualInstance representing the child of the parent VirtualInstance
 
     Creates a new VirtualInstance that automatically mounts on the child of the
     parent VirtualInstance. Will wait until a child with the given name is
-    found, or if a function is provided, will wait until a child is found for
-    which the provided callback returns true.
+    found.
 
     The following blocks of code are equivalent:
 ```lua
@@ -501,7 +500,7 @@ local child = parent:FindChild("ChildName")
 ]]
 function VirtualInstance.__index.FindChild(
     self: VirtualInstance,
-    path: string | {string}
+    path: ChildPath
 ): VirtualInstance
     assertNotYetMounted(self)
 
