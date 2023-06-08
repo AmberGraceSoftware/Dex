@@ -497,9 +497,9 @@ function VirtualInstance.__index.FindChild(
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
-        _type = "ExtractChildTemplate",
+        _type = "FindChild",
         _payload = nameOrPredicate,
-        _trace = getTrace("Dec.ExtractChildTemplate", 1),
+        _trace = getTrace("Dec.FindChild", 1),
     })
 end
 
