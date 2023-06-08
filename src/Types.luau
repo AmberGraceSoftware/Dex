@@ -225,9 +225,6 @@ export type VirtualInstance = typeof(setmetatable(
         ExtractChildTemplate: ((
             self: VirtualInstance,
             childPath: ChildPath
-        ) -> VirtualInstance) & ((
-            self: VirtualInstance,
-            condition: (child: Instance) -> boolean
         ) -> VirtualInstance),
         AddChild: (
             self: VirtualInstance,
