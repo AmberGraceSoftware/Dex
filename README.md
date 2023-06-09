@@ -17,7 +17,7 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] API, concepts, and types defined
 - [X] Basic Public API Skeleton Structure
 - [X] Reconciler API Skeleton Structure
-- [ ] CI Workflows (In Progress)
+- [X] CI Workflows (In Progress)
 - [X] VirtualInstance API Implementation
 - [X] State and Observables API Implementation
 - [X] Reconciler Full Implementation
