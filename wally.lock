@@ -6,3 +6,8 @@ registry = "test"
 name = "ambergracesoftware/dec"
 version = "0.0.1"
 dependencies = []
+
+[[package]]
+name = "roblox/testez"
+version = "0.4.1"
+dependencies = []

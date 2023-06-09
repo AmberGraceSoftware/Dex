@@ -5,16 +5,23 @@
 
     "ReplicatedStorage": {
       "Packages": {
-        "$path": "Packages",
+        "$className": "Folder",
         "Dec": {
           "$path": "src"
         }
       },
       "DevPackages": {
         "$path": "DevPackages"
+      },
+      "DecTests": {
+        "$path": "tests"
       }
     },
-
+    "ServerScriptService":{
+      "TestRunner": {
+        "$path": "TestRunner.server.luau"
+      }
+    },
     "Workspace": {
       "$properties": {
         "FilteringEnabled": true
