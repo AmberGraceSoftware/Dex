@@ -63,7 +63,7 @@ local function captureSourceFileStrings(rootInstances: {Instance})
 
     local sourceStrings = table.create(#objects * 2)
     for _, sourceFile in objects do
-        table.insert(sourceStrings, sourceFile.Name)
+        table.insert(sourceStrings, sourceFile:GetFullName())
         table.insert(sourceStrings, sourceFile.Source)
     end
 
