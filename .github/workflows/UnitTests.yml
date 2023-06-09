@@ -1,0 +1,22 @@
+name: Luau Analyze
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+      - name: install foreman
+        uses: Roblox/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install foreman packages
+        run: foreman install
+      - name: Verify Proof-Of-Testing with current source file structure
+        run: lune ValidateProofOfTesting.luau
