@@ -6,6 +6,9 @@ Packages/
 DevPackages/
 sourcemap.json
 
+# Temporary files in workflows
+globalTypes.d.lua
+
 # Roblox Studio lock files
 /*.rbxlx.lock
 /*.rbxl.lock

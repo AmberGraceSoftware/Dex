@@ -1,0 +1,30 @@
+name: Analyze Source Code
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.3.0
+      - name: Install wally dependencies
+        run: wally install
+      - name: Generate Rojo Sourcemap
+        run: rojo sourcemap --output sourcemap.json
+      - name: Download latest Roblox API types
+        run: |
+          curl \
+            -H 'Accept: application/vnd.github.v3.raw' \
+            -O \
+            -L 'https://api.github.com/repos/JohnnyMorganz/luau-lsp/contents/scripts/globalTypes.d.lua'
+      - name: Verify type safety with luau-lsp
+        run: lune workflowtools/RunLuauLSP.luau
+      - name: Verify code integrity with selene 
+        run: selene src tests
