@@ -1,4 +1,4 @@
-name: Luau Analyze
+name: Unit Testing
 
 on:
   push:
