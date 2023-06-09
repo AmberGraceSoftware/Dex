@@ -1,6 +1,6 @@
 --!strict
 --[[
-    Lune script which validates the proof_of_testing.txt checksum file by
+    Lune script which validates the testing_proof_checksum.txt checksum file by
     checking the "success" flag and comparing the checksum with the file
     structure. Emits detailed warnings on whether the checksum matches (and how
     to run unit tests manually), as well as the successes/failures/skipped tests
@@ -14,7 +14,7 @@ type SourceMap = {
     robloxPath: string
 }
 
-local PROOF_FILE_PATH = "proof_of_testing.txt"
+local PROOF_FILE_PATH = "testing_proof_checksum.txt"
 local SOURCE_ROOTS: {SourceMap} = {
     {
         sourcePath = "src",

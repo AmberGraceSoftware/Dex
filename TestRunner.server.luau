@@ -3,7 +3,7 @@
 
 Run this TestRunner script on the command line in Roblox Studio. The output
 will be a "proof" checksum, which should then be copied and pasted into
-proof_of_testing.txt in Dec's root project folder before a PR is merged.
+testing_proof_checksum.txt in Dec's root project folder before a PR is merged.
 
 ]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -115,7 +115,7 @@ local function TestRunner()
             )
         end
         print("\n\tProof-of-testing checksum (paste into " ..
-            "'proof_of_testing.txt' in Dec's root project directory): ",
+            "'testing_proof_checksum.txt' in Dec's root project directory): ",
             proof_checksum)
     end)
 end
