@@ -15,7 +15,7 @@ jobs:
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
       - name: Install wally dependencies
-        uses: wally install
+        run: wally install
       - name: Generate Rojo Sourcemap
         run: rojo sourcemap --output sourcemap.json
       - name: Download latest Roblox API types
