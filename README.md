@@ -17,17 +17,17 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] API, concepts, and types defined
 - [X] Basic Public API Skeleton Structure
 - [X] Reconciler API Skeleton Structure
-- [X] CI Workflows (In Progress)
+- [X] CI Workflows
 - [X] VirtualInstance API Implementation
 - [X] State and Observables API Implementation
 - [X] Reconciler Full Implementation
+- [X] Unit Test Skeleton Structure
+- [ ] Complete Code Coverage of Most Modules (In Progress)
 - [ ] First Stable Release (In Progress)
-- [ ] Full Fusion and Roact interop (In Progress)
-- [ ] Unit Test Skeleton Structure
-- [ ] Complete Code Coverage of Most Modules
+- [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!) 
 - [ ] Documentation Site using Moonwave
 - [ ] Add usage guides to docs site
-- [ ] Create a simple Todo List Demo (In Progress)
+- [ ] Create a simple Todo List Demo
 - [ ] Create a simple open-source demo game using Dec?
 - [ ] Create a simple open-source demo plugin using Dec?
 - [ ] Video tutorials?
