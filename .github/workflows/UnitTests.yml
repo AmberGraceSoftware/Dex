@@ -15,4 +15,4 @@ jobs:
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
       - name: Verify Proof-Of-Testing with current source file structure
-        run: lune ValidateProofOfTesting.luau
+        run: lune workflowtools/ValidateProofOfTesting.luau
