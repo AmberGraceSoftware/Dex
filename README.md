@@ -1,5 +1,5 @@
 # Dec
-| DISCLAIMER: Dec is a work in progress project, and does NOT currently have a stable release or any testing. Please be patient as it is developed. |
+| DISCLAIMER: Dec is a work in progress project, and does NOT currently have a stable release, finalized API/documentation, or full test coverage. Please be patient as a first beta release is actively being developed! |
 | --- |
 
 Dec is a reactive UI library for Roblox.
