@@ -12,11 +12,7 @@ jobs:
     steps:
       - name: Clone Repository
         uses: actions/checkout@v3
-      - name: install foreman
-        uses: Roblox/setup-foreman@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install foreman packages
-        run: foreman install
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.3.0
       - name: Verify Proof-Of-Testing with current source file structure
         run: lune ValidateProofOfTesting.luau
