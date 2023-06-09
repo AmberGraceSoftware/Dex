@@ -2,7 +2,7 @@
 --[[
 
 Run this TestRunner script on the command line in Roblox Studio. The output
-will be a "proof" hash, which should then be copied and pasted into
+will be a "proof" checksum, which should then be copied and pasted into
 proof_of_testing.txt in Dec's root project folder before a PR is merged.
 
 ]]
@@ -16,7 +16,8 @@ type TestResults = {
     successCount: number,
 }
 
-local function generateSourceFileHash(sourceStrings: {string})
+-- Polynomial rolling hash checksum
+local function generateSourceFileChecksum(sourceStrings: {string})
     local base = 256
     local prime = 1000000007
 
@@ -80,14 +81,14 @@ local function TestRunner()
     }
     TestEZ.TestBootstrap:run({ReplicatedStorage.DecTests}, interceptReporter)
 
-    -- Generate a hash of the source code
+    -- Generate a checksum of the source code
     local sourceRoots = {ReplicatedStorage.DecTests,
     ReplicatedStorage.Packages.Dec}
-    local sourceHash = generateSourceFileHash(
+    local sourceChecksum = generateSourceFileChecksum(
         captureSourceFileStrings(sourceRoots)
     )
     
-    -- Output a final "proof of testing" hash
+    -- Output a final "proof of testing" checksum
     task.defer(function()
         local success = false
         if testResults then
@@ -96,25 +97,26 @@ local function TestRunner()
                 and (testResults.successCount > 0)
         end
         local success_str = if success then "success" else "fail"
-        local proof_hash
+        local proof_checksum
         if testResults then
-            proof_hash = string.format(
+            proof_checksum = string.format(
                 "%s_%d_%d_%d_%s",
-                sourceHash,
+                sourceChecksum,
                 testResults.successCount,
                 testResults.failureCount,
                 testResults.skippedCount,
                 success_str
             )
         else
-            proof_hash = string.format(
+            proof_checksum = string.format(
                 "%s_0_0_0_%s",
-                sourceHash,
+                sourceChecksum,
                 success_str
             )
         end
-        print("\n\tProof of Testing hash (paste into proof_of_testing.txt " ..
-            " in Dec's root project directory): ", proof_hash)
+        print("\n\tProof-of-testing checksum (paste into " ..
+            "'proof_of_testing.txt' in Dec's root project directory): ",
+            proof_checksum)
     end)
 end
 

@@ -51,5 +51,5 @@ cannot currently be fully automated, unit tests must be run manually before
 changes can be merged into the main branch. To perform this process:
 - Sync the build via `rojo build --output Dec.rbxlx`
 - Open the build in Roblox Studio, and run the command line script located in `game.ServerScriptStorage.TestRunner`
-- Copy the "proof" hash generated in Studio's output and replace the contents `proof_of_testing.txt` with this hash, then commit this directly to the branch.
-- Github will automatically start an action which compares the source code with the proof hash. If it matches, and the unit tests were all successful, the current branch will be marked as safe to merge.
+- Copy the "proof checksum" generated in Studio's output and replace the contents `proof_of_testing.txt` with this checksum, then commit this directly to the branch.
+- Github will automatically start an action which compares the source code with the proof checksum. If it matches, and the unit tests were all successful, the current branch will be marked as safe to merge.
