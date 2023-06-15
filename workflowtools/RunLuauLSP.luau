@@ -39,9 +39,8 @@ local function RunLuauLSP()
         print("Luau LSP exited with no errors")
         print(result.stdout)
     else
-        warn(result.stderr)
+        error(result.stderr)
     end
-    return result.code
 end
 
 return RunLuauLSP()

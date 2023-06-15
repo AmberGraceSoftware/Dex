@@ -125,9 +125,8 @@ end
 local function ValidateProofOfTesting()
     -- Validate checksum file format and extract components
     if not fs.isFile(PROOF_FILE_PATH) then
-        warn("Validation Error: No file exists in this directory named '" .. 
+        error("Validation Error: No file exists in this directory named '" .. 
             PROOF_FILE_PATH .. "'") 
-        return 1
     end
     local proofChecksum: string = fs.readFile(PROOF_FILE_PATH)
     local sourceChecksum, successesStr, failsStr, skipsStr, successFlag
@@ -141,35 +140,31 @@ local function ValidateProofOfTesting()
         or not skips
         or not successFlag
     then
-        warn("Validation Error: Proof of testing file '" .. PROOF_FILE_PATH
+        error("Validation Error: Proof of testing file '" .. PROOF_FILE_PATH
             .. "' does not contain a valid proof checksum!")
-        return 1
     end
 
     -- Calculate and compare with current file structure checksum
     local expectedChecksum = generateSourceFileChecksum(
         captureSourceFileStrings(SOURCE_ROOTS))
     if expectedChecksum ~= sourceChecksum then
-        warn("Validation Error: Some source code for Dec has changed since " .. 
+        error("Validation Error: Some source code for Dec has changed since " .. 
             "the last time unit tests were ran!\n\nPlease run unit tests " .. 
             "manually and paste the proof checksum output into the '" ..
             PROOF_FILE_PATH .. "' file at the root of the Dec project " .. 
             "directory.\n\n See Dec's readme file for more details.\n\n" .. 
             `Current checksum: {sourceChecksum}; Expected: {expectedChecksum}`
         )
-        return 1
     end
     
     -- Verify successes/failures
     if successFlag == "success" then
         print("All unit tests have passed!\n\n" ..
             `Successes: {successes}; Failures: {fails}; Skipped: {skips}`)
-        return 0
     else
-        warn("Validation Error: Some unit tests have failed! Please run unit" ..
+        error("Validation Error: Some unit tests have failed! Please run unit" ..
             "tests manually to see more details.\n\n" ..
             `Successes: {successes}; Failures: {fails}; Skipped: {skips}`)
-        return 1
     end
 end
 
