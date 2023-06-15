@@ -526,7 +526,7 @@ end
 function VirtualInstance.new(
     constructorType: "New" | "Clone" | "Premade" | "Extract",
     constructorPayload: any?,
-    defaultProperties: {[string]: CanBeObservable<any>}?,
+    defaultProperties: {[string]: any}?,
     defaultChildMap: ChildMap?,
     debugTraceLevel: number?
 ): VirtualInstance

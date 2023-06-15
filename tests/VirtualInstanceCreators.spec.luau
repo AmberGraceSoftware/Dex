@@ -8,7 +8,8 @@ return function()
         local props = {Size = Vector3.new(10, 10, 10)}
         local children = {Child1 = VirtualInstanceCreators.New("Part")}
 
-        local virtualInstance = VirtualInstanceCreators.New(className, props, children)
+        local virtualInstance = VirtualInstanceCreators.New(className, props,
+            children)
 
         expect(virtualInstance._dectype).to.equal("VirtualInstance")
         expect(virtualInstance._constructorType).to.equal("New")
@@ -23,7 +24,8 @@ return function()
         local props = {Size = Vector3.new(5, 5, 5)}
         local children = {Child2 = VirtualInstanceCreators.New("Part")}
 
-        local virtualInstance = VirtualInstanceCreators.Clone(template, props, children)
+        local virtualInstance = VirtualInstanceCreators.Clone(template, props,
+            children)
 
         expect(virtualInstance._dectype).to.equal("VirtualInstance")
         expect(virtualInstance._constructorType).to.equal("Clone")
