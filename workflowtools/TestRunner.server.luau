@@ -78,11 +78,15 @@ local function TestRunner()
         captureSourceFileStrings(sourceRoots)
     )
 
-    -- Copy / remove old source trees to de-cache modules for re-runs in studio
+    -- Copy / hide old source trees to de-cache modules for re-runs in studio
+    local tempRoots = {}
+    local oldRootParents = {}
     for _, root in sourceRoots do
         local newRoot = root:Clone()
+        table.insert(tempRoots, newRoot)
         newRoot.Parent = root.Parent
-        root:Destroy()
+        oldRootParents[root] = root.Parent
+        root.Parent = nil
     end
     
     -- Run and intercept default TestEZ output
@@ -94,6 +98,14 @@ local function TestRunner()
         end
     }
     TestEZ.TestBootstrap:run({ReplicatedStorage.DecTests}, interceptReporter)
+
+    -- Put old modules back into place and delete cloned ones
+    for _, root in tempRoots do
+        root:Destroy()
+    end
+    for root, parent in oldRootParents do
+        root.Parent = parent
+    end
 
     -- Output a final "proof of testing" checksum
     task.defer(function()
