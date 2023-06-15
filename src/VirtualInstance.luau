@@ -558,7 +558,7 @@ function VirtualInstance.new(
     return setmetatable({
         _directives = directives,
         _constructorType = constructorType :: string,
-        _constructorTypePayload = constructorPayload :: any
+        _constructorTypeArgument = constructorPayload :: any
     }, VirtualInstance :: any)
 end
 
