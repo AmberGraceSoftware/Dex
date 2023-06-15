@@ -78,7 +78,7 @@ VirtualInstance.__index._dectype = "VirtualInstance"
 ]]
 function VirtualInstance.__index.SetProperties(
     self: VirtualInstance,
-    propertyMap: {[string]: CanBeObservable<any>}
+    propertyMap: {[string]: any}
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {

@@ -30,8 +30,8 @@ return function()
             {},
             1
         )
-        expect(#hasChildDirective._directives).to.equal(2)
-        expect(hasChildDirective._directives[2]._type).to.equal("Children")
+        expect(#hasChildDirective._directives).to.equal(1)
+        expect(hasChildDirective._directives[1]._type).to.equal("Children")
 
         local hasPropsAndChildDirectives = VirtualInstance.new(
             "New",
@@ -43,5 +43,25 @@ return function()
         expect(#hasPropsAndChildDirectives._directives).to.equal(2)
         expect(hasPropsAndChildDirectives._directives[1]._type).to.equal("Properties")
         expect(hasPropsAndChildDirectives._directives[2]._type).to.equal("Children")
+    end)
+    it("adds a Properties directive with the provided property map", function()
+        local virtualInstance = VirtualInstance.new(
+            "New",
+            "Part",
+            nil,
+            nil,
+            1
+        )
+
+        local propertyMap = {
+            Size = Vector3.new(10, 10, 10),
+            Color = Color3.new(1, 1, 1),
+        }
+
+        virtualInstance:SetProperties(propertyMap)
+
+        expect(#virtualInstance._directives).to.equal(1)
+        expect(virtualInstance._directives[1]._type).to.equal("Properties")
+        expect(virtualInstance._directives[1]._payload).to.equal(propertyMap)
     end)
 end
