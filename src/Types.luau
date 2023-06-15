@@ -133,9 +133,9 @@ export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
-    [ChildPath]: CanBeObservable<
+    [ChildPath]: any--[[CanBeObservable<
         Instance | VirtualInstance | nil
-    >
+    >]]
 }>
 export type VirtualInstanceTrace = {
     method: string,
