@@ -71,6 +71,20 @@ local function captureSourceFileStrings(rootInstances: {Instance})
 end
 
 local function TestRunner()
+    -- Generate a checksum of the source code
+    local sourceRoots = {ReplicatedStorage.DecTests,
+    ReplicatedStorage.Packages.Dec}
+    local sourceChecksum = generateSourceFileChecksum(
+        captureSourceFileStrings(sourceRoots)
+    )
+
+    -- Copy / remove old source trees to de-cache modules for re-runs in studio
+    for _, root in sourceRoots do
+        local newRoot = root:Clone()
+        newRoot.Parent = root.Parent
+        root:Destroy()
+    end
+    
     -- Run and intercept default TestEZ output
     local testResults: TestResults? = nil
     local interceptReporter = {
@@ -81,13 +95,6 @@ local function TestRunner()
     }
     TestEZ.TestBootstrap:run({ReplicatedStorage.DecTests}, interceptReporter)
 
-    -- Generate a checksum of the source code
-    local sourceRoots = {ReplicatedStorage.DecTests,
-    ReplicatedStorage.Packages.Dec}
-    local sourceChecksum = generateSourceFileChecksum(
-        captureSourceFileStrings(sourceRoots)
-    )
-    
     -- Output a final "proof of testing" checksum
     task.defer(function()
         local success = false
