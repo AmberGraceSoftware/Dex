@@ -260,5 +260,4 @@ return function()
         checkLastDirective("Children", {[childPath] = childVInst})
         expect(childVInst._dectype).to.be.equal("VirtualInstance")
     end)
-    
 end
