@@ -76,7 +76,7 @@ function Observable.__index.Map(
 ): Observable<any>
     -- Lazy-load to prevent circular dependency.
     local MapObservable = (require :: any)(script.Parent.Parent.Util.MapObservable)
-    return MapObservable(self, mappingFunction)
+    return MapObservable(self)(mappingFunction)
 end
 
 

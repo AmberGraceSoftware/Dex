@@ -40,7 +40,7 @@ local Dec = {}
 
 -- Basic State and Observables
 Dec.State = require(script.Observables.State)
-Dec.Derive = require(script.Util.MapObservable)
+Dec.Map = require(script.Util.MapObservable)
 Dec.Alpha = require(script.Observables.Alpha)
 Dec.CustomObservable = Observable.new
 

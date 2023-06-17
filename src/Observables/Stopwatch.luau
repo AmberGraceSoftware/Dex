@@ -46,16 +46,13 @@ function Stopwatch.__index.Lerp<T>(
     endValue: T
 ): Observable<T>
     local interpolator = PolymorphicLerp(typeof(startValue))
-    return MapObservable(
-        self,
-        function(current)
-            local alpha = math.clamp(
-                current / self._duration,
-                0, 1
-            )
-            return interpolator(startValue, endValue, alpha)
-        end
-    ) :: any
+    return MapObservable(self)(function(current)
+        local alpha = math.clamp(
+            current / self._duration,
+            0, 1
+        )
+        return interpolator(startValue, endValue, alpha)
+    end) :: any
 end
 
 --[[

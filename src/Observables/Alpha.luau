@@ -48,21 +48,18 @@ function Alpha.__index.Curve(
     easingStyle: Enum.EasingStyle,
     easingDirection: Enum.EasingDirection?
 ): Alpha
-    local interpolated = MapObservable(
-        self,
-        function(current)
-            local tweened = TweenService:GetValue(
-                current,
-                easingStyle,
-                easingDirection or Enum.EasingDirection.Out
-            )
-            if tweened ~= tweened then
-                return 0
-            end
-
-            return math.clamp(tweened, 0, 1)
+    local interpolated = MapObservable(self)(function(current)
+        local tweened = TweenService:GetValue(
+            current,
+            easingStyle,
+            easingDirection or Enum.EasingDirection.Out
+        )
+        if tweened ~= tweened then
+            return 0
         end
-    ) :: any
+
+        return math.clamp(tweened, 0, 1)
+    end) :: any
     setmetatable(interpolated, Alpha)
     return interpolated
 end
@@ -77,12 +74,9 @@ end
 function Alpha.__index.Invert(
     self: Alpha
 ): Alpha
-    local inverted = MapObservable(
-        self,
-        function(current)
-            return 1 - current
-        end
-    ) :: any
+    local inverted = MapObservable(self)(function(current)
+        return 1 - current
+    end) :: any
     setmetatable(inverted, Alpha)
     return inverted
 end
@@ -101,12 +95,9 @@ function Alpha.__index.Lerp<T>(
     goalValue: T
 ): Observable<T>
     local interpolator = PolymorphicLerp(typeof(startValue))
-    return MapObservable(
-        self,
-        function(current)
-            return interpolator(startValue, goalValue, current)
-        end
-    ) :: any
+    return MapObservable(self)(function(current)
+        return interpolator(startValue, goalValue, current)
+    end) :: any
 end
 
 
@@ -124,21 +115,18 @@ function Alpha.new(
     sourceRangeMax: number
 ): Alpha
     local range = sourceRangeMax - sourceRangeMin
-    local self: Alpha = MapObservable(
-        sourceState,
-        function(sourceCurrent)
-            -- Sanitize NaN values
-            local nextValue = (sourceCurrent - sourceRangeMin) / range
-            if nextValue ~= nextValue then
-                return 0
-            end
-
-            return math.clamp(
-                nextValue,
-                0, 1
-            )
+    local self: Alpha = MapObservable(sourceState)(function(sourceCurrent)
+        -- Sanitize NaN values
+        local nextValue = (sourceCurrent - sourceRangeMin) / range
+        if nextValue ~= nextValue then
+            return 0
         end
-    ) :: any
+
+        return math.clamp(
+            nextValue,
+            0, 1
+        )
+    end) :: any
     setmetatable(self, Alpha)
     return self
 end
