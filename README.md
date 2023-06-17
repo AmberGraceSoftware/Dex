@@ -13,7 +13,7 @@ Dec is a **work in progress project** that started from a simple concept of ways
 One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a truly declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to reconcile components and instance properties only exactly when and where it is needed, leading to great performance gains over [Roact](https://roblox.github.io/roact). Dec also has built-in support for object pooling, animation, and more with a very simple and familiar syntax.
 
 
-## Project Progress
+## Project Roadmap
 - [X] API, concepts, and types defined
 - [X] Basic Public API Skeleton Structure
 - [X] Reconciler API Skeleton Structure
@@ -23,15 +23,22 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] Reconciler Full Implementation
 - [X] Unit Test Skeleton Structure
 - [ ] Complete Code Coverage of Most Modules (In Progress)
+- [ ] Math operator overloads for scalar/vector/other types of observables
+- [ ] `Dec.StateDict`, which has the same implementation as `Dec.StateRecord` using statically knowable key/value types
+- [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:SetParameters` function that changes the whole parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
+- [ ] Add reverse/repeat count parameters to `Alpha:Curve()` as well as reverse/repeat count/delay time/tween time to `BaseTimer:CurvedAlpha()`
 - [ ] First Stable Release (In Progress)
-- [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!) 
-- [ ] Documentation Site using Moonwave
+- [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!)
+- [ ] Rx interop
+- [ ] Generate a Documentation Site + workflow using Moonwave
 - [ ] Add usage guides to docs site
+
+## Post-Release Roadmap
 - [ ] Create a simple Todo List Demo
 - [ ] Create a simple open-source demo game using Dec?
 - [ ] Create a simple open-source demo plugin using Dec?
 - [ ] Video tutorials?
-- [ ] Marketing, making a cool logo, etc.
+- [ ] Marketing the library (so to speak), making a cool logo, etc.
 
 ## Contributing
 
