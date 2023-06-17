@@ -54,16 +54,14 @@ local MapObservable: ReturnType = function(...: any): any
         local function getCurrent()
             local values = table.create(#deps)
             for i = 1, deps.n do
-                local dep = deps[i]
-                table.insert(values, dep:Current())
+                table.insert(values, deps[i]:Current())
             end
             return map(table.unpack(values))
         end
         local function createUpdateStream(notifyUpdate: () -> ())
             local unsubscribes = table.create(#deps)
             for i = 1, deps.n do
-                local dep = deps[i]
-                table.insert(unsubscribes, dep:Subscribe(notifyUpdate))
+                table.insert(unsubscribes, deps[i]:Subscribe(notifyUpdate))
             end
             return function()
                 for _, unsubscribe in unsubscribes do
