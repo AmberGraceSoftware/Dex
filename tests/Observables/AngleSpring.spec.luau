@@ -39,7 +39,7 @@ return function()
         expect(easingObservable:Current() < 0).to.equal(true)
     end)
 
-    it("should provide the wrapped target angle through CurrentTarget", function()
+    it("should provide wrapped target angle through CurrentTarget", function()
         local target = State.new(3 * math.pi)
         local easingObservable = AngleSpring.new(target)
 

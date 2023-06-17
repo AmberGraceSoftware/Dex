@@ -8,7 +8,7 @@ return function()
         while os.clock() == start do end
     end
 
-    it("should create an IntSpring which eases towards target and rounds to the nearest integer", function()
+    it("constructs IntSpring which eases to target w/ int rounding", function()
         local target = State.new(0)
         local easingObservable = IntSpring.new(target)
         expect(easingObservable).to.be.ok()

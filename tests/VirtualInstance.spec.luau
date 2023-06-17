@@ -46,7 +46,7 @@ end
 
 
 return function()
-    it("adds conventional directives based on constructor parameters", function()
+    it("adds conventional directives from constructor parameters", function()
         local hasNoDirectives = VirtualInstance.new(
             "New",
             "Part"
@@ -77,8 +77,10 @@ return function()
             {}
         )
         expect(#hasPropsAndChildDirectives._directives).to.equal(2)
-        expect(hasPropsAndChildDirectives._directives[1]._type).to.equal("Properties")
-        expect(hasPropsAndChildDirectives._directives[2]._type).to.equal("Children")
+        expect(hasPropsAndChildDirectives._directives[1]._type)
+            .to.equal("Properties")
+        expect(hasPropsAndChildDirectives._directives[2]._type)
+            .to.equal("Children")
     end)
 
     local virtualInstance = VirtualInstance.new("New", "Part")
@@ -146,7 +148,7 @@ return function()
         })
     end)
     
-    it("creates an observable initial property via OutInitialProperty", function()
+    it("creates initial property Observable via OutInitialProperty", function()
         local initialPropertyValue = "InitialValue"
         local observableInitialProperty = virtualInstance:OutInitialProperty(
             "CFrame", initialPropertyValue)
@@ -158,7 +160,7 @@ return function()
         })
     end)
 
-    it("creates an observable attribute via OutAttribute", function()
+    it("creates attribute Observable via OutAttribute", function()
         local attributeValue = 42
         local observableAttribute = virtualInstance:OutAttribute(
             "AttributeName", attributeValue)
@@ -170,7 +172,7 @@ return function()
         })
     end)
     
-    it("creates an observable initial attribute via OutInitialAttribute", function()
+    it("creates initial attribute Observable via OutInitialAttribute", function()
         local initialAttributeValue = true
         local observableInitialAttribute = virtualInstance:OutInitialAttribute(
             "AttributeName", initialAttributeValue)
