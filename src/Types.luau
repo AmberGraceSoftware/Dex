@@ -102,19 +102,19 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
         Start: (self: BaseTimer) -> (),
         Stop: (self: BaseTimer) -> (),
         Pause: (self: BaseTimer) -> (),
-        SetTimePosition: (self: BaseTimer) -> (),
+        SetTimePosition: (self: BaseTimer, position: number) -> (),
         CurvedAlpha: (
-            self: Alpha,
+            self: BaseTimer,
             easingStyle: Enum.EasingStyle,
             easingDirection: Enum.EasingDirection?
         ) -> Alpha,
         SliceAlpha: (
-            self: Alpha,
+            self: BaseTimer,
             startTime: number,
             endTime: number
         ) -> Alpha,
         Lerp: <T>(
-            self: Alpha,
+            self: BaseTimer,
             startValue: T,
             goalValue: T
         ) -> Observable<T>,

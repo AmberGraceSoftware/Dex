@@ -65,6 +65,11 @@ function Timer.__index.Lerp<T>(
     end) :: any
 end
 
+function Timer.__index.SetTimePosition(self: Timer, pos: number)
+    BaseTimer.SetTimePosition(self,
+        math.clamp(self._duration - pos, 0, self._duration))
+end
+
 
 --[[
     @param duration: number
@@ -87,7 +92,7 @@ function Timer.new(duration: number): Timer
                 duration
             )
         end
-        return current.resumeAtTime
+        return math.clamp(duration - current.resumeAtTime, 0, duration)
     end
     local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
