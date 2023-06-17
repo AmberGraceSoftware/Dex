@@ -34,6 +34,7 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 ))
 export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
+        _valueRef: {value: T},
         _notifyUpdate: (() -> ())?,
         _notifyRecord: {[any]: {[() -> ()]: true}}
     },
@@ -41,7 +42,7 @@ export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
         Set: (self: StateRecord<T>, key: any, newValue: any) -> (),
         Current: (self: StateRecord<T>, atKey: any) -> any,
         Replace: (self: StateRecord<T>, T) -> (),
-        Index: (self: StateRecord<T>, key: any) -> Observable<any>,
+        Index: (self: StateRecord<T>, key: any) -> State<any>,
     }}
 ))
 export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(

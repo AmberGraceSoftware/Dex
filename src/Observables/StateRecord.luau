@@ -2,7 +2,9 @@
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 
-export type StateRecord<T> = Types.StateRecord<T>
+type StateRecord<T> = Types.StateRecord<T>
+type State<T> = Types.State<T>
+type Unsubscribe = Types.Unsubscribe
 
 local StateRecord = {}
 StateRecord.__index = {}
@@ -23,7 +25,10 @@ function StateRecord.__index.Set(
     key: string,
     value: any
 ): ()
-    self._cachedValue[key] = value
+    if self._valueRef.value[key] == value then
+        return
+    end
+    self._valueRef.value[key] = value
     local listenerList = {}
     if self._notifyUpdate then
         table.insert(listenerList, self._notifyUpdate)
@@ -44,10 +49,10 @@ function StateRecord.__index.Current(
     ...: any
 ): any
     if select("#", ...) == 0 then
-        return self._cachedValue
+        return self._valueRef.value
     else
         local key = (...)
-        return self._cachedValue[key]
+        return self._valueRef.value[key]
     end
 end
 
@@ -55,7 +60,7 @@ function StateRecord.__index.Replace(
     self: StateRecord<any>,
     newRecord: any
 )
-    self._cachedValue = newRecord
+    self._valueRef.value = newRecord
     local listenerList = {}
     if self._notifyUpdate then
         table.insert(listenerList, self._notifyUpdate)
@@ -70,13 +75,25 @@ function StateRecord.__index.Replace(
     end
 end
 
+local Index = {}
+Index.__index = {}
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (Index.__index :: any)[k] = v
+end
+Index.__index._decobservabletype = "State"
+
+function Index.__index.Set(self: any, value: any)
+    self._parent:Set(self._key, value)
+end
+
 function StateRecord.__index.Index(
     self: StateRecord<any>,
     key: any
-)
-    return Observable.new(
+): State<any>
+    local indexState: any = Observable.new(
         function()
-            return self._cachedValue[key]
+            return self._valueRef.value[key]
         end,
         function(notifyUpdate)
             local listenersAtKey = self._notifyRecord[key]
@@ -85,15 +102,21 @@ function StateRecord.__index.Index(
                 self._notifyRecord[key] = listenersAtKey
             end
             listenersAtKey[notifyUpdate] = true
+            self._notifyUpdate = notifyUpdate
 
             return function()
                 listenersAtKey[notifyUpdate] = nil
+                self._notifyUpdate = nil
                 if not next(listenersAtKey) then
                     self._notifyRecord[key] = nil
                 end
             end
         end
     )
+    indexState._parent = self
+    indexState._key = key
+    setmetatable(indexState, Index)
+    return indexState
 end
 
 --[[
@@ -105,13 +128,14 @@ end
 function StateRecord.new<T>(initialValue: T): StateRecord<T>
     local self: StateRecord<T>
     local initialized = false
+    local valueRef = {value = initialValue}
     self = Observable.new(
         function()
             if not initialized then
                 initialized = true
                 return initialValue
             end
-            return self._cachedValue
+            return valueRef.value
         end,
         function(notifyUpdate)
             self._notifyUpdate = notifyUpdate
@@ -120,7 +144,10 @@ function StateRecord.new<T>(initialValue: T): StateRecord<T>
             end
         end
     ) :: any
+    -- Flag as allowing redundant updates, since our contained value is mutable.
+    ;(self :: any)._ignoreRedundantUpdates = false
     self._notifyRecord = {}
+    self._valueRef = valueRef
     setmetatable(self, StateRecord)
     return self
 end
