@@ -44,39 +44,30 @@ export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
         Index: (self: StateRecord<T>, key: any) -> Observable<any>,
     }}
 ))
-export type Spring<T = any> = Observable<T> & typeof(setmetatable(
+export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
-        _angularFrequency: any, -- CanBeObservable<number>
         _target: Observable<T>,
-        _snapToGoalTheshold: any, -- CanBeObservable<number>?
+        _easingFrame: any,
     },
     {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
+        CurrentTarget: (self: EasedObject<T>) -> T,
+        SetPosition: (self: EasedObject<T>, position: T) -> (),
+        ResetVelocity: (self: EasedObject<T>) -> (),
     }}
 ))
-export type IntSpring<T = any> = Observable<T> & typeof(setmetatable(
+export type Spring<T = any> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _angularFrequency: any, -- CanBeObservable<number>
-        _target: Observable<T>,
     },
-    {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
-    }}
+    {} :: {__index: { }}
 ))
-export type EasedValue<T = any> = Observable<T> & typeof(setmetatable(
+export type AngleSpring<T> = Spring<T>
+export type IntSpring<T = any> = Spring<T>
+export type EasedValue<T = any> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _info: TweenInfo,
-        _target: Observable<T>,
     },
-    {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
-    }}
+    {} :: {__index: { }}
 ))
 export type Alpha = Observable<number> & typeof(setmetatable(
     {} :: {},

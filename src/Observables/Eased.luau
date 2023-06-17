@@ -1,11 +1,12 @@
 --!strict
 local TweenService = game:GetService("TweenService")
 local Types = require(script.Parent.Parent.Types)
-local CreateEasedObject = require(script.Parent.CreateEasedObject)
+local EasedObject = require(script.Parent.EasedObject)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
-type EasingFrame<T> = CreateEasedObject.EasingFrame<T>
+type EasingFrame<T> = EasedObject.EasingFrame<T>
 type Observable<T> = Types.Observable<T>
+type Eased<T> = Types.EasedValue<T>
 
 local function easingFunction<T>(
     info: TweenInfo,
@@ -50,6 +51,14 @@ local function easingFunction<T>(
     return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
 end
 
+local Eased = {}
+Eased.__index = {}
+-- Inherits EasedObject
+for k, v in EasedObject.__index :: any do
+    (Eased.__index :: any)[k] = v
+end
+Eased.__index._decobservabletype = "Eased"
+
 --[[
     Creates an Observable that eases in realtime every time the input Observable
     changes its value, based on the TweenInfo provided.
@@ -63,14 +72,17 @@ end
     @return An Observable that eases in realtime from changes in the input value
 
 ]]
-local function Eased<T>(input: Observable<T>, info: TweenInfo): Observable<T>
+function Eased.new<T>(input: Observable<T>, info: TweenInfo): Eased<T>
     local lerp = PolymorphicLerp(typeof(input:Current()))
-    return CreateEasedObject(
+    local self: Eased<T> = EasedObject.new(
         input,
         function(easingFrame)
             return easingFunction(info, lerp, easingFrame)
         end
-    )
+    ) :: any
+    self._info = info
+    setmetatable(self, Eased)
+    return self
 end
 
 return Eased

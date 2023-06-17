@@ -1,12 +1,21 @@
 --!strict
 
-local CreateEasedObject = require(script.Parent.CreateEasedObject)
+local EasedObject = require(script.Parent.EasedObject)
 local Spring = require(script.Parent.Spring)
 local Types = require(script.Parent.Parent.Types)
 
 local ROUND_UP_THRESHOLD = 0.9
 
 type Observable<T> = Types.Observable<T>
+type IntSpring<T> = Types.IntSpring<T>
+
+local IntSpring = {}
+IntSpring.__index = {}
+-- Inherits EasedObject
+for k, v in IntSpring.__index :: any do
+    (IntSpring.__index :: any)[k] = v
+end
+IntSpring.__index._decobservabletype = "IntSpring"
 
 --[[
     Creates an easing observable that simulates the behavior of a critically
@@ -22,10 +31,10 @@ type Observable<T> = Types.Observable<T>
         oscillation. Defaults to Tau (2 * pi) if not provided.
     @return Observable<T> - The resulting easing observable.
 ]]
-local function IntSpring<T>(
+function IntSpring.new<T>(
     target: Observable<T>,
     angularFrequency: number?
-): Observable<T>
+): IntSpring<T>
     local targetType = typeof(target:Current())
     local stepMethod = Spring.StepMethods[targetType]
     if not stepMethod then
@@ -35,7 +44,7 @@ local function IntSpring<T>(
     end
 
     local _angularFrequency = angularFrequency or math.pi * 2
-    return CreateEasedObject(
+    local self: any = EasedObject.new(
         target,
         function(easingFrame)
             local stepDirection = math.sign(
@@ -53,6 +62,11 @@ local function IntSpring<T>(
             return position, velocity
         end
     )
+
+    self._angularFrequency = _angularFrequency
+    setmetatable(self, IntSpring)
+
+    return self
 end
 
 return IntSpring
