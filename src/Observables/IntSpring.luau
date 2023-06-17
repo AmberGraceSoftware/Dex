@@ -1,10 +1,40 @@
 --!strict
-
 local EasedObject = require(script.Parent.EasedObject)
 local Spring = require(script.Parent.Spring)
 local Types = require(script.Parent.Parent.Types)
 
 local ROUND_UP_THRESHOLD = 0.9
+
+local function roundTarget(target: any): any
+    if typeof(target) == "number" then
+        return math.floor(target + 0.5)
+    end
+    if typeof(target) == "Vector2" then
+        return Vector2.new(roundTarget(target.X), roundTarget(target.Y))
+    end
+    if typeof(target) == "Vector2int16" then
+        return Vector2int16.new(roundTarget(target.X), roundTarget(target.Y))
+    end
+    if typeof(target) == "Vector3" then
+        return Vector3.new(roundTarget(target.X), roundTarget(target.Y),
+            roundTarget(target.Z))
+    end
+    if typeof(target) == "Vector3int16" then
+        return Vector3int16.new(roundTarget(target.X), roundTarget(target.Y),
+            roundTarget(target.Z))
+    end
+    if typeof(target) == "UDim" then
+        return UDim.new(roundTarget(target.Scale), roundTarget(target.Offset))
+    end
+    if typeof(target) == "UDim2" then
+        return UDim2.new(
+            roundTarget(target.X.Scale), roundTarget(target.X.Offset),
+            roundTarget(target.Y.Scale), roundTarget(target.Y.Offset)
+        )
+    end
+
+    return target
+end
 
 type Observable<T> = Types.Observable<T>
 type IntSpring<T> = Types.IntSpring<T>
@@ -12,10 +42,18 @@ type IntSpring<T> = Types.IntSpring<T>
 local IntSpring = {}
 IntSpring.__index = {}
 -- Inherits EasedObject
-for k, v in IntSpring.__index :: any do
+for k, v in EasedObject.__index :: any do
     (IntSpring.__index :: any)[k] = v
 end
 IntSpring.__index._decobservabletype = "IntSpring"
+
+function IntSpring.__index.CurrentTarget(self: IntSpring<any>)
+    return roundTarget(EasedObject.__index.CurrentTarget(self))
+end
+
+function IntSpring.__index.SetPosition(self: IntSpring<any>, newPos: any)
+    EasedObject.__index.SetPosition(self, roundTarget(newPos))
+end
 
 --[[
     Creates an easing observable that simulates the behavior of a critically
