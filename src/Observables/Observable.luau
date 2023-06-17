@@ -133,6 +133,7 @@ function Observable.__index.Destroy(self: Observable<any>)
     if self._destroyed then
         return
     end
+    self._destroyed = true
     stopObservingIdempotent(self)
     self._listeners = {}
 end

@@ -16,7 +16,8 @@ export type Observable<T = any> = typeof(setmetatable(
     {} :: {__index: {
         _dectype: string,
         _decobservabletype: string,
-        Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
+        Subscribe: (self: Observable<T>, listener: (T) -> (),
+            immediatelyCallListener: boolean?) -> Unsubscribe,
         Current: (self: Observable<T>) -> T,
         Destroy: (self: Observable<T>) -> (),
         Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
