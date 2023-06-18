@@ -2,14 +2,15 @@
 
 <p align="center">
       <img src="logo/Logo256.png" />
+      <br/>
+      Dec is a reactive UI library for <a href=https://www.roblox.com/home>Roblox</a>.
+      <br/>
+      It provides a familiar, declarative syntax for building scalable UI components for any project's needs.
 </p>
+
 
 | DISCLAIMER: Dec is a work in progress project, and does NOT currently have a stable release, finalized API/documentation, or full test coverage. Please be patient as a first beta release is actively being developed! |
 | --- |
-
-Dec is a reactive UI library for Roblox.
-
-It combines all of the best features of modern libraries like Roact, Fusion, and more for building reusable, performant, declarative UI components.
 
 ## Features
 
