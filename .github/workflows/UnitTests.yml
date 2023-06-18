@@ -18,9 +18,7 @@ jobs:
     steps:
       - name: Clone Repository
         uses: actions/checkout@v3
-      - uses: robinraju/release-downloader@v1.8
-        with:
-          repository: filiptibell/lune
-          latest: true
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.3.0
       - name: Verify Proof-Of-Testing with current source file structure
         run: lune workflowtools/ValidateProofOfTesting.luau
