@@ -40,6 +40,13 @@ type Observable<T> = Types.Observable<T>
 type IntSpring<T> = Types.IntSpring<T>
 
 local IntSpring = {}
+-- Inherits EasedObject metamethods
+for k, v in EasedObject :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (IntSpring :: any)[k] = v
+end
 IntSpring.__index = {}
 -- Inherits EasedObject
 for k, v in EasedObject.__index :: any do

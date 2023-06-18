@@ -110,6 +110,13 @@ local typeToInitialVelocity: {[string]: any?} = {
 }
 
 local EasedObject = {}
+-- Inherits Observable metamethods
+for k, v in Observable :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (EasedObject :: any)[k] = v
+end
 EasedObject.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do

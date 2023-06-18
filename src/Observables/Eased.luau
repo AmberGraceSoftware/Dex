@@ -52,6 +52,13 @@ local function easingFunction<T>(
 end
 
 local Eased = {}
+-- Inherits EasedObject metamethods
+for k, v in EasedObject :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (Eased :: any)[k] = v
+end
 Eased.__index = {}
 -- Inherits EasedObject
 for k, v in EasedObject.__index :: any do

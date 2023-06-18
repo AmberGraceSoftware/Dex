@@ -118,6 +118,13 @@ local typeToSpringStepMethod = {
 }
 
 local Spring = {}
+-- Inherits EasedObject metamethods
+for k, v in EasedObject :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (Spring :: any)[k] = v
+end
 Spring.__index = {}
 -- Inherits EasedObject
 for k, v in EasedObject.__index :: any do

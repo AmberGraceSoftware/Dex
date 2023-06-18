@@ -7,6 +7,13 @@ type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
 local StateRecord = {}
+-- Inherits Observable metamethods
+for k, v in Observable :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (StateRecord :: any)[k] = v
+end
 StateRecord.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do
@@ -76,6 +83,13 @@ function StateRecord.__index.Replace(
 end
 
 local Index = {}
+-- Inherits Observable metamethods
+for k, v in Observable :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (Index :: any)[k] = v
+end
 Index.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do

@@ -5,6 +5,13 @@ local Observable = require(script.Parent.Observable)
 export type State<T> = Types.State<T>
 
 local State = {}
+-- Inherits Observable metamethods
+for k, v in Observable :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (State :: any)[k] = v
+end
 State.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do

@@ -60,6 +60,13 @@ local typeToSpringStepMethod = {
 }
 
 local AngleSpring = {}
+-- Inherits EasedObject metamethods
+for k, v in EasedObject :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (AngleSpring :: any)[k] = v
+end
 AngleSpring.__index = {}
 -- Inherits EasedObject
 for k, v in EasedObject.__index :: any do

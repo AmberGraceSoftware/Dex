@@ -13,6 +13,13 @@ type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 local Timer = {}
+-- Inherits Timer metamethods
+for k, v in Timer :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (Timer :: any)[k] = v
+end
 Timer.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do
