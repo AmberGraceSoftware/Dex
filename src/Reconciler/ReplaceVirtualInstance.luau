@@ -17,19 +17,15 @@ type ReconciledNode = Types.ReconciledNode
 ]]
 local function ReplaceVirtualInstance(
     oldNode: ReconciledNode,
-    virtualInstance: VirtualInstance,
-    debugLevel: number
+    virtualInstance: VirtualInstance
 ): ReconciledNode
-    debugLevel += 1
-    
     -- This is a naive implementation. In the future, we may want to support
     -- object pooling natively via Dec's reconciler?
-    UnmountVirtualInstance(oldNode, debugLevel)
+    UnmountVirtualInstance(oldNode)
     return MountVirtualInstance(
         oldNode._rootInstance,
         oldNode._childPath,
-        virtualInstance,
-        debugLevel
+        virtualInstance
     )
 end
 

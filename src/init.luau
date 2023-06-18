@@ -22,6 +22,7 @@ export type Observable<T> = Types.Observable<T>
 export type State<T> = Types.State<T>
 export type StateRecord<T> = Types.StateRecord<T>
 export type Spring<T> = Types.Spring<T>
+export type AngleSpring<T> = Types.AngleSpring<T>
 export type IntSpring<T> = Types.IntSpring<T>
 export type EasedValue<T> = Types.EasedValue<T>
 export type Alpha = Types.Alpha
@@ -39,18 +40,18 @@ export type Nil = Symbol<"Nil">
 local Dec = {}
 
 -- Basic State and Observables
-Dec.State = require(script.Observables.State)
-Dec.Derive = require(script.Util.MapObservable)
-Dec.Alpha = require(script.Observables.Alpha)
+Dec.State = require(script.Observables.State).new
+Dec.Map = require(script.Util.MapObservable)
+Dec.Alpha = require(script.Observables.Alpha).new
 Dec.CustomObservable = Observable.new
 
 -- Realtime simulation observable utilities
 Dec.Spring = require(script.Observables.Spring).new
-Dec.IntSpring = require(script.Observables.IntSpring)
-Dec.AngleSpring = require(script.Observables.AngleSpring)
-Dec.Eased = require(script.Observables.Eased)
-Dec.Stopwatch = require(script.Observables.Stopwatch)
-Dec.Timer = require(script.Observables.Timer)
+Dec.IntSpring = require(script.Observables.IntSpring).new
+Dec.AngleSpring = require(script.Observables.AngleSpring).new
+Dec.Eased = require(script.Observables.Eased).new
+Dec.Stopwatch = require(script.Observables.Stopwatch).new
+Dec.Timer = require(script.Observables.Timer).new
 
 -- Interop functions
 Dec.ObserveFusionState = require(script.Interop.ObserveFusionState)

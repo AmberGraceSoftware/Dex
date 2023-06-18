@@ -71,6 +71,24 @@ local function captureSourceFileStrings(rootInstances: {Instance})
 end
 
 local function TestRunner()
+    -- Generate a checksum of the source code
+    local sourceRoots = {ReplicatedStorage.DecTests,
+    ReplicatedStorage.Packages.Dec}
+    local sourceChecksum = generateSourceFileChecksum(
+        captureSourceFileStrings(sourceRoots)
+    )
+
+    -- Copy / hide old source trees to de-cache modules for re-runs in studio
+    local tempRoots = {}
+    local oldRootParents = {}
+    for _, root in sourceRoots do
+        local newRoot = root:Clone()
+        table.insert(tempRoots, newRoot)
+        newRoot.Parent = root.Parent
+        oldRootParents[root] = root.Parent
+        root.Parent = nil
+    end
+    
     -- Run and intercept default TestEZ output
     local testResults: TestResults? = nil
     local interceptReporter = {
@@ -81,13 +99,14 @@ local function TestRunner()
     }
     TestEZ.TestBootstrap:run({ReplicatedStorage.DecTests}, interceptReporter)
 
-    -- Generate a checksum of the source code
-    local sourceRoots = {ReplicatedStorage.DecTests,
-    ReplicatedStorage.Packages.Dec}
-    local sourceChecksum = generateSourceFileChecksum(
-        captureSourceFileStrings(sourceRoots)
-    )
-    
+    -- Put old modules back into place and delete cloned ones
+    for _, root in tempRoots do
+        root:Destroy()
+    end
+    for root, parent in oldRootParents do
+        root.Parent = parent
+    end
+
     -- Output a final "proof of testing" checksum
     task.defer(function()
         local success = false
@@ -115,7 +134,7 @@ local function TestRunner()
             )
         end
         print("\n\tProof-of-testing checksum (paste into " ..
-            "'testing_proof_checksum.txt' file in Dec's root project" .. 
+            "'testing_proof_checksum.txt' file in Dec's root project " .. 
             "directory): ", proof_checksum)
     end)
 end

@@ -56,16 +56,18 @@ function Timer.__index.Lerp<T>(
     endValue: T
 ): Observable<T>
     local interpolator = PolymorphicLerp(typeof(startValue))
-    return MapObservable(
-        self,
-        function(current)
-            local alpha = 1 - math.clamp(
-                current / self._duration,
-                0, 1
-            )
-            return interpolator(startValue, endValue, alpha)
-        end
-    ) :: any
+    return MapObservable(self)(function(current)
+        local alpha = 1 - math.clamp(
+            current / self._duration,
+            0, 1
+        )
+        return interpolator(startValue, endValue, alpha)
+    end) :: any
+end
+
+function Timer.__index.SetTimePosition(self: Timer, pos: number)
+    BaseTimer.SetTimePosition(self,
+        math.clamp(self._duration - pos, 0, self._duration))
 end
 
 
@@ -90,7 +92,7 @@ function Timer.new(duration: number): Timer
                 duration
             )
         end
-        return current.resumeAtTime
+        return math.clamp(duration - current.resumeAtTime, 0, duration)
     end
     local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil

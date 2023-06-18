@@ -16,7 +16,15 @@ local typeToInterpolator: {[string]: (
     Vector2 = mathExpresionLerp,
     Vector2int16 = mathExpresionLerp,
     Vector3 = mathExpresionLerp,
-    Vector3int16 = mathExpresionLerp,
+    -- Vector3int16 doesn't support decimal scalar multiplication the same way
+    -- Vector2int16 does for some reason
+    Vector3int16 = function(vec3A, vec3B, alpha)
+        return Vector3int16.new(
+            mathExpresionLerp(vec3A.X, vec3B.X, alpha),
+            mathExpresionLerp(vec3A.Y, vec3B.Y, alpha),
+            mathExpresionLerp(vec3A.Z, vec3B.Z, alpha)
+        )
+    end,
     CFrame = classMethodLerp,
     Color3 = classMethodLerp,
     UDim = function(a: UDim, b: UDim, alpha)

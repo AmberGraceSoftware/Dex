@@ -8,6 +8,7 @@ local Observable = {}
 Observable.__index = {}
 Observable.__index._dectype = "Observable"
 Observable.__index._decobservabletype = "Observable"
+Observable.__index._ignoreRedundantUpdates = true
 
 -- Safely calls a set of listeners. Listeners can remove themselves from the set
 -- during the call without causing issues.
@@ -33,7 +34,8 @@ local function beginObservingIdempotent(self: Observable<any>)
     task.spawn(function()
         local function notifyUpdate()
             local newValue = self._getCurrent()
-            if self._cachedValue == newValue then
+            if (self :: any)._ignoreRedundantUpdates
+                and (self._cachedValue == newValue) then
                 return
             end
             self._cachedValue = newValue
@@ -76,7 +78,7 @@ function Observable.__index.Map(
 ): Observable<any>
     -- Lazy-load to prevent circular dependency.
     local MapObservable = (require :: any)(script.Parent.Parent.Util.MapObservable)
-    return MapObservable(self, mappingFunction)
+    return MapObservable(self)(mappingFunction)
 end
 
 
@@ -133,6 +135,7 @@ function Observable.__index.Destroy(self: Observable<any>)
     if self._destroyed then
         return
     end
+    self._destroyed = true
     stopObservingIdempotent(self)
     self._listeners = {}
 end
@@ -154,7 +157,7 @@ function Observable.new<T>(
         _closeUpdateStream = nil :: Unsubscribe?,
         _createUpdateStream = createUpdateStream,
         _listeners = {},
-    }, Observable)
+    }, Observable) :: any
 end
 
 return Observable

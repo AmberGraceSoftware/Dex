@@ -7,7 +7,6 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 type VirtualInstance = Types.VirtualInstance
 type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
-type State<T> = Types.State<T>
 type ChildPath = Types.ChildPath
 type ChildMap = Types.ChildMap
 
@@ -78,7 +77,7 @@ VirtualInstance.__index._dectype = "VirtualInstance"
 ]]
 function VirtualInstance.__index.SetProperties(
     self: VirtualInstance,
-    propertyMap: {[string]: CanBeObservable<any>}
+    propertyMap: {[string]: any}
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -156,7 +155,7 @@ end
 --[[
     @param propName: string - The name of the property to output.
     @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Observable<T> - An observable with the same output type as initialValue.
+    @return Dec.Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the current value of an
     property on the virtual instance once when it is mounted, and listens to
@@ -187,7 +186,7 @@ end
 --[[
     @param propName: string - The name of the property to output.
     @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Observable<T> - An observable with the same output type as initialValue.
+    @return Dec.Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the original value of an
     property on the virtual instance once when it is mounted. This is useful
@@ -219,7 +218,7 @@ end
 --[[
     @param attributeName: string - The name of the attribute to output.
     @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Observable<T> - An observable with the same output type as initialValue.
+    @return Dec.Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the current value of an
     attribute on the virtual instance once when it is mounted, and listens to
@@ -250,7 +249,7 @@ end
 --[[
     @param attributeName: string - The name of the attribute to output.
     @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Observable<T> - An observable with the same output type as initialValue.
+    @return Dec.Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the original value of an
     attribute on the virtual instance once when it is mounted. This is useful
@@ -280,8 +279,7 @@ function VirtualInstance.__index.OutInitialAttribute(
 end
 
 --[[
-    @param outState: State<Instance> | State<Instance?> - The state to output the instance to.
-    @return void
+    @return Dec.Observable<Instance?> - The state to output the instance to.
 
     Outputs a reference to the reconciled instance to a Dec State object.
 ]]
@@ -526,7 +524,7 @@ end
 function VirtualInstance.new(
     constructorType: "New" | "Clone" | "Premade" | "Extract",
     constructorPayload: any?,
-    defaultProperties: {[string]: CanBeObservable<any>}?,
+    defaultProperties: {[string]: any}?,
     defaultChildMap: ChildMap?,
     debugTraceLevel: number?
 ): VirtualInstance
@@ -558,7 +556,7 @@ function VirtualInstance.new(
     return setmetatable({
         _directives = directives,
         _constructorType = constructorType :: string,
-        _constructorTypePayload = constructorPayload :: any
+        _constructorTypeArgument = constructorPayload :: any
     }, VirtualInstance :: any)
 end
 

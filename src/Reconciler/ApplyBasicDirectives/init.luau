@@ -64,10 +64,8 @@ end
 
 local function ApplyBasicDirectives(
     node: ReconciledNode,
-    virtualInstance: VirtualInstance,
-    debugLevel: number
+    virtualInstance: VirtualInstance
 )
-    debugLevel += 1
     local directivesByPriority = {{}, {}, {}}
     for _, directive in virtualInstance._directives do
         if not handleDirective[directive._type] then
@@ -90,8 +88,7 @@ local function ApplyBasicDirectives(
             if not success then
                 EmitTracedError(
                     "Error when mounting VirtualInstance:\n" .. err,
-                    directive._trace,
-                    debugLevel
+                    directive._trace
                 )
             end
         end

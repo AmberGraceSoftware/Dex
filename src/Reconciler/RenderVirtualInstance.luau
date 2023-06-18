@@ -22,31 +22,25 @@ local function RenderVirtualInstance(
     rootInstance: Instance,
     childPath: string?,
     virtualInstance: VirtualInstance?,
-    oldReconciledNode: ReconciledNode?,
-    debugLevel: number
-): ReconciledNode?
-    debugLevel += 1
-    
+    oldReconciledNode: ReconciledNode?
+): ReconciledNode?    
     if virtualInstance then
         if oldReconciledNode then
             return ReplaceVirtualInstance(
                 oldReconciledNode,
-                virtualInstance,
-                debugLevel
+                virtualInstance
             )
         else
             return MountVirtualInstance(
                 rootInstance,
                 childPath,
-                virtualInstance,
-                debugLevel
+                virtualInstance
             )
         end
     else
         if oldReconciledNode then
             return UnmountVirtualInstance(
-                oldReconciledNode,
-                debugLevel
+                oldReconciledNode
             )
         else
             -- Redundant case, nothing to do

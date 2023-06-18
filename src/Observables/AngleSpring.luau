@@ -1,16 +1,28 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
-local CreateEasedObject = require(script.Parent.CreateEasedObject)
+local EasedObject = require(script.Parent.EasedObject)
 
-type EasingFrame<T> = CreateEasedObject.EasingFrame<T>
+type EasingFrame<T> = EasedObject.EasingFrame<T>
 type Observable<T> = Types.Observable<T>
+type AngleSpring<T> = Types.AngleSpring<T>
 
 -- Wraps an angle to the range [-pi, pi]
-local function wrapAngle(angle: number): number
-    angle %= (math.pi * 2)
-    if angle > math.pi then
-        angle -= math.pi * 2
+local function wrapAngle(angle: any): any
+    if typeof(angle) == "number" then
+        angle %= (math.pi * 2)
+        if angle > math.pi then
+            angle -= math.pi * 2
+        end
+        return angle
     end
+    if typeof(angle) == "Vector2" then
+        return Vector2.new(wrapAngle(angle.X), wrapAngle(angle.Y))
+    end
+    if typeof(angle) == "Vector3" then
+        return Vector3.new(wrapAngle(angle.X), wrapAngle(angle.Y),
+            wrapAngle(angle.Z))
+    end
+
     return angle
 end
 
@@ -45,9 +57,23 @@ local typeToSpringStepMethod = {
     ["number"] = linearSpringStep,
     ["Vector3"] = linearSpringStep,
     ["Vector2"] = linearSpringStep,
-    ["Vector2int16"] = linearSpringStep,
-    ["Vector3int16"] = linearSpringStep,
 }
+
+local AngleSpring = {}
+AngleSpring.__index = {}
+-- Inherits EasedObject
+for k, v in EasedObject.__index :: any do
+    (AngleSpring.__index :: any)[k] = v
+end
+AngleSpring.__index._decobservabletype = "AngleSpring"
+
+function AngleSpring.__index.SetPosition(self: AngleSpring<any>, pos: any)
+    EasedObject.__index.SetPosition(self, wrapAngle(pos))
+end
+
+function AngleSpring.__index.CurrentTarget(self: AngleSpring<any>)
+    return wrapAngle(EasedObject.__index.CurrentTarget(self))
+end
 
 --[[
     Creates an easing observable that simulates the behavior of a critically
@@ -63,10 +89,10 @@ local typeToSpringStepMethod = {
         oscillation. Defaults to Tau (2 * pi) if not provided.
     @return Observable<T> - The resulting easing observable.
 ]]
-local function AngleSpring<T>(
+function AngleSpring.new<T>(
     target: Observable<T>,
     angularFrequency: number?
-): Observable<T>
+): AngleSpring<T>
     local targetType = typeof(target:Current())
     local stepMethod = typeToSpringStepMethod[targetType]
     if not stepMethod then
@@ -76,7 +102,7 @@ local function AngleSpring<T>(
     end
 
     local _angularFrequency = angularFrequency or math.pi * 2
-    return CreateEasedObject(
+    local self: AngleSpring<T> = EasedObject.new(
         target,
         function(easingFrame)
             return stepMethod(
@@ -84,7 +110,10 @@ local function AngleSpring<T>(
                 easingFrame
             )
         end
-    )
+    ) :: any
+    self._angularFrequency = _angularFrequency
+    setmetatable(self, AngleSpring)
+    return self
 end
 
 return AngleSpring

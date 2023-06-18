@@ -13,7 +13,7 @@ local function IsStateRecord(passedIn: unknown): boolean
     end
 
     return ((passedIn :: any)._dectype == "Observable")
-        and ((passedIn :: any)._decobservabletype == "StateRecords")
+        and ((passedIn :: any)._decobservabletype == "StateRecord")
 end
 
 return IsStateRecord

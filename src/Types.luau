@@ -16,7 +16,8 @@ export type Observable<T = any> = typeof(setmetatable(
     {} :: {__index: {
         _dectype: string,
         _decobservabletype: string,
-        Subscribe: (self: Observable<T>, listener: (T) -> ()) -> Unsubscribe,
+        Subscribe: (self: Observable<T>, listener: (T) -> (),
+            immediatelyCallListener: boolean?) -> Unsubscribe,
         Current: (self: Observable<T>) -> T,
         Destroy: (self: Observable<T>) -> (),
         Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
@@ -24,6 +25,7 @@ export type Observable<T = any> = typeof(setmetatable(
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
+        _valueRef: {value: T},
         _notifyUpdate: (() -> ())?,
     },
     {} :: {__index: {
@@ -32,6 +34,7 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
 ))
 export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
+        _valueRef: {value: T},
         _notifyUpdate: (() -> ())?,
         _notifyRecord: {[any]: {[() -> ()]: true}}
     },
@@ -39,42 +42,33 @@ export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
         Set: (self: StateRecord<T>, key: any, newValue: any) -> (),
         Current: (self: StateRecord<T>, atKey: any) -> any,
         Replace: (self: StateRecord<T>, T) -> (),
-        Index: (self: StateRecord<T>, key: any) -> Observable<any>,
+        Index: (self: StateRecord<T>, key: any) -> State<any>,
     }}
 ))
-export type Spring<T = any> = Observable<T> & typeof(setmetatable(
+export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
-        _angularFrequency: any, -- CanBeObservable<number>
         _target: Observable<T>,
-        _snapToGoalTheshold: any, -- CanBeObservable<number>?
+        _easingFrame: any,
     },
     {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
+        CurrentTarget: (self: EasedObject<T>) -> T,
+        SetPosition: (self: EasedObject<T>, position: T) -> (),
+        ResetVelocity: (self: EasedObject<T>) -> (),
     }}
 ))
-export type IntSpring<T = any> = Observable<T> & typeof(setmetatable(
+export type Spring<T = any> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _angularFrequency: any, -- CanBeObservable<number>
-        _target: Observable<T>,
     },
-    {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
-    }}
+    {} :: {__index: { }}
 ))
-export type EasedValue<T = any> = Observable<T> & typeof(setmetatable(
+export type AngleSpring<T> = Spring<T>
+export type IntSpring<T = any> = Spring<T>
+export type EasedValue<T = any> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _info: TweenInfo,
-        _target: Observable<T>,
     },
-    {} :: {__index: {
-        CurrentTarget: (self: State<T>) -> T,
-        SetPosition: (self: State<T>, position: T) -> (),
-        ResetVelocity: (self: State<T>) -> (),
-    }}
+    {} :: {__index: { }}
 ))
 export type Alpha = Observable<number> & typeof(setmetatable(
     {} :: {},
@@ -109,19 +103,19 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
         Start: (self: BaseTimer) -> (),
         Stop: (self: BaseTimer) -> (),
         Pause: (self: BaseTimer) -> (),
-        SetTimePosition: (self: BaseTimer) -> (),
+        SetTimePosition: (self: BaseTimer, position: number) -> (),
         CurvedAlpha: (
-            self: Alpha,
+            self: BaseTimer,
             easingStyle: Enum.EasingStyle,
             easingDirection: Enum.EasingDirection?
         ) -> Alpha,
         SliceAlpha: (
-            self: Alpha,
+            self: BaseTimer,
             startTime: number,
             endTime: number
         ) -> Alpha,
         Lerp: <T>(
-            self: Alpha,
+            self: BaseTimer,
             startValue: T,
             goalValue: T
         ) -> Observable<T>,
@@ -133,9 +127,9 @@ export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
-    [ChildPath]: CanBeObservable<
+    [ChildPath]: any--[[CanBeObservable<
         Instance | VirtualInstance | nil
-    >
+    >]]
 }>
 export type VirtualInstanceTrace = {
     method: string,
@@ -162,11 +156,11 @@ export type VirtualInstance = typeof(setmetatable(
         _dectype: string,
         SetProperties: (
             self: VirtualInstance,
-            propertyMap: {[string]: CanBeObservable<any>}
+            propertyMap: {[string]: any}
         ) -> (),
         SetAttributes: (
             self: VirtualInstance,
-            attributeMap: {[string]: CanBeObservable<any>}
+            attributeMap: {[string]: any}
         ) -> (),
         AddTags: (
             self: VirtualInstance,

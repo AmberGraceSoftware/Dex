@@ -5,6 +5,7 @@ local Observable = require(script.Parent.Parent.Observables.Observable)
 local Types = require(script.Parent.Parent.Types)
 
 type Observable<T> = Types.Observable<T>
+type EasedObject<T> = Types.EasedObject<T>
 
 export type EasingFrame<T> = {
     startTime: number,
@@ -108,6 +109,36 @@ local typeToInitialVelocity: {[string]: any?} = {
     ["CFrame"] = CFrame.identity,
 }
 
+local EasedObject = {}
+EasedObject.__index = {}
+-- Inherits Observable
+for k, v in Observable.__index :: any do
+    (EasedObject.__index :: any)[k] = v
+end
+EasedObject.__index._decobservabletype = "EasedObject"
+
+function EasedObject.__index.ResetVelocity(self: EasedObject<any>)
+    self._easingFrame.previousVelocity =
+        typeToInitialVelocity[typeof(self._easingFrame.startValue)]
+end
+function EasedObject.__index.CurrentTarget(self: EasedObject<any>)
+    return self._target:Current()
+end
+function EasedObject.__index.SetPosition(self: EasedObject<any>, pos: any)
+    if typeof(pos) ~= typeof(self._easingFrame.startValue) then
+        error(`Invalid argument to SetPosition (` ..
+            `{typeof(self._easingFrame.startValue)} expected; got ` ..
+            `{typeof(pos)})`)
+    end
+    local initialTime = os.clock()
+    self._easingFrame.previousValue = pos
+    self._easingFrame.previousTime = initialTime
+    self._easingFrame.previousElapsed = 0
+    self._easingFrame.startValue = pos
+    self._easingFrame.startTime = initialTime
+    self._easingFrame.startElapsed = 0
+end
+
 --[[
     Creates an eased Observable object based on a target Observable and an
     easing function. This function returns an Observable that smoothly
@@ -120,10 +151,10 @@ local typeToInitialVelocity: {[string]: any?} = {
     @param easingFunction The function determining the rate of transition
     @return An Observable that smoothly transitions to new values
 ]]
-local function CreateEasedObject<T>(
+function EasedObject.new<T>(
     target: Observable<T>,
     easingFunction: EasingFunction<T>
-): Observable<T>
+): EasedObject<T>
     local initialValue = target:Current()
     local initialVelocity = typeToInitialVelocity[typeof(initialValue)]
     if not initialVelocity then
@@ -142,14 +173,20 @@ local function CreateEasedObject<T>(
         targetMet = true
     }
 
-    return Observable.new(
+    local self: EasedObject<T> = Observable.new(
         function()
             return getCurrent(easingFrame, target, easingFunction)
         end,
         function(notifyUpdate)
             return createUpdateStream(notifyUpdate, easingFrame, target)
         end
-    )
+    ) :: any
+    self._easingFrame = easingFrame
+    self._target = target
+
+    setmetatable(self, EasedObject)
+
+    return self
 end
 
-return CreateEasedObject
+return EasedObject
