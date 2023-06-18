@@ -4,6 +4,11 @@
 ]]
 export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
+
+export type MappingBinopMetamethod<Simple, Complex> =
+    ((lhs: Complex, rhs: Complex) -> Complex)
+    & ((lhs: Simple, rhs: Complex) -> Complex)
+    & ((lhs: Complex, rhs: Simple) -> Complex)
 export type Observable<T = any> = typeof(setmetatable(
     {} :: {
         _cachedValue: T,
@@ -13,15 +18,23 @@ export type Observable<T = any> = typeof(setmetatable(
         _listeners: Set<(newValue: T) -> ()>,
         _destroyed: boolean?,
     },
-    {} :: {__index: {
-        _dectype: string,
-        _decobservabletype: string,
-        Subscribe: (self: Observable<T>, listener: (T) -> (),
-            immediatelyCallListener: boolean?) -> Unsubscribe,
-        Current: (self: Observable<T>) -> T,
-        Destroy: (self: Observable<T>) -> (),
-        Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
-    }}
+    {} :: {
+        __index: {
+            _dectype: string,
+            _decobservabletype: string,
+            Subscribe: (self: Observable<T>, listener: (T) -> (),
+                immediatelyCallListener: boolean?) -> Unsubscribe,
+            Current: (self: Observable<T>) -> T,
+            Destroy: (self: Observable<T>) -> (),
+            Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
+        },
+        __mul: MappingBinopMetamethod<T, Observable<T>>,
+        __add: MappingBinopMetamethod<T, Observable<T>>,
+        __sub: MappingBinopMetamethod<T, Observable<T>>,
+        __div: MappingBinopMetamethod<T, Observable<T>>,
+        __pow: MappingBinopMetamethod<T, Observable<T>>,
+        __unm: (self: Observable<T>) -> Observable<T>,
+    }
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {

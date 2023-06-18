@@ -9,6 +9,13 @@ type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 local Alpha = {}
+-- Inherits Observable metamethods
+for k, v in Observable :: any do
+    if k:sub(1, 2) ~= "__" then
+        continue
+    end
+    (Alpha :: any)[k] = v
+end
 Alpha.__index = {}
 -- Inherits Observable
 for k, v in Observable.__index :: any do
