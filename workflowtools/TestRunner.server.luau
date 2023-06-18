@@ -134,7 +134,7 @@ local function TestRunner()
             )
         end
         print("\n\tProof-of-testing checksum (paste into " ..
-            "'testing_proof_checksum.txt' file in Dec's root project" .. 
+            "'testing_proof_checksum.txt' file in Dec's root project " .. 
             "directory): ", proof_checksum)
     end)
 end

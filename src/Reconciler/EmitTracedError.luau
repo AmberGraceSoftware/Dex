@@ -33,7 +33,6 @@ local function EmitTracedError(
             table.insert(errMessageStrs, traceLevel.identifier)
         end
     end
-    task.cancel(coroutine.running())
     error(table.concat(errMessageStrs))
 end
 

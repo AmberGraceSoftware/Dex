@@ -127,7 +127,6 @@ local function ApplyChildrenDirective(
                     chainedVirtualInstance
                 )
             end
-            RenderChild(node, finalChildKey, chainedVirtualInstance)
         end
     end
 end
