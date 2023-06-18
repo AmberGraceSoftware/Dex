@@ -47,6 +47,9 @@ local function MountVirtualInstance(
         for callback in node._instanceResolvedCallbacks do
             task.spawn(callback, instance)
         end
+        if (instance.Parent == nil) and (instance ~= rootInstance) then
+            instance.Parent = rootInstance
+        end
     end)
     if not node._instance then
         table.insert(node._unsubscribes, instancePromise.cancel)
