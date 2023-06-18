@@ -4,6 +4,8 @@
 ]]
 export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
+
+type MathBinopMetamethod<T> = (lhs: T, rhs: T) -> T
 export type Observable<T = any> = typeof(setmetatable(
     {} :: {
         _cachedValue: T,
@@ -13,15 +15,39 @@ export type Observable<T = any> = typeof(setmetatable(
         _listeners: Set<(newValue: T) -> ()>,
         _destroyed: boolean?,
     },
-    {} :: {__index: {
-        _dectype: string,
-        _decobservabletype: string,
-        Subscribe: (self: Observable<T>, listener: (T) -> (),
-            immediatelyCallListener: boolean?) -> Unsubscribe,
-        Current: (self: Observable<T>) -> T,
-        Destroy: (self: Observable<T>) -> (),
-        Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
-    }}
+    {} :: {
+        __index: {
+            _dectype: string,
+            _decobservabletype: string,
+            Subscribe: (self: Observable<T>, listener: (T) -> (),
+                immediatelyCallListener: boolean?) -> Unsubscribe,
+            Current: (self: Observable<T>) -> T,
+            Destroy: (self: Observable<T>) -> (),
+            Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
+        },
+        __mul: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __add: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __sub: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __div: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __pow: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __lt: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __le: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
+            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __unm: (self: Observable<T>) -> Observable<T>,
+    }
 ))
 export type State<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
