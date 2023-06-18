@@ -1,4 +1,9 @@
 # Dec
+
+<p align="center">
+      <img src="logo/Logo256.png" />
+</p>
+
 | DISCLAIMER: Dec is a work in progress project, and does NOT currently have a stable release, finalized API/documentation, or full test coverage. Please be patient as a first beta release is actively being developed! |
 | --- |
 
