@@ -58,6 +58,20 @@ export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
         Index: (self: StateRecord<T>, key: any) -> State<any>,
     }}
 ))
+export type StateDict<K = string, V = any> = Observable<{[K]: V}> & typeof(setmetatable(
+    {} :: {
+        _valueRef: {value: {[K]: V}},
+        _notifyUpdate: (() -> ())?,
+        _notifyRecord: {[K]: {[() -> ()]: true}}
+    },
+    {} :: {__index: {
+        Set: (self: StateDict<K, V>, key: any, newValue: any) -> (),
+        Current: ((self: StateDict<K, V>, atKey: K) -> V)
+            & ((self: StateDict<K, V>) -> {[K]: V}),
+        Replace: (self: StateDict<K, V>, {[K]: V}) -> (),
+        Index: (self: StateDict<K, V>, key: K) -> State<V>,
+    }}
+))
 export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(
     {} :: {
         _target: Observable<T>,

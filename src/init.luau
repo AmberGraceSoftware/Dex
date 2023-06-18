@@ -21,6 +21,7 @@ export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>
 export type State<T> = Types.State<T>
 export type StateRecord<T> = Types.StateRecord<T>
+export type StateDict<T> = Types.StateDict<T>
 export type Spring<T> = Types.Spring<T>
 export type AngleSpring<T> = Types.AngleSpring<T>
 export type IntSpring<T> = Types.IntSpring<T>
