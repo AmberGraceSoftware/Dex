@@ -1,4 +1,6 @@
 --!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local IsObservable = require(ReplicatedStorage.Packages.Dec.Reflection.IsObservable)
 local Types = require(script.Parent.Parent.Types)
 
 export type Observable<T> = Types.Observable<T>
@@ -158,6 +160,183 @@ function Observable.new<T>(
         _createUpdateStream = createUpdateStream,
         _listeners = {},
     }, Observable) :: any
+end
+-- Metamethod implementations: Map lhs and rhs with component-wise binop if the
+-- observable value type is a scalar, vector, or matrix
+local typeToMonadicBinopMapper: {
+    [string]: (a: any, b: any, map: (number, number) -> number) -> any
+} = {}
+local typeToUnaryNegation: {[string]: (a: any) -> any} = {}
+
+typeToMonadicBinopMapper.number = function(a: number, b: number, map): number
+    return map(a, b)
+end
+typeToUnaryNegation.number = function(self: number)
+    return -self
+end
+
+typeToMonadicBinopMapper.Vector2 = function(a: Vector2, b: Vector2, map): Vector2
+    return Vector2.new(map(a.X, b.X), map(a.Y, b.Y))
+end
+typeToUnaryNegation.Vector2 = function(self: Vector2)
+    return -self
+end
+
+typeToMonadicBinopMapper.Vector2int16 = function(a: Vector2int16, b: Vector2int16, map): Vector2int16
+    return Vector2int16.new(map(a.X, b.X), map(a.Y, b.Y))
+end
+typeToUnaryNegation.Vector2int16 = function(self: Vector2int16)
+    return -self
+end
+
+typeToMonadicBinopMapper.Vector3 = function(a, b, map)
+    return map(a, b) -- Will error if invalid Vector3 binops are used
+end
+typeToUnaryNegation.Vector3 = function(self: Vector3)
+    return -self
+end
+
+typeToMonadicBinopMapper.Vector3int16 = function(a: Vector3int16,
+    b: Vector3int16, map): Vector3int16
+    return Vector3int16.new(map(a.X, b.X), map(a.Y, b.Y), map(a.Z, b.Z))
+end
+typeToUnaryNegation.Vector3int16 = function(self: Vector3int16)
+    return -self
+end
+
+typeToMonadicBinopMapper.CFrame = function(a, b, map)
+    return map(a, b) -- Will error if invalid CFrame binops are used
+end
+typeToUnaryNegation.CFrame = function(self: CFrame)
+    return self - self.Position * 2
+end
+
+typeToMonadicBinopMapper.UDim = function(a: UDim, b: UDim, map): UDim
+    return UDim.new(map(a.Scale, b.Scale), map(a.Offset, b.Offset))
+end
+typeToUnaryNegation.UDim = function(self: UDim)
+    return UDim.new(-self.Scale, -self.Offset)
+end
+
+typeToMonadicBinopMapper.UDim2 = function(a: UDim2, b: UDim2, map): UDim2
+    return UDim2.new(
+        map(a.X.Scale, b.X.Scale),
+        map(a.X.Offset, b.X.Offset),
+        map(a.Y.Scale, b.Y.Scale),
+        map(a.Y.Offset, b.Y.Offset)
+    )
+end
+typeToUnaryNegation.UDim2 = function(self: UDim2)
+    return UDim2.new(
+        -self.X.Scale, -self.X.Offset,
+        -self.Y.Scale,-self.Y.Offset
+    )
+end
+
+typeToMonadicBinopMapper.Color3 = function(a: Color3, b: Color3, map): Color3
+    return Color3.new(map(a.R, b.R), map(a.G, b.G), map(a.B, b.B))
+end
+typeToUnaryNegation.Color3 = function(self: Color3)
+    return Color3.new(-self.R, -self.G, -self.B)
+end
+
+typeToMonadicBinopMapper.boolean = function(a: boolean, b: boolean): boolean
+    return a and b
+end
+typeToUnaryNegation.boolean = function(self: boolean)
+    return not self
+end
+
+typeToMonadicBinopMapper.Rect = function(a: Rect, b: Rect, map): Rect
+    return Rect.new(
+        map(a.Min.X, b.Min.X),
+        map(a.Min.Y, b.Min.Y),
+        map(a.Max.X, b.Max.X),
+        map(a.Max.Y, b.Max.Y)
+    )
+end
+typeToUnaryNegation.Rect = function(self: Rect)
+    return Rect.new(-self.Min.X, -self.Min.Y, -self.Max.X, -self.Max.Y)
+end
+-- Monadic method of wrapping and unwrapping vector types into scalar types for
+-- metamethod overloads
+local function applyBinopPolymorphic(
+    a: any,
+    b: any,
+    binop: (a: number, b: number) -> number
+): any
+    if typeof(a) ~= typeof(b) then
+        error("Can only perform math operations on Dec Observables of the " .. 
+            "same type (got " .. typeof(a) .. " and " .. typeof(b) .. ")")
+    end
+    local monadicMapper = typeToMonadicBinopMapper[typeof(a)]
+    if not monadicMapper then
+        error("Can only perform math operations on Dec Observables with " .. 
+            "scalar, vector, or matrix value types (got " .. typeof(a) ..  ")")
+    end
+
+    return monadicMapper(a, b, binop)
+end
+local function createMappingMetamethod(
+    binop: (a: number, b: number) -> number
+): (any, any) -> any
+    return function(a, b)
+        if IsObservable(a) then
+            if IsObservable(b) then
+                -- Map from two constant observables
+                return Observable.new(function()
+                    return applyBinopPolymorphic(
+                        a:Current(),
+                        b:Current(),
+                        binop
+                    )
+                end, function(notifyUpdates)
+                    local unsubscribeA = a:Subscribe(notifyUpdates)
+                    local unsubscribeB = b:Subscribe(notifyUpdates)
+                    return function()
+                        unsubscribeA()
+                        unsubscribeB()
+                    end
+                end)
+            else
+                -- lhs is observable, rhs is constant
+                return a:Map(function(aCurrent)
+                    return applyBinopPolymorphic(aCurrent, b, binop)
+                end)
+            end
+        else
+            -- rhs is observable, lhs is constant
+            return b:Map(function(bCurrent)
+                return applyBinopPolymorphic(a, bCurrent, binop)
+            end)
+        end
+    end
+end
+Observable.__add = createMappingMetamethod(function(a, b)
+    return a + b
+end)
+Observable.__sub = createMappingMetamethod(function(a, b)
+    return a - b
+end)
+Observable.__mul = createMappingMetamethod(function(a, b)
+    return a * b
+end)
+Observable.__div = createMappingMetamethod(function(a, b)
+    return a / b
+end)
+Observable.__exp = createMappingMetamethod(function(a, b)
+    return a ^ b
+end)
+Observable.__unm = function(self: Observable<any>)
+    local negationHandler = typeToUnaryNegation[typeof(self._cachedValue)]
+    if not negationHandler then
+        error(
+            "Unary negation not supported with Observables of value type"
+                .. typeof(self._cachedValue)
+        )
+    end
+
+    return self:Map(negationHandler)
 end
 
 return Observable
