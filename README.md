@@ -24,14 +24,15 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] Unit Test Skeleton Structure
 - [X] Initial test coverage of Most Modules
 - [X] Math operator overloads for scalar/vector/other types of observables
-- [ ] `Dec.StateDict`, which has the same implementation as `Dec.StateRecord` using statically knowable key/value types
-- [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:SetParameters` function that changes the whole parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
+- [X] Finalize `Dec.Dict` and `Dec.Record` observable objects
+- [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:Replace` function that changes all parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
 - [ ] Add reverse/repeat count parameters to `Alpha:Curve()` as well as reverse/repeat count/delay time/tween time to `BaseTimer:CurvedAlpha()`
+- [ ] Create a logo & clean up readme
+- [ ] Deploy a Documentation Site + workflow using Moonwave
 - [ ] More extensive Reconciler unit testing and examples
 - [ ] First Stable Release (In Progress)
 - [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!)
 - [ ] Rx interop
-- [ ] Generate a Documentation Site + workflow using Moonwave
 - [ ] Add usage guides to docs site
 
 ## Post-Release Roadmap
@@ -39,7 +40,7 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [ ] Create a simple open-source demo game using Dec?
 - [ ] Create a simple open-source demo plugin using Dec?
 - [ ] Video tutorials?
-- [ ] Marketing the library (so to speak), making a cool logo, etc.
+- [ ] Word-of-mouth / twitter marketing (so to speak), getting the library out there!
 
 ## Contributing
 
