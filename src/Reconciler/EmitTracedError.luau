@@ -5,7 +5,6 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 --[[
     @param errMessage: string
     @param trace: VirtualInstanceTrace?
-    @param debugLevel: number
     @return void
 
     Emits an error at the given debug level which has a traceback to the
@@ -14,10 +13,8 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 ]]
 local function EmitTracedError(
     errMessage: string,
-    trace: VirtualInstanceTrace?,
-    debugLevel: number
+    trace: VirtualInstanceTrace?
 )
-    debugLevel += 1
     local errMessageStrs = {
         errMessage
     }
@@ -36,10 +33,8 @@ local function EmitTracedError(
             table.insert(errMessageStrs, traceLevel.identifier)
         end
     end
-    error(
-        table.concat(errMessageStrs),
-        debugLevel
-    )
+    task.cancel(coroutine.running())
+    error(table.concat(errMessageStrs))
 end
 
 return EmitTracedError

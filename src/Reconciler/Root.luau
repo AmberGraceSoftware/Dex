@@ -32,8 +32,7 @@ function Root.__index.Render(
         self._instance,
         nil,
         node,
-        self._reconciled,
-        1
+        self._reconciled
     )
     return self._reconciled :: ReconciledNode
 end
@@ -46,10 +45,7 @@ end
 ]]
 function Root.__index.Unmount(self: Root)
     if self._reconciled then
-        UnmountVirtualInstance(
-            self._reconciled,
-            1
-        )
+        UnmountVirtualInstance(self._reconciled)
         self._reconciled = nil
     end
 end

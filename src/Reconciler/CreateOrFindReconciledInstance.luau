@@ -9,21 +9,19 @@ local WAIT_FOR_CHILD_TIMEOUT = 30
 local DEFAULT_CREATED_CHILD_NAME = "DecRoot"
 
 type PseudoPromise = {
-    andThen: (callback: (Instance, number) -> ()) -> (),
+    andThen: (callback: (Instance) -> ()) -> (),
     cancel: () -> (),
 }
 
 local function CreateNewReconciledInstance(
     childPath: string?,
-    virtualInstance: VirtualInstance,
-    debugLevel: number
+    virtualInstance: VirtualInstance
 ): PseudoPromise
-    debugLevel += 1
     local newInstance = Instance.new(virtualInstance._constructorTypeArgument)
     newInstance.Name = childPath or DEFAULT_CREATED_CHILD_NAME
     return {
         andThen = function(callback)
-            callback(newInstance, debugLevel + 1)
+            callback(newInstance)
         end,
         cancel = function() end,
     }
@@ -31,12 +29,10 @@ end
 
 local function FindChildReconciledInstance(
     hostInstance: Instance,
-    childPath: string?,
-    debugLevel: number
+    childPath: string?
 ): PseudoPromise
-    debugLevel += 1
     local result: Instance? = nil
-    local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
+    local onResultCallbacks: {(Instance) -> ()} = {}
     local childAddedConn: RBXScriptConnection? = nil
     local cancelled = false
     if childPath then
@@ -48,7 +44,7 @@ local function FindChildReconciledInstance(
                 if child.Name == childPath then
                     result = child
                     for _, cb in onResultCallbacks do
-                        task.spawn(cb, child, debugLevel + 1)
+                        task.spawn(cb, child)
                     end
                 end
             end)
@@ -69,7 +65,7 @@ local function FindChildReconciledInstance(
     return {
         andThen = function(callback)
             if result then
-                callback(result, debugLevel + 1)
+                callback(result)
             else
                 table.insert(onResultCallbacks, callback)
             end
@@ -87,12 +83,10 @@ end
 local function CloneLatentResolvedTemplate(
     childPath: string?,
     virtualInstance: VirtualInstance,
-    templateArg: VirtualInstance,
-    debugLevel: number
+    templateArg: VirtualInstance
 ): PseudoPromise
-    debugLevel += 1
     local result: Instance? = nil
-    local onResultCallbacks: {(Instance, debugLevel: number) -> ()} = {}
+    local onResultCallbacks: {(Instance) -> ()} = {}
     local cancelled = false
     local stopTrackingLatentResolve: (() -> ())? = nil
     task.defer(function()
@@ -123,8 +117,7 @@ local function CloneLatentResolvedTemplate(
                 "will be mounted within the same frame. Perhaps you " ..
                 "passed an unmounted VirtualInstance as a template " .. 
                 "for Dec.Clone()?",
-                firstEncounteredTrace,
-                1
+                firstEncounteredTrace
             )
             return
         end
@@ -136,7 +129,7 @@ local function CloneLatentResolvedTemplate(
                 or DEFAULT_CREATED_CHILD_NAME
             result = newInstance
             for _, cb in onResultCallbacks do
-                task.spawn(cb, newInstance, 1)
+                task.spawn(cb, newInstance)
             end
         else
             local function onResolve(template: Instance)
@@ -144,7 +137,7 @@ local function CloneLatentResolvedTemplate(
                 newInstance.Name = childPath
                     or DEFAULT_CREATED_CHILD_NAME
                 for _, cb in onResultCallbacks do
-                    task.spawn(cb, newInstance, 1)
+                    task.spawn(cb, newInstance)
                 end
             end
             templateNode._instanceResolvedCallbacks[onResolve] = true
@@ -156,7 +149,7 @@ local function CloneLatentResolvedTemplate(
     return {
         andThen = function(callback)
             if result then
-                callback(result, debugLevel + 1)
+                callback(result)
             else
                 table.insert(onResultCallbacks, callback)
             end
@@ -172,17 +165,14 @@ end
 
 local function CloneTemplateReconciledInstance(
     childPath: string?,
-    virtualInstance: VirtualInstance,
-    debugLevel: number
+    virtualInstance: VirtualInstance
 ): PseudoPromise
-    debugLevel += 1
     local templateArg = virtualInstance._constructorTypeArgument
     if IsVirtualInstance(templateArg) then
         if templateArg._constructorType == "New" then
             -- In the case that our template was a "Dec.New" virtual
             -- instance, simply treat as a Dec.New call
-            return CreateNewReconciledInstance(childPath, templateArg,
-                debugLevel)
+            return CreateNewReconciledInstance(childPath, templateArg)
         elseif
             templateArg._reconciledNode
             and templateArg._reconciledNode._instance
@@ -193,7 +183,7 @@ local function CloneTemplateReconciledInstance(
             newInstance.Name = childPath or DEFAULT_CREATED_CHILD_NAME
             return {
                 andThen = function(callback)
-                    callback(newInstance, debugLevel + 1)
+                    callback(newInstance)
                 end,
                 cancel = function() end,
             }
@@ -203,7 +193,7 @@ local function CloneTemplateReconciledInstance(
             -- for the template at least to resolve. Otherwise, raise an
             -- exception.
             return CloneLatentResolvedTemplate(childPath, virtualInstance,
-                templateArg, debugLevel)
+                templateArg)
         end
     else
         -- In standard case, use template instance provided
@@ -211,7 +201,7 @@ local function CloneTemplateReconciledInstance(
         newInstance.Name = childPath or DEFAULT_CREATED_CHILD_NAME
         return {
             andThen = function(callback)
-                callback(newInstance, debugLevel + 1)
+                callback(newInstance)
             end,
             cancel = function() end,
         }
@@ -233,19 +223,14 @@ end
 local function CreateOrFindReconciledInstance(
     hostInstance: Instance,
     childPath: string?,
-    virtualInstance: VirtualInstance,
-    debugLevel: number
+    virtualInstance: VirtualInstance
 ): PseudoPromise
-    debugLevel += 1
-
     if virtualInstance._constructorType == "New" then
-        return CreateNewReconciledInstance(childPath, virtualInstance,
-            debugLevel)
+        return CreateNewReconciledInstance(childPath, virtualInstance)
     elseif virtualInstance._constructorType == "Clone" then
-        return CloneTemplateReconciledInstance(childPath, virtualInstance,
-            debugLevel)
+        return CloneTemplateReconciledInstance(childPath, virtualInstance)
     else
-        return FindChildReconciledInstance(hostInstance, childPath, debugLevel)
+        return FindChildReconciledInstance(hostInstance, childPath)
     end
 end
 return CreateOrFindReconciledInstance
