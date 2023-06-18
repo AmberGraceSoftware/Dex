@@ -5,7 +5,10 @@
 export type Unsubscribe = () -> ()
 export type Set<T = any> = {[T]: true}
 
-type MathBinopMetamethod<T> = (lhs: T, rhs: T) -> T
+export type MappingBinopMetamethod<Simple, Complex> =
+    ((lhs: Complex, rhs: Complex) -> Complex)
+    & ((lhs: Simple, rhs: Complex) -> Complex)
+    & ((lhs: Complex, rhs: Simple) -> Complex)
 export type Observable<T = any> = typeof(setmetatable(
     {} :: {
         _cachedValue: T,
@@ -25,27 +28,13 @@ export type Observable<T = any> = typeof(setmetatable(
             Destroy: (self: Observable<T>) -> (),
             Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
         },
-        __mul: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __add: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __sub: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __div: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __pow: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __lt: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
-        __le: ((lhs: Observable<T>, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: T, rhs: Observable<T>) -> Observable<T>)
-            & ((lhs: Observable<T>, rhs: T) -> Observable<T>),
+        __mul: MappingBinopMetamethod<T, Observable<T>>,
+        __add: MappingBinopMetamethod<T, Observable<T>>,
+        __sub: MappingBinopMetamethod<T, Observable<T>>,
+        __div: MappingBinopMetamethod<T, Observable<T>>,
+        __pow: MappingBinopMetamethod<T, Observable<T>>,
+        __lt: MappingBinopMetamethod<T, Observable<T>>,
+        __le: MappingBinopMetamethod<T, Observable<T>>,
         __unm: (self: Observable<T>) -> Observable<T>,
     }
 ))
