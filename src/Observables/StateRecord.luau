@@ -3,6 +3,7 @@ local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 
 type StateRecord<T> = Types.StateRecord<T>
+type StateDict<K, V> = Types.StateDict<K, V>
 type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
@@ -134,10 +135,10 @@ function StateRecord.__index.Index(
 end
 
 --[[
-    @param initialValue: T - The initial value of the StateRecord.
-    @return Dec.StateRecord<T> - The newly created StateRecord observable.
+    @param initialValue: T - The initial value of the Record state observable.
+    @return Dec.Record<T> - The newly created Record state observable.
 
-    Creates a new StateRecord observable with the given initial value.
+    Creates a new Record observable with the given initial value.
 ]]
 function StateRecord.new<T>(initialValue: T): StateRecord<T>
     local self: StateRecord<T>
@@ -165,5 +166,14 @@ function StateRecord.new<T>(initialValue: T): StateRecord<T>
     setmetatable(self, StateRecord)
     return self
 end
+
+--[[
+    @param initialValue: {[K]: V} - The initial value of the Dict observable.
+    @return Dec.Dict<T> - The newly created Dict observable.
+
+    Creates a new Dict state observable with the given initial value.
+]]
+StateRecord.newDict = (StateRecord.new :: any)
+    :: <K, V>(initialValue: {[K]: V}) -> StateDict<K, V>
 
 return StateRecord
