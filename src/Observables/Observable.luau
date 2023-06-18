@@ -175,14 +175,16 @@ typeToUnaryNegation.number = function(self: number)
     return -self
 end
 
-typeToMonadicBinopMapper.Vector2 = function(a: Vector2, b: Vector2, map): Vector2
+typeToMonadicBinopMapper.Vector2 = function(a: Vector2, b: Vector2,
+    map): Vector2
     return Vector2.new(map(a.X, b.X), map(a.Y, b.Y))
 end
 typeToUnaryNegation.Vector2 = function(self: Vector2)
     return -self
 end
 
-typeToMonadicBinopMapper.Vector2int16 = function(a: Vector2int16, b: Vector2int16, map): Vector2int16
+typeToMonadicBinopMapper.Vector2int16 = function(a: Vector2int16,
+    b: Vector2int16, map): Vector2int16
     return Vector2int16.new(map(a.X, b.X), map(a.Y, b.Y))
 end
 typeToUnaryNegation.Vector2int16 = function(self: Vector2int16)
@@ -206,9 +208,6 @@ end
 
 typeToMonadicBinopMapper.CFrame = function(a, b, map)
     return map(a, b) -- Will error if invalid CFrame binops are used
-end
-typeToUnaryNegation.CFrame = function(self: CFrame)
-    return self - self.Position * 2
 end
 
 typeToMonadicBinopMapper.UDim = function(a: UDim, b: UDim, map): UDim
@@ -324,7 +323,7 @@ end)
 Observable.__div = createMappingMetamethod(function(a, b)
     return a / b
 end)
-Observable.__exp = createMappingMetamethod(function(a, b)
+Observable.__pow = createMappingMetamethod(function(a, b)
     return a ^ b
 end)
 Observable.__unm = function(self: Observable<any>)
