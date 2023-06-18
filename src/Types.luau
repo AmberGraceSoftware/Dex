@@ -33,8 +33,6 @@ export type Observable<T = any> = typeof(setmetatable(
         __sub: MappingBinopMetamethod<T, Observable<T>>,
         __div: MappingBinopMetamethod<T, Observable<T>>,
         __pow: MappingBinopMetamethod<T, Observable<T>>,
-        __lt: MappingBinopMetamethod<T, Observable<T>>,
-        __le: MappingBinopMetamethod<T, Observable<T>>,
         __unm: (self: Observable<T>) -> Observable<T>,
     }
 ))
