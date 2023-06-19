@@ -3,7 +3,7 @@
 <p align="center">
       <img src="logo/Logo256.png" />
       <br/>
-      Dec is a reactive UI library for <a href=https://www.roblox.com/home>Roblox</a>.
+      Dec is a reactive UI library for <a href="https://www.roblox.com/home">Roblox</a>.
       <br/>
       It provides a familiar, declarative syntax for building scalable UI components for any project's needs.
 </p>
