@@ -1,0 +1,18 @@
+classOrder = ["Dec", "VirtualInstance"]
+gitSourceBranch = "main"
+
+[docusaurus]
+url = "https://ambergracesoftware.com"
+baseUrl = "/dec"
+tagline = "A reactive UI library for Roblox"
+
+[navbar]
+title = ""
+
+[navbar.logo]
+alt = "Dec"
+src = "LogoNoBG.png"
+
+[home]
+enabled = true
+includeReadme = false
