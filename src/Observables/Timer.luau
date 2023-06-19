@@ -12,6 +12,9 @@ type Timer = Types.Timer
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
+--- @class Timer
+--- Subclass of Observable which simulates in realtime while subscribed
+--- Can be constructed via [Dec.Timer]
 local Timer = {}
 -- Inherits Timer metamethods
 for k, v in Timer :: any do

@@ -7,6 +7,9 @@ type StateDict<K, V> = Types.StateDict<K, V>
 type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
+--- @class StateRecord
+--- Subclass of Observable
+--- Can be constructed via [Dec.StateRecord]
 local StateRecord = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do

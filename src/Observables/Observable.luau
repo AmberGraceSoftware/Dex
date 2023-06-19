@@ -6,6 +6,10 @@ local Types = require(script.Parent.Parent.Types)
 export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
 
+--- @class Observable
+--- Observables are objects that hold or derive some state, and forward updates
+--- to listeners of this state when subscribed.
+--- Can be constructed via [Dec.CustomObservable]
 local Observable = {}
 Observable.__index = {}
 Observable.__index._dectype = "Observable"

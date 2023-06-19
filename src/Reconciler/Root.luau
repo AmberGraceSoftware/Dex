@@ -10,6 +10,10 @@ type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type ReconciledNode = Types.ReconciledNode
 
+--- @class Root
+--- Root is an object which starts and stops rendering VirtualInstances passed
+--- into it. In order to write a Dec application, you need to create a root via
+--- [Dec.Root], and render an instance using [Root:Render()]
 local Root = {}
 Root.__index = {}
 Root.__index._dectype = "Root"

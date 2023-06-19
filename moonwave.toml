@@ -1,4 +1,12 @@
-classOrder = ["Dec", "VirtualInstance"]
+[[classOrder]]
+section = "Core"
+classes = ["Dec", "VirtualInstance", "Root"]
+
+[[classOrder]]
+section = "Observables"
+classes = ["Observable", "State", "StateRecord", "Stopwatch", "Timer", "Alpha",
+    "Eased", "Spring", "AngleSpring", "IntSpring"]
+
 gitSourceBranch = "main"
 
 [docusaurus]

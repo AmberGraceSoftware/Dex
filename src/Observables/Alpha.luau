@@ -8,6 +8,11 @@ local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
+--- @class Alpha
+--- Alpha is an [Observable] subclass which maps the number value from another
+--- observable to the range [0, 1]. Contains helper functions for making
+--- animations and state transitions.
+--- Can be constructed via [Dec.Alpha]
 local Alpha = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -108,14 +113,18 @@ function Alpha.__index.Lerp<T>(
 end
 
 
---[[
-    @param sourceState: Dec.Observable<number> - The source state to derive an alpha from.
-    @param sourceRangeMin - The number in source state to maps to 0
-    @param sourceRangeMax - The number in source state to maps to 1
-    @return Dec.Alpha - The new Alpha Observable.
+--[=[
+    @function Alpha
+    @within Dec
+    @param source Observable<number>
+    @param sourceRangeMin number
+    @param sourceRangeMax number
+    @return Alpha
 
-    Creates a new Alpha Observable with the provided initial value.
-]]
+    Creates a new Alpha Observable object, which maps the current value of the
+    source observable to the range [0, 1] based on sourceRangeMin and
+    sourceRangeMax
+]=]
 function Alpha.new(
     sourceState: Observable<number>,
     sourceRangeMin: number,

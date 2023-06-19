@@ -59,6 +59,9 @@ local typeToSpringStepMethod = {
     ["Vector2"] = linearSpringStep,
 }
 
+--- @class AngleSpring
+--- Subclass of Observable
+--- Can be constructed via [Dec.AngleSpring]
 local AngleSpring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do
@@ -82,20 +85,24 @@ function AngleSpring.__index.CurrentTarget(self: AngleSpring<any>)
     return wrapAngle(EasedObject.__index.CurrentTarget(self))
 end
 
---[[
+--[=[
+    @function AngleSpring
+    @within Dec
+    @param target Observable<T>
+    @param angularFrequency number?
+    @return Observable<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, wrapped around the range [-pi, pi]. The spring simulates in
-    realtime until the target value is reached. NOTE: Spring must have at lease
+    realtime until the target value is reached.
+    
+    :::caution
+    AngleSpring must have at least
     one Subscriber (or be mounted on at least one VirtualInstance) to simulate
     properly! Observables automatically garbage collect once the object is
     dereferenced and all subscribers are disconnected (and VirtualInstances
     unmounted)
-
-    @param target: Observable<T> - The target observable to apply the easing to.
-    @param angularFrequency: number? - The angular frequency of the spring
-        oscillation. Defaults to Tau (2 * pi) if not provided.
-    @return Observable<T> - The resulting easing observable.
-]]
+    :::
+]=]
 function AngleSpring.new<T>(
     target: Observable<T>,
     angularFrequency: number?

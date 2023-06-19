@@ -117,6 +117,9 @@ local typeToSpringStepMethod = {
     ),
 }
 
+--- @class Spring
+--- Subclass of Observable
+--- Can be constructed via [Dec.Spring]
 local Spring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

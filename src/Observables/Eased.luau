@@ -51,6 +51,9 @@ local function easingFunction<T>(
     return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
 end
 
+--- @class Eased
+--- Subclass of Observable
+--- Can be constructed via [Dec.Eased]
 local Eased = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

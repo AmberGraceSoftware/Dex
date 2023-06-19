@@ -63,6 +63,9 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
 end
 
 --- @class VirtualInstance
+--- VirtualInstances are the building blocks of dec applications.
+--- VirtualInstances are "Mounted" by Dec's reconciler engine,
+--- creating/destoying/modifying these real instances automatically as needed.
 local VirtualInstance = {}
 VirtualInstance.__index = {}
 VirtualInstance.__index._dectype = "VirtualInstance"

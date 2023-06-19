@@ -39,6 +39,9 @@ end
 type Observable<T> = Types.Observable<T>
 type IntSpring<T> = Types.IntSpring<T>
 
+--- @class IntSpring
+--- Subclass of Observable
+--- Can be constructed via [Dec.IntSpring]
 local IntSpring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do
