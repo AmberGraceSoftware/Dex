@@ -60,6 +60,9 @@ Dec uses the following toolchain for library development:
 - [Luau LSP VS Code Extension](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp), which should be configured to include the testez declaration file.
 ![](https://i.imgur.com/x9LjJDy.png)
 - [Selene VS Code extension](https://marketplace.visualstudio.com/items?itemName=Kampfkarren.selene-vscode)
+- [Moonwave](https://eryn.io/moonwave/)
+    - Install via `npm i -g moonwave@latest`
+    - Run `moonwave dev` to live test the docs site in your local branch
 
 Dec uses unit testing to validate code quality. Because Roblox Studio tests
 cannot currently be fully automated, unit tests must be run manually before
