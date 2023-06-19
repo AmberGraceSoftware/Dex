@@ -62,6 +62,7 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
     end
 end
 
+--- @class VirtualInstance
 local VirtualInstance = {}
 VirtualInstance.__index = {}
 VirtualInstance.__index._dectype = "VirtualInstance"
@@ -334,10 +335,10 @@ function VirtualInstance.__index.DeepCopy(
     return copy
 end
 
---[[
-    @param path: Dec.ChildPath - The path of the child to add. Can be a dot-separated string, a table of raw names, or a number.
-    @param child: CanBeObservable<Instance | VirtualInstance?> - The child VirtualInstance or actual Instance to add.
-    @return void
+--[=[
+    @param path string | number | {string | number}
+    @param child CanBeObservable<Instance | VirtualInstance?>
+    @return ()
 
     Adds a child VirtualInstance node to this VirtualInstance.
 
@@ -349,7 +350,10 @@ end
     
     If the child is a VirtualInstance, it will be created or found depending on
     the type of VirtualInstance passed in.
-]]
+
+    @method AddChild
+    @within VirtualInstance
+]=]
 function VirtualInstance.__index.AddChild(
     self: VirtualInstance,
     path: ChildPath,
