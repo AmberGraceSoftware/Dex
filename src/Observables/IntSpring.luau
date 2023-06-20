@@ -65,20 +65,21 @@ function IntSpring.__index.SetPosition(self: IntSpring<any>, newPos: any)
     EasedObject.__index.SetPosition(self, roundTarget(newPos))
 end
 
---[[
+--[=[
+    @function IntSpring
+    @within Dec
+    @param target Observable<T>
+    @param angularFrequency number
+    @return Observable<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, constrained to the Integer range. Rounds the current position
-    towards the target value, useful for elements like counters. NOTE: Spring
-    must have at lease one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate properly! Observables automatically garbage
-    collect once the object is dereferenced and all subscribers are disconnected
-    (and VirtualInstances unmounted)
-
-    @param target: Observable<T> - The target observable to apply the easing to.
-    @param angularFrequency: number? - The angular frequency of the spring
-        oscillation. Defaults to Tau (2 * pi) if not provided.
-    @return Observable<T> - The resulting easing observable.
-]]
+    towards the target value, useful for elements like counters. 
+    
+    :::caution
+    Springs must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
+]=]
 function IntSpring.new<T>(
     target: Observable<T>,
     angularFrequency: number?

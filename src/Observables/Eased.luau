@@ -69,19 +69,21 @@ for k, v in EasedObject.__index :: any do
 end
 Eased.__index._decobservabletype = "Eased"
 
---[[
+--[=[
+    @function Eased
+    @within Dec
+    @param target Observable<T>
+    @param info TweenInfo
+    @return Observable<T>
     Creates an Observable that eases in realtime every time the input Observable
     changes its value, based on the TweenInfo provided.
+    
+    :::caution
+    Eased must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 
-    WARNING: The return Observable needs to be subscribed by at least one
-    listener or mounted on a VirtualInstance to update in real time; otherwise,
-    it will only simulate every time :Current() is called.
-
-    @param target - The target Observable to apply easing to.
-    @param info - The TweenInfo object that defines the easing behavior.
-    @return An Observable that eases in realtime from changes in the input value
-
-]]
+]=]
 function Eased.new<T>(input: Observable<T>, info: TweenInfo): Eased<T>
     local lerp = PolymorphicLerp(typeof(input:Current()))
     local self: Eased<T> = EasedObject.new(

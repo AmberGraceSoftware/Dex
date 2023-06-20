@@ -96,11 +96,8 @@ end
     realtime until the target value is reached.
     
     :::caution
-    AngleSpring must have at least
-    one Subscriber (or be mounted on at least one VirtualInstance) to simulate
-    properly! Observables automatically garbage collect once the object is
-    dereferenced and all subscribers are disconnected (and VirtualInstances
-    unmounted)
+    AngleSpring must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
     :::
 ]=]
 function AngleSpring.new<T>(

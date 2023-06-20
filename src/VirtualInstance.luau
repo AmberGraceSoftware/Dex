@@ -63,7 +63,7 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
 end
 
 --- @class VirtualInstance
---- VirtualInstances are the building blocks of dec applications.
+--- VirtualInstances are the building blocks of Dec applications.
 --- VirtualInstances are "Mounted" by Dec's reconciler engine,
 --- creating/destoying/modifying these real instances automatically as needed.
 local VirtualInstance = {}
@@ -461,29 +461,29 @@ end
 
     Usage example:
 
-```lua
-local function CardListUI()
-    -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
-    local rootUI = Dec.Premade()
+    ```lua
+    local function CardListUI()
+        -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
+        local rootUI = Dec.Premade()
 
-    -- Index a ScrollingFrame containing template cards
-    local cardList = rootUI:FindChild("ScrollingFrame")
+        -- Index a ScrollingFrame containing template cards
+        local cardList = rootUI:FindChild("ScrollingFrame")
 
-    -- Extract the first template named "CardTemplate", and destroy all other
-    -- premade templates with that same name
-    local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
+        -- Extract the first template named "CardTemplate", and destroy all other
+        -- premade templates with that same name
+        local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
 
-    -- Generate 10 cards from the template
-    local cards = {}
-    for i = 1, 10 do
-        table.insert(cards, Dec.Clone(cardTemplate, {
-            LayoutOrder = i
-        }))
+        -- Generate 10 cards from the template
+        local cards = {}
+        for i = 1, 10 do
+            table.insert(cards, Dec.Clone(cardTemplate, {
+                LayoutOrder = i
+            }))
+        end
+
+        return rootUI
     end
-
-    return rootUI
-end
-```
+    ```
 ]=]
 function VirtualInstance.__index.ExtractChildTemplate(
     self: VirtualInstance,
@@ -515,16 +515,16 @@ end
     found.
 
     The following blocks of code are equivalent:
-```lua
-local parent = Dec.Premade()
-local child = Dec.Premade()
-parent:AddChild("ChildName", child)
-```
+    ```lua
+    local parent = Dec.Premade()
+    local child = Dec.Premade()
+    parent:AddChild("ChildName", child)
+    ```
 
-```lua
-local parent = Dec.Premade()
-local child = parent:FindChild("ChildName")
-```
+    ```lua
+    local parent = Dec.Premade()
+    local child = parent:FindChild("ChildName")
+    ```
 ]=]
 function VirtualInstance.__index.FindChild(
     self: VirtualInstance,

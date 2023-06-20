@@ -35,7 +35,7 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
 --[=[
     @function Map
     @within Dec
-    @param ...Observable<...T>
+    @param ... Observable<...T>
     @return ((map: ...T) -> ReturnType) -> Observable<ReturnType>
 
     Returns a curryable mapping function, which in turn returns a derived
