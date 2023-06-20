@@ -28,16 +28,18 @@ for k, v in Observable.__index :: any do
 end
 Alpha.__index._decobservabletype = "Alpha"
 
---[[
-    @param startAlpha: number - The start value for the slice.
-    @param endAlpha: number - The end value for the slice.
-    @return Dec.Alpha - The sliced Alpha Observable.
+--[=[
+    @method Slice
+    @within Alpha
+    @param startAlpha number
+    @param endAlpha number
+    @return Alpha
 
     Creates a slice of the current Alpha Observable that starts at startAlpha
     (maps to 0) and ends at endAlpha (maps to 1).
 
     Useful for slicing up animation sequences into smaller slices.
-]]
+]=]
 function Alpha.__index.Slice(
     self: Alpha,
     startAlpha: number,
@@ -46,15 +48,17 @@ function Alpha.__index.Slice(
     return Alpha.new(self, startAlpha, endAlpha)
 end
 
---[[
-    @param easingStyle: Enum.EasingStyle? - Optional easing style.
-    @param easingDirection: Enum.EasingDirection? - Optional easing direction.
-    @return Dec.Alpha - The interpolated Alpha Observable.
+--[=[
+    @method Curve
+    @within Alpha
+    @param easingStyle Enum.EasingStyle?
+    @param easingDirection Enum.EasingDirection?
+    @return Alpha
 
     Creates a new Alpha Observable that interpolates between 0 and 1 using
     the given easing style and direction. Useful for creating non-linear
     animations.
-]]
+]=]
 function Alpha.__index.Curve(
     self: Alpha,
     easingStyle: Enum.EasingStyle,
@@ -77,12 +81,14 @@ function Alpha.__index.Curve(
 end
 
 
---[[
-    @return Dec.Alpha - The inverted Alpha Observable.
+--[=[
+    @method Invert
+    @within Alpha
+    @return Alpha
 
     Creates a new Alpha Observable that maps 0 to 1 and 1 to 0 from the original
     Observable. Useful for reversing animations, output values, etc.
-]]
+]=]
 function Alpha.__index.Invert(
     self: Alpha
 ): Alpha
@@ -93,14 +99,16 @@ function Alpha.__index.Invert(
     return inverted
 end
 
---[[
-    @param startValue: T - The start value for the lerp.
-    @param goalValue: T - The goal value for the lerp.
-    @return Observable<T> - The lerped Observable.
+--[=[
+    @method Lerp
+    @within Alpha
+    @param startValue T
+    @param goalValue T
+    @return Observable<T>
 
     Creates a new Observable that outputs an interpolated value between the 
     start value and goal value based on the current Alpha value.
-]]
+]=]
 function Alpha.__index.Lerp<T>(
     self: Alpha,
     startValue: T,
