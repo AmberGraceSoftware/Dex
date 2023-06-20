@@ -10,7 +10,6 @@ type Observable<T> = Types.Observable<T>
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param tagList: CanBeObservable<{string}> - The tag list to apply to the VirtualInstance
-    @return void
 
     Applies a tag list to a VirtualInstance, throwing any Roblox engine
     errors encountered. If an error occurs, it should be logged to the console

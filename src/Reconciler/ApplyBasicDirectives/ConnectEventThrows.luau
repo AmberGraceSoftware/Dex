@@ -5,7 +5,6 @@ type ReconciledNode = Types.ReconciledNode
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param payload: {event: string, listener: (...any) -> ()}
-    @return void
 
     Connects an event listener to an event on the reconciled instance. If an
     error occurs, it should be logged to the console traced to the line of code

@@ -9,7 +9,6 @@ export type Observable<T> = Types.Observable<T>
 local BaseTimer = {}
 
 --[[
-    @return void
 
     Starts the timing-based Observable. The observable will update with new
     values every heartbeat in real-time until it is stopped.
@@ -24,8 +23,6 @@ function BaseTimer.Start(self: BaseTimer): ()
 end
 
 --[[
-    @return void
-
     Stops the timing-based Observable.
 ]]
 function BaseTimer.Stop(self: BaseTimer): ()
@@ -37,8 +34,6 @@ function BaseTimer.Stop(self: BaseTimer): ()
 end
 
 --[[
-    @return void
-
     Pauses the timing-based Observable.
 ]]
 function BaseTimer.Pause(self: BaseTimer): ()
@@ -60,8 +55,6 @@ function BaseTimer.Pause(self: BaseTimer): ()
 end
 
 --[[
-    @return void
-
     Sets the current time position of the timing-based Observable.
 ]]
 function BaseTimer.SetTimePosition(self: BaseTimer, position: number): ()

@@ -27,7 +27,6 @@ StateRecord.__index._decobservabletype = "StateRecord"
 
 --[[
     @param value: any - The value to set.
-    @return void
 
     Sets the StateRecord value.
 ]]

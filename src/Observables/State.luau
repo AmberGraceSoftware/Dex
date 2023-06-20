@@ -24,7 +24,6 @@ State.__index._decobservabletype = "State"
 
 --[[
     @param value: any - The value to set.
-    @return void
 
     Sets the state value.
 ]]

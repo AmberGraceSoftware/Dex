@@ -6,7 +6,6 @@ type State<T> = Types.State<T>
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param payload: State<any>
-    @return void
     
     Outputs a reference to the reconciled instance, into the state specified in
     the payload.

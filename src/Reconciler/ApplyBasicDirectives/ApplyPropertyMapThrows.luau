@@ -12,8 +12,7 @@ end
 
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
-    @param propMAp: {[string]: any} - The property map to apply to the VirtualInstance
-    @return void
+    @param propMap: {[string]: any} - The property map to apply to the VirtualInstance
 
     Applies a property map to a VirtualInstance, throwing any Roblox engine
     errors. If an error occurs, it should be logged to the console traced to

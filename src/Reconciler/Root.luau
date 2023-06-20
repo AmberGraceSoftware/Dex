@@ -42,8 +42,6 @@ function Root.__index.Render(
 end
 
 --[[
-    @return void
-
     Unmounts the Virtual Instance from the Root, causing it to be removed from
     the DataModel but not destroyed.
 ]]
@@ -55,8 +53,6 @@ function Root.__index.Unmount(self: Root)
 end
 
 --[[
-    @return void
-
     Unmounts and destroys the Root and its underlying Roblox Instance. This
     function should be called before discarding a Root object to ensure memory
     is properly freed.

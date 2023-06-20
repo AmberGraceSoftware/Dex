@@ -132,8 +132,6 @@ function Observable.__index.Subscribe(
 end
 
 --[[
-    @return void
-
     Destroys the Observable, releasing all its resources and unsubscribing all
     listeners.
 ]]

@@ -46,7 +46,6 @@ end
 
 --[[
     @param duration: number
-    @return void
 
     Sets the duration of the timer.
 ]]
