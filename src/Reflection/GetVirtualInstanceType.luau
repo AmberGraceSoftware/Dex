@@ -3,14 +3,16 @@ local IsVirtualInstance = require(script.Parent.IsVirtualInstance)
 local Types = require(script.Parent.Parent.Types)
 type VirtualInstance = Types.VirtualInstance
 export type VirtualInstanceType = "New" | "Clone" | "Premade"
---[[
-    @param passedIn: VirtualInstance - The VirtualInstance to check
+--[=[
+    @function GetVirtualInstanceType
+    @within Dec
+    @param passedIn VirtualInstance
     @return "New" | "Clone" | "Premade"
 
     This function returns the constructor type for VirtualInstance ("New",
     "Clone", or "Premade"). Errors if the passed in value is not a
     VirtualInstance.
-]]
+]=]
 local function GetVirtualInstanceType(
     passedIn: VirtualInstance
 ): VirtualInstanceType

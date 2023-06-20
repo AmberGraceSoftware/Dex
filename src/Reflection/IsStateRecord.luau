@@ -1,12 +1,14 @@
 --!strict
 
---[[
-    @param passedIn: unknown - The value to check
-    @return boolean - Whether or not the passed in value is a Dec.StateRecord objec
+--[=[
+    @function IsStateRecord
+    @within Dec
+    @param passedIn unknown
+    @return boolean
 
     This function checks if the passed in value is a Dec.StateRecord observable
     object
-]]
+]=]
 local function IsStateRecord(passedIn: unknown): boolean
     if typeof(passedIn) ~= "table" then
         return false

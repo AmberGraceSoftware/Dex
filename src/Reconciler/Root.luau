@@ -65,13 +65,15 @@ function Root.__index.Destroy(self: Root)
     self:Unmount()
 end
 
---[[
-    @param instance: Instance - The underlying Roblox Instance to be managed.
-    @return Dec.Root - A new Root instance.
+--[=[
+    @function Root
+    @within Dec
+    @param instance Instance
+    @return Root
 
     Creates a new Root instance. The Root is a reference to a real Roblox
     Instance and is used to reconcile Virtual Instances.
-]]
+]=]
 function Root.new(instance: Instance): Root
     return setmetatable({
         _instance = instance,

@@ -13,7 +13,7 @@ type Symbol<Name> = Symbol.Symbol<Name>
     Dec.New("BillboardGui", {
         Adornee =  Dec.Map(props.adornee)(function(adorneeCurrent: Instance?)
             return adorneeCurrent or Dec.Nil
-        end)
+        end),
     })
     ```
 ]=]

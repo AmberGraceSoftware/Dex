@@ -5,10 +5,12 @@ local Observable = require(script.Parent.Parent.Observables.Observable)
 export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
 
---[[
-    @param Fusion: any - The Fusion library runtime that the observable belongs to.
-    @param fusionStateObject: Fusion.StateObject<T> - The Fusion StateObject to map.
-    @return observable: Dec.Observable<T> - The Dec Observable created
+--[=[
+    @function ObserveFusionState
+    @within Dec
+    @param Fusion any
+    @param fusionStateObject Fusion.StateObject<T>
+    @return Observable<T>
 
     Interoperability function that maps a Fusion StateObject to a Dec
     Observable object. The returned observable is garbage collected once
@@ -16,7 +18,7 @@ export type Unsubscribe = Types.Unsubscribe
 
     The Fusion library must be provided, as Fusion StateObjects only work when
     embedded in a Fusion runtime.
-]]
+]=]
 local function ObserveFusionState<T>(
     Fusion: {Observer: any},
     fusionStateObject: {get: (self: any) -> T}
