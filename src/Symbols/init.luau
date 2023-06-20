@@ -18,7 +18,6 @@ type Symbol<Name> = Symbol.Symbol<Name>
     ```
 ]=]
 local Symbols = {
-    }
     Nil = (Symbol.new(
         "Nil",
         "A value that represents 'nil' when a VirtualInstance is reconciled " ..
