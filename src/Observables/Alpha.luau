@@ -104,7 +104,7 @@ end
     @within Alpha
     @param startValue T
     @param goalValue T
-    @return Observable<T>
+    @return Observable<T> - The lerped Observable.
 
     Creates a new Observable that outputs an interpolated value between the 
     start value and goal value based on the current Alpha value.
