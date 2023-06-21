@@ -5,6 +5,7 @@
 Packages/
 DevPackages/
 sourcemap.json
+build/*
 
 # Temporary files in workflows
 globalTypes.d.lua

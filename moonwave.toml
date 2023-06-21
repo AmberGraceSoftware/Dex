@@ -13,6 +13,7 @@ gitSourceBranch = "main"
 url = "https://ambergracesoftware.com"
 baseUrl = "/dec"
 tagline = "A reactive UI library for Roblox"
+onBrokenLinks = 'warn'
 
 [navbar]
 title = ""
