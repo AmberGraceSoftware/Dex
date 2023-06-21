@@ -9,7 +9,9 @@ type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 --- @class Alpha
---- Alpha is an [Observable] subclass which maps the number value from another
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which maps the number value from another
 --- observable to the range [0, 1]. Contains helper functions for making
 --- animations and state transitions.
 --- Can be constructed via [Dec.Alpha]

@@ -60,7 +60,10 @@ local typeToSpringStepMethod = {
 }
 
 --- @class AngleSpring
---- Subclass of Observable
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which simulates critically damped spring motion in
+--- realtime while subscribed, clamping values to the range [-pi, pi].
 --- Can be constructed via [Dec.AngleSpring]
 local AngleSpring = {}
 -- Inherits EasedObject metamethods

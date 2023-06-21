@@ -4,8 +4,8 @@ classes = ["Dec", "VirtualInstance", "Root"]
 
 [[classOrder]]
 section = "Observables"
-classes = ["Observable", "State", "StateRecord", "Stopwatch", "Timer", "Alpha",
-    "Eased", "Spring", "AngleSpring", "IntSpring"]
+classes = ["Observable", "State", "Record", "Dict", "Stopwatch", "Timer",
+    "Alpha", "Eased", "Spring", "AngleSpring", "IntSpring"]
 
 gitSourceBranch = "main"
 

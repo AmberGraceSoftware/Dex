@@ -52,7 +52,11 @@ local function easingFunction<T>(
 end
 
 --- @class Eased
---- Subclass of Observable
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which eases in realtime using tween motion, towards an
+--- input observaable's value, restarting the tween every time that value
+--- changes.
 --- Can be constructed via [Dec.Eased]
 local Eased = {}
 -- Inherits EasedObject metamethods

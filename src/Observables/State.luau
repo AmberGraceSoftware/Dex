@@ -5,7 +5,9 @@ local Observable = require(script.Parent.Observable)
 export type State<T> = Types.State<T>
 
 --- @class State
---- Subclass of Observable
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which holds a value that can be updated via [State:Set()].
 --- Can be constructed via [Dec.State]
 local State = {}
 -- Inherits Observable metamethods
