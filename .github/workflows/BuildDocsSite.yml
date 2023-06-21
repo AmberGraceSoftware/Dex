@@ -1,4 +1,4 @@
-name: Analyze Source Code
+name: Test Documentation
 
 on:
   pull_request:
