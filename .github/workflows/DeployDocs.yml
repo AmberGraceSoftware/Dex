@@ -1,0 +1,24 @@
+name: Deploy Docs Site with Moonwave
+
+on:
+  push:
+    paths:
+      - docs/**
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Moonwave
+        run: npm i -g moonwave
+      - name: Build and publish docs site
+        run: moonwave build --publish
