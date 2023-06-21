@@ -19,6 +19,10 @@ jobs:
           node-version: '18'
       - name: Install Moonwave
         run: npm i -g moonwave
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Build and publish docs site
         run: moonwave build --publish
         env:
