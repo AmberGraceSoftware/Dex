@@ -5,7 +5,6 @@ type ReconciledNode = Types.ReconciledNode
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param payload: (instance: any) -> ()
-    @return void
     
     Immediately spawns the given OnMount callback with the reconciled instanc
      as an argument

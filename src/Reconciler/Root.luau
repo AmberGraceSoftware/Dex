@@ -10,6 +10,10 @@ type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type ReconciledNode = Types.ReconciledNode
 
+--- @class Root
+--- Root is an object which starts and stops rendering VirtualInstances passed
+--- into it. In order to write a Dec application, you need to create a root via
+--- [Dec.Root], and render an instance using [Root:Render()]
 local Root = {}
 Root.__index = {}
 Root.__index._dectype = "Root"
@@ -38,8 +42,6 @@ function Root.__index.Render(
 end
 
 --[[
-    @return void
-
     Unmounts the Virtual Instance from the Root, causing it to be removed from
     the DataModel but not destroyed.
 ]]
@@ -51,8 +53,6 @@ function Root.__index.Unmount(self: Root)
 end
 
 --[[
-    @return void
-
     Unmounts and destroys the Root and its underlying Roblox Instance. This
     function should be called before discarding a Root object to ensure memory
     is properly freed.
@@ -61,13 +61,15 @@ function Root.__index.Destroy(self: Root)
     self:Unmount()
 end
 
---[[
-    @param instance: Instance - The underlying Roblox Instance to be managed.
-    @return Dec.Root - A new Root instance.
+--[=[
+    @function Root
+    @within Dec
+    @param instance Instance
+    @return Root
 
     Creates a new Root instance. The Root is a reference to a real Roblox
     Instance and is used to reconcile Virtual Instances.
-]]
+]=]
 function Root.new(instance: Instance): Root
     return setmetatable({
         _instance = instance,

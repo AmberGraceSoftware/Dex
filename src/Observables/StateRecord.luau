@@ -7,6 +7,19 @@ type StateDict<K, V> = Types.StateDict<K, V>
 type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
+--- @class Record
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which holds a table record of predefined keys and values,
+--- with utility functions for observing and updating specific keys only.
+--- Can be constructed via [Dec.Record]
+
+--- @class Dict
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which holds a dictionary of predefined key and value
+--- types, with utility functions for observing and updating specific keys only.
+--- Can be constructed via [Dec.Record]
 local StateRecord = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -22,12 +35,22 @@ for k, v in Observable.__index :: any do
 end
 StateRecord.__index._decobservabletype = "StateRecord"
 
---[[
-    @param value: any - The value to set.
-    @return void
+--[=[
+    @method Set
+    @within Record
+    @param key string
+    @param value any
 
-    Sets the StateRecord value.
-]]
+    Sets the value at a specific key.
+]=]
+--[=[
+    @method Set
+    @within Dict
+    @param key K
+    @param value V
+
+    Sets the value at a specific key.
+]=]
 function StateRecord.__index.Set(
     self: StateRecord<any>,
     key: string,
@@ -135,8 +158,10 @@ function StateRecord.__index.Index(
 end
 
 --[[
-    @param initialValue: T - The initial value of the Record state observable.
-    @return Dec.Record<T> - The newly created Record state observable.
+    @function Record
+    @within Dec
+    @param initialValue T
+    @return Record<T>
 
     Creates a new Record observable with the given initial value.
 ]]
@@ -167,12 +192,14 @@ function StateRecord.new<T>(initialValue: T): StateRecord<T>
     return self
 end
 
---[[
-    @param initialValue: {[K]: V} - The initial value of the Dict observable.
-    @return Dec.Dict<T> - The newly created Dict observable.
+--[=[
+    @function Dict
+    @within Dec
+    @param initialValue: {[K]: V}
+    @return Dict<T>
 
     Creates a new Dict state observable with the given initial value.
-]]
+]=]
 StateRecord.newDict = (StateRecord.new :: any)
     :: <K, V>(initialValue: {[K]: V}) -> StateDict<K, V>
 

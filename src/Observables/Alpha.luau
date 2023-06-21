@@ -8,6 +8,13 @@ local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
+--- @class Alpha
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which maps the number value from another
+--- observable to the range [0, 1]. Contains helper functions for making
+--- animations and state transitions.
+--- Can be constructed via [Dec.Alpha]
 local Alpha = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -23,16 +30,18 @@ for k, v in Observable.__index :: any do
 end
 Alpha.__index._decobservabletype = "Alpha"
 
---[[
-    @param startAlpha: number - The start value for the slice.
-    @param endAlpha: number - The end value for the slice.
-    @return Dec.Alpha - The sliced Alpha Observable.
+--[=[
+    @method Slice
+    @within Alpha
+    @param startAlpha number
+    @param endAlpha number
+    @return Alpha
 
     Creates a slice of the current Alpha Observable that starts at startAlpha
     (maps to 0) and ends at endAlpha (maps to 1).
 
     Useful for slicing up animation sequences into smaller slices.
-]]
+]=]
 function Alpha.__index.Slice(
     self: Alpha,
     startAlpha: number,
@@ -41,15 +50,17 @@ function Alpha.__index.Slice(
     return Alpha.new(self, startAlpha, endAlpha)
 end
 
---[[
-    @param easingStyle: Enum.EasingStyle? - Optional easing style.
-    @param easingDirection: Enum.EasingDirection? - Optional easing direction.
-    @return Dec.Alpha - The interpolated Alpha Observable.
+--[=[
+    @method Curve
+    @within Alpha
+    @param easingStyle Enum.EasingStyle?
+    @param easingDirection Enum.EasingDirection?
+    @return Alpha
 
     Creates a new Alpha Observable that interpolates between 0 and 1 using
     the given easing style and direction. Useful for creating non-linear
     animations.
-]]
+]=]
 function Alpha.__index.Curve(
     self: Alpha,
     easingStyle: Enum.EasingStyle,
@@ -72,12 +83,14 @@ function Alpha.__index.Curve(
 end
 
 
---[[
-    @return Dec.Alpha - The inverted Alpha Observable.
+--[=[
+    @method Invert
+    @within Alpha
+    @return Alpha
 
     Creates a new Alpha Observable that maps 0 to 1 and 1 to 0 from the original
     Observable. Useful for reversing animations, output values, etc.
-]]
+]=]
 function Alpha.__index.Invert(
     self: Alpha
 ): Alpha
@@ -88,14 +101,16 @@ function Alpha.__index.Invert(
     return inverted
 end
 
---[[
-    @param startValue: T - The start value for the lerp.
-    @param goalValue: T - The goal value for the lerp.
+--[=[
+    @method Lerp
+    @within Alpha
+    @param startValue T
+    @param goalValue T
     @return Observable<T> - The lerped Observable.
 
     Creates a new Observable that outputs an interpolated value between the 
     start value and goal value based on the current Alpha value.
-]]
+]=]
 function Alpha.__index.Lerp<T>(
     self: Alpha,
     startValue: T,
@@ -108,14 +123,18 @@ function Alpha.__index.Lerp<T>(
 end
 
 
---[[
-    @param sourceState: Dec.Observable<number> - The source state to derive an alpha from.
-    @param sourceRangeMin - The number in source state to maps to 0
-    @param sourceRangeMax - The number in source state to maps to 1
-    @return Dec.Alpha - The new Alpha Observable.
+--[=[
+    @function Alpha
+    @within Dec
+    @param source Observable<number>
+    @param sourceRangeMin number
+    @param sourceRangeMax number
+    @return Alpha
 
-    Creates a new Alpha Observable with the provided initial value.
-]]
+    Creates a new Alpha Observable object, which maps the current value of the
+    source observable to the range [0, 1] based on sourceRangeMin and
+    sourceRangeMax
+]=]
 function Alpha.new(
     sourceState: Observable<number>,
     sourceRangeMin: number,

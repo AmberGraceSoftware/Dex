@@ -6,6 +6,10 @@ local Types = require(script.Parent.Parent.Types)
 export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
 
+--- @class Observable
+--- Observables are objects that hold or derive some state, and forward updates
+--- to listeners of this state when subscribed.
+--- Can be constructed via [Dec.CustomObservable]
 local Observable = {}
 Observable.__index = {}
 Observable.__index._dectype = "Observable"
@@ -55,11 +59,13 @@ local function stopObservingIdempotent(self: Observable<any>)
     self._closeUpdateStream = nil
 end
 
---[[
-    @return T - The current value of the observable.
+--[=[
+    @method Current
+    @within Observable
+    @return T
 
     Returns the current value of the Observable.
-]]
+]=]
 function Observable.__index.Current(self: Observable<any>): any
     if self._closeUpdateStream then
         return self._cachedValue
@@ -68,12 +74,15 @@ function Observable.__index.Current(self: Observable<any>): any
     end
 end
 
---[[
-    @param mappingFunction: (value: T) -> any - The function to map the value of the observable.
-    @return Observable<any> - An Observable that emits the mapped values.
+--[=[
+    @method Map
+    @within Observable
+    @param mappingFunction (value: T) -> any
+    @return Observable<any>
 
-    Creates a new Observable that emits the values from the original Observable mapped by the provided function.
-]]
+    Creates a new Observable that emits the values from the original Observable
+    mapped by the provided function.
+]=]
 function Observable.__index.Map(
     self: Observable<any>,
     mappingFunction: (value: any) -> any
@@ -84,10 +93,12 @@ function Observable.__index.Map(
 end
 
 
---[[
-    @param listener: (value: T) -> () - The callback function to call when the observable changes.
-    @param immediatelyCallListener: boolean? - If true, will call the listener once immediately.
-    @return () -> () - Function to stop receiving updates.
+--[=[
+    @method Subscribe
+    @within Observable
+    @param listener (value: T) -> ()
+    @param immediatelyCallListener boolean?
+    @return () -> ()
 
     Subscribes to changes in the Observable. Returns a function that, when
     called, will unsubscribe the callback from the Observable updates. If `true`
@@ -97,7 +108,7 @@ end
     WARNING: Make sure you handle the Unsubscribe function whenever a calling
     Subscribe! Observables do not garbage collect until all external listeners
     are unsubscribed.
-]]
+]=]
 function Observable.__index.Subscribe(
     self: Observable<any>,
     listener: (value: any) -> (),
@@ -127,12 +138,12 @@ function Observable.__index.Subscribe(
     end
 end
 
---[[
-    @return void
-
+--[=[
+    @method Destroy
+    @within Observable
     Destroys the Observable, releasing all its resources and unsubscribing all
     listeners.
-]]
+]=]
 function Observable.__index.Destroy(self: Observable<any>)
     if self._destroyed then
         return
@@ -142,13 +153,29 @@ function Observable.__index.Destroy(self: Observable<any>)
     self._listeners = {}
 end
 
---[[
-    @param initialValue: T - The initial value of the observable.
-    @return Dec.Observable<T> - The new Observable instance.
+--[=[
+    @function CustomObservable
+    @within Dec
+    @param getCurrent () -> T
+    @param createUpdateStream (notifyChange: () -> ()) -> (() -> ())
+    @return Observable<T>
 
-    Creates a new Dec Observable object with the given initial value.
-    Observables are used to hold, derive, or map state within a Dec application.
-]]
+    Creates a new Dec Observable object. Observables are used to hold, derive,
+    or map state within a Dec application.
+
+    The first parameter should be a function that always returns the current
+    state of the observable whenever called. The second parameter is a function
+    which sets up resources to notify its first paramter whenever the current
+    state changes, then returns a "cleanup" function which takes down these
+    resources when the observable is no longer subscribed or mounted.
+
+    :::warning
+    Make sure the `createUpdateStream` parameter correctly matches type, and
+    returns a "cleanup" function which fully cleans up all listeners or
+    resources. Observables garbage collect ONLY when all subscribers are
+    unsubscribed, and all VirtualInstances using them are unmounted.
+    :::
+]=]
 function Observable.new<T>(
     getCurrent: () -> T,
     createUpdateStream: (notifyChange: () -> ()) -> Unsubscribe

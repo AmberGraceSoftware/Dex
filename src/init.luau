@@ -20,8 +20,8 @@ local Observable = require(script.Observables.Observable)
 export type Unsubscribe = Types.Unsubscribe
 export type Observable<T> = Types.Observable<T>
 export type State<T> = Types.State<T>
-export type StateRecord<T> = Types.StateRecord<T>
-export type StateDict<T> = Types.StateDict<T>
+export type Record<T> = Types.StateRecord<T>
+export type Dict<T> = Types.StateDict<T>
 export type Spring<T> = Types.Spring<T>
 export type AngleSpring<T> = Types.AngleSpring<T>
 export type IntSpring<T> = Types.IntSpring<T>
@@ -30,6 +30,10 @@ export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
+--- @type CanBeObservable<T> Observable<T> | T
+--- @within Dec
+--- Utility type that denotes a value can be an observable. Dec provides the
+--- utility function [Dec.CoerceAsObservable] for unwrapping these objects.
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type ChildMap = Types.ChildMap
 export type VirtualInstance = Types.VirtualInstance
@@ -38,6 +42,7 @@ export type Symbol<Name> = Types.Symbol<Name>
 export type Root = Types.Root
 export type Nil = Symbol<"Nil">
 
+--- @class Dec
 local Dec = {}
 
 -- Basic State and Observables

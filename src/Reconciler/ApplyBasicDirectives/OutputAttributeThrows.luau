@@ -6,7 +6,6 @@ type State<T> = Types.State<T>
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param payload: {attribute: string, state: State<any>, once: boolean}
-    @return void
     
     Outputs a attribute on the reconciled instance to the state specified in the
     payload. If payload.once is true, will only output the attribute on mount

@@ -32,9 +32,11 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     -> Observable<Return>
 ))
 
---[[
-    @param ...: Dec.Observable<...T> - Tuple consisting of one or more Observable dependencies
-    @returns mapper: ((map: ...Dec.Observable<...T>) -> ReturnType) -> Dec.Observable<ReturnType> - A curryable function which should be called with a mapping function
+--[=[
+    @function Map
+    @within Dec
+    @param ... Observable<...T>
+    @return ((map: ...T) -> ReturnType) -> Observable<ReturnType>
 
     Returns a curryable mapping function, which in turn returns a derived
     observable from the dependent observables passed in.
@@ -47,7 +49,7 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     local sum = Dec.Map(x, y)(function(currentX, currentY)
         return currentX + currentY
     end)
-]]
+]=]
 local MapObservable: ReturnType = function(...: any): any
     local deps = table.pack(...)
     return function(map:(...any) -> any)

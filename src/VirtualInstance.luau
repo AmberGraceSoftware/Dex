@@ -62,19 +62,24 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
     end
 end
 
+--- @class VirtualInstance
+--- VirtualInstances are the building blocks of Dec applications.
+--- VirtualInstances are "Mounted" by Dec's reconciler engine,
+--- creating/destoying/modifying these real instances automatically as needed.
 local VirtualInstance = {}
 VirtualInstance.__index = {}
 VirtualInstance.__index._dectype = "VirtualInstance"
 
---[[
-    @param propertyMap: {[string]: CanBeObservable<any>} - Property map to render
-    @return void
+--[=[
+    @method SetProperties
+    @within VirtualInstance
+    @param propertyMap {[string]: CanBeObservable<any>}
 
     Adds properties to be rendered on the instance when it is reconciled.
 
     Multiple calls to this function will merge the provided property map with
     the existing one, prioritizing the later call.
-]]
+]=]
 function VirtualInstance.__index.SetProperties(
     self: VirtualInstance,
     propertyMap: {[string]: any}
@@ -87,15 +92,16 @@ function VirtualInstance.__index.SetProperties(
     })
 end
 
---[[
-    @param attributeMap: {[string]: any} - Attribute map to render
-    @return void
+--[=[
+    @method SetAttributes
+    @within VirtualInstance
+    @param attributeMap {[string]: CanBeObservable<any>}
 
     Adds attributes to be rendered on the instance when it is reconciled.
     
     Multiple calls to this function will merge the provided attribute map with
     the existing one, prioritizing the latest calls.
-]]
+]=]
 function VirtualInstance.__index.SetAttributes(
     self: VirtualInstance,
     attributeMap: {[string]: CanBeObservable<any>}
@@ -108,14 +114,15 @@ function VirtualInstance.__index.SetAttributes(
     })
 end
 
---[[
-    @param tags: CanBeObservable<{string}> - CollectionService tags to render.
-    @return void
+--[=[
+    @method AddTags
+    @within VirtualInstance
+    @param tags CanBeObservable<{string}>
 
     Adds tags to the Virtual Instance when it is reconciled. Multiple calls to
     this function will add extra tags to the VirtualInstance if they do not
     exist.
-]]
+]=]
 function VirtualInstance.__index.AddTags(
     self: VirtualInstance,
     tags: CanBeObservable<{string}>
@@ -128,14 +135,15 @@ function VirtualInstance.__index.AddTags(
     })
 end
 
---[[
-    @param eventName: string - The name of the event to connect.
-    @param listener: (...any) -> () - The function to be called when the event is fired.
-    @return void
+--[=[
+    @method Connect
+    @within VirtualInstance
+    @param eventName string
+    @param listener (...any) -> ()
 
     Adds an event listener to the Virtual Instance, which will automatically
     be connected and disconnected as the VirtualInstance is reconciled.
-]]
+]=]
 function VirtualInstance.__index.Connect(
     self: VirtualInstance,
     eventName: string,
@@ -152,18 +160,20 @@ function VirtualInstance.__index.Connect(
     })
 end
 
---[[
-    @param propName: string - The name of the property to output.
-    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Dec.Observable<T> - An observable with the same output type as initialValue.
+--[=[
+    @method OutProperty
+    @within VirtualInstance
+    @param propName string
+    @param initialValue T
+    @return Observable<T>
 
     Creates an Observable object that updates to the current value of an
     property on the virtual instance once when it is mounted, and listens to
     updates on this property.
 
     Give initialValue a type annotation if initializing to nil
-    (e.g. nil :: string?)
-]]
+    (e.g. vInst:OutProperty("Adornee", nil :: Instance?)()
+]=]
 function VirtualInstance.__index.OutProperty(
     self: VirtualInstance,
     propertyName: string,
@@ -183,9 +193,11 @@ function VirtualInstance.__index.OutProperty(
     return outState
 end
 
---[[
-    @param propName: string - The name of the property to output.
-    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
+--[=[
+    @method OutInitialProperty
+    @within VirtualInstance
+    @param propName string
+    @param initialValue T
     @return Dec.Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the original value of an
@@ -194,8 +206,8 @@ end
     a Dec component.
 
     Give initialValue a type annotation if initializing to nil
-    (e.g. nil :: string?)
-]]
+    (e.g. vInst:OutInitialProperty("Adornee", nil :: Instance?))
+]=]
 function VirtualInstance.__index.OutInitialProperty(
     self: VirtualInstance,
     propertyName: string,
@@ -215,18 +227,20 @@ function VirtualInstance.__index.OutInitialProperty(
     return outState
 end
 
---[[
-    @param attributeName: string - The name of the attribute to output.
-    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Dec.Observable<T> - An observable with the same output type as initialValue.
+--[=[
+    @method OutAttribute
+    @within VirtualInstance
+    @param attributeName string
+    @param initialValue T
+    @return Observable<T>
 
     Creates an Observable object that updates to the current value of an
     attribute on the virtual instance once when it is mounted, and listens to
     updates on this attribute.
 
     Give initialValue a type annotation if initializing to nil
-    (e.g. nil :: string?)
-]]
+    (e.g. vInstance:OutAttribute("Foo", nil :: string?))
+]=]
 function VirtualInstance.__index.OutAttribute(
     self: VirtualInstance,
     propertyName: string,
@@ -246,10 +260,12 @@ function VirtualInstance.__index.OutAttribute(
     return outState
 end
 
---[[
-    @param attributeName: string - The name of the attribute to output.
-    @param initialValue: T - The Observable's initial value before the virtual instance is reconciled
-    @return Dec.Observable<T> - An observable with the same output type as initialValue.
+--[=[
+    @method OutInitialAttribute
+    @within VirtualInstance
+    @param attributeName string
+    @param initialValue T
+    @return Observable<T>
 
     Creates an Observable object that updates to the original value of an
     attribute on the virtual instance once when it is mounted. This is useful
@@ -257,8 +273,8 @@ end
     a Dec component.
 
     Give initialValue a type annotation if initializing to nil
-    (e.g. nil :: string?)
-]]
+    (e.g. vInst:OutInitialAttribute("Foo", nil :: string?))
+]=]
 function VirtualInstance.__index.OutInitialAttribute(
     self: VirtualInstance,
     propertyName: string,
@@ -278,11 +294,13 @@ function VirtualInstance.__index.OutInitialAttribute(
     return outState
 end
 
---[[
-    @return Dec.Observable<Instance?> - The state to output the instance to.
+--[=[
+    @method OutInstance
+    @within VirtualInstance
+    @return Observable<Instance?>
 
     Outputs a reference to the reconciled instance to a Dec State object.
-]]
+]=]
 function VirtualInstance.__index.OutInstance(
     self: VirtualInstance
 ): Observable<any?>
@@ -296,11 +314,13 @@ function VirtualInstance.__index.OutInstance(
     return outState
 end
 
---[[
-    @return Dec.VirtualInstance - A copy of the Virtual Instance.
+--[=[
+    @method Copy
+    @within VirtualInstance
+    @return VirtualInstance
 
     Creates a shallow copy of the Virtual Instance.
-]]
+]=]
 function VirtualInstance.__index.Copy(
     self: VirtualInstance
 ): VirtualInstance
@@ -312,11 +332,13 @@ function VirtualInstance.__index.Copy(
     }, VirtualInstance :: any)
 end
 
---[[
-    @return Dec.VirtualInstance - A deep copy of the VirtualInstance.
+--[=[
+    @method DeepCopy
+    @within VirtualInstance
+    @return VirtualInstance
 
     Creates a deep copy of the VirtualInstance and all child VirtualInstances.
-]]
+]=]
 function VirtualInstance.__index.DeepCopy(
     self: VirtualInstance
 ): VirtualInstance
@@ -334,10 +356,11 @@ function VirtualInstance.__index.DeepCopy(
     return copy
 end
 
---[[
-    @param path: Dec.ChildPath - The path of the child to add. Can be a dot-separated string, a table of raw names, or a number.
-    @param child: CanBeObservable<Instance | VirtualInstance?> - The child VirtualInstance or actual Instance to add.
-    @return void
+--[=[
+    @method AddChild
+    @within VirtualInstance
+    @param path string | number | {string | number}
+    @param child CanBeObservable<Instance | VirtualInstance?>
 
     Adds a child VirtualInstance node to this VirtualInstance.
 
@@ -349,7 +372,7 @@ end
     
     If the child is a VirtualInstance, it will be created or found depending on
     the type of VirtualInstance passed in.
-]]
+]=]
 function VirtualInstance.__index.AddChild(
     self: VirtualInstance,
     path: ChildPath,
@@ -364,13 +387,14 @@ function VirtualInstance.__index.AddChild(
 end
 
 
---[[
-    @param childMap: CanBeObservable<{[Dec.ChildPath]: CanBeObservable<Instance | VirtualInstance?>}>
-    @return void
+--[=[
+    @method AddChildren
+    @within VirtualInstance
+    @param childMap CanBeObservable<{[any]: CanBeObservable<VirtualInstance?>}>
 
     Adds multiple children to the VirtualInstance given a child map. See
     VirtualInstance:Child() for API reference
-]]
+]=]
 function VirtualInstance.__index.AddChildren(
     self: VirtualInstance,
     childMap: ChildMap
@@ -383,12 +407,13 @@ function VirtualInstance.__index.AddChildren(
     })
 end
 
---[[
-    @param callback: (instance: Instance) -> () - The lifecycle callback
-    @return void
+--[=[
+    @method OnMount
+    @within VirtualInstance
+    @param callback (instance: Instance) -> ()
 
     Adds a lifecycle callback to be called when the Virtual Instance is mounted.
-]]
+]=]
 function VirtualInstance.__index.OnMount(
     self: VirtualInstance,
     callback: (instance: Instance) -> ()
@@ -401,13 +426,14 @@ function VirtualInstance.__index.OnMount(
     })
 end
 
---[[
-    @param callback: (instance: Instance) -> () - The lifecycle callback
-    @return void
+--[=[
+    @method OnUnmount
+    @within VirtualInstance
+    @param callback (instance: Instance) -> ()
 
     Adds a lifecycle callback to be called when the Virtual Instance is
     unmounted.
-]]
+]=]
 function VirtualInstance.__index.OnUnmount(
     self: VirtualInstance,
     callback: (instance: Instance) -> ()
@@ -420,9 +446,11 @@ function VirtualInstance.__index.OnUnmount(
     })
 end
 
---[[
-    @param nameOrPredicate: string | {string} - The name of the child to be extracted as a template
-    @return Dec.VirtualInstance - A new VirtualInstance, cloned from a child of the parent instance
+--[=[
+    @method ExtractChildTemplate
+    @within VirtualInstance
+    @param nameOrPredicate string | {string}
+    @return VirtualInstance
     Specifies that when the VirtualInstance is mounted, returns a new
     VirtualInstance which automatically mounts on the first child matching
     the name (or predicate) defined in the first argument to this method.
@@ -433,30 +461,30 @@ end
 
     Usage example:
 
-```lua
-local function CardListUI()
-    -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
-    local rootUI = Dec.Premade()
+    ```lua
+    local function CardListUI()
+        -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
+        local rootUI = Dec.Premade()
 
-    -- Index a ScrollingFrame containing template cards
-    local cardList = rootUI:FindChild("ScrollingFrame")
+        -- Index a ScrollingFrame containing template cards
+        local cardList = rootUI:FindChild("ScrollingFrame")
 
-    -- Extract the first template named "CardTemplate", and destroy all other
-    -- premade templates with that same name
-    local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
+        -- Extract the first template named "CardTemplate", and destroy all other
+        -- premade templates with that same name
+        local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
 
-    -- Generate 10 cards from the template
-    local cards = {}
-    for i = 1, 10 do
-        table.insert(cards, Dec.Clone(cardTemplate, {
-            LayoutOrder = i
-        }))
+        -- Generate 10 cards from the template
+        local cards = {}
+        for i = 1, 10 do
+            table.insert(cards, Dec.Clone(cardTemplate, {
+                LayoutOrder = i
+            }))
+        end
+
+        return rootUI
     end
-
-    return rootUI
-end
-```
-]]
+    ```
+]=]
 function VirtualInstance.__index.ExtractChildTemplate(
     self: VirtualInstance,
     childPath: ChildPath
@@ -476,26 +504,28 @@ function VirtualInstance.__index.ExtractChildTemplate(
     return childVInst
 end
 
---[[
-    @param childPath: string - The name of the child to find
-    @return Dec.VirtualInstance - A new VirtualInstance representing the child of the parent VirtualInstance
+--[=[
+    @method FindChild
+    @within VirtualInstance
+    @param childPath string
+    @return VirtualInstance
 
     Creates a new VirtualInstance that automatically mounts on the child of the
     parent VirtualInstance. Will wait until a child with the given name is
     found.
 
     The following blocks of code are equivalent:
-```lua
-local parent = Dec.Premade()
-local child = Dec.Premade()
-parent:AddChild("ChildName", child)
-```
+    ```lua
+    local parent = Dec.Premade()
+    local child = Dec.Premade()
+    parent:AddChild("ChildName", child)
+    ```
 
-```lua
-local parent = Dec.Premade()
-local child = parent:FindChild("ChildName")
-```
-]]
+    ```lua
+    local parent = Dec.Premade()
+    local child = parent:FindChild("ChildName")
+    ```
+]=]
 function VirtualInstance.__index.FindChild(
     self: VirtualInstance,
     path: ChildPath

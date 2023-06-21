@@ -4,6 +4,11 @@ local Observable = require(script.Parent.Observable)
 
 export type State<T> = Types.State<T>
 
+--- @class State
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which holds a value that can be updated via [State:Set()].
+--- Can be constructed via [Dec.State]
 local State = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -21,7 +26,6 @@ State.__index._decobservabletype = "State"
 
 --[[
     @param value: any - The value to set.
-    @return void
 
     Sets the state value.
 ]]
@@ -35,12 +39,14 @@ function State.__index.Set(
     end
 end
 
---[[
-    @param initialValue: T - The initial value of the state.
-    @return Dec.State<T> - The newly created State observable.
+--[=[
+    @function State
+    @within Dec
+    @param initialValue T
+    @return State<T>
 
-    Creates a new State observable with the given initial value.
-]]
+    Creates a new State Observable object with the given initial value.
+]=]
 function State.new<T>(initialValue: T): State<T>
     local self: State<T>
     local valueRef = {value = initialValue}

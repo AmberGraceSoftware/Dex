@@ -8,15 +8,17 @@ type ChildMap = Types.ChildMap
 
 local VirtualInstanceCreators = {}
 
---[[
-    @param props: {[string]: any}? - If provided, initializes the VirtualInstance with property assignments
-    @param children: Dec.ChildMap? - If provided, initializes the VirtualInstance with children
-    @param className: string - The ClassName of the Instance type to create.
-    @return Dec.VirtualInstance - The virtual instance that was created.
+--[=[
+    @function New
+    @within Dec
+    @param className string
+    @param props {[string]: any}?
+    @param children {[any]: CanBeObservable<VirtualInstance?>}
+    @return VirtualInstance
 
     Creates a new VirtualInstance that represents a newly-created Roblox
     Instance (via Instance.new(className)).
-]]
+]=]
 function VirtualInstanceCreators.New(
     className: string,
     props: {[string]: any}?,
@@ -31,15 +33,17 @@ function VirtualInstanceCreators.New(
     )
 end
 
---[[
-    @param template: Instance - The Instance to clone.
-    @param props: {[string]: any}? - If provided, initializes the VirtualInstance with property assignments
-    @param children: Dec.ChildMap? - If provided, initializes the VirtualInstance with children
-    @return Dec.VirtualInstance - The virtual instance that was created.
+--[=[
+    @function Clone
+    @within Dec
+    @param template Instance
+    @param props {[string]: any}?
+    @param children {[any]: CanBeObservable<VirtualInstance?>}
+    @return VirtualInstance
 
     Creates a new VirtualInstance that represents a cloned Roblox Instance
     from a given template instance (via template:Clone()).
-]]
+]=]
 function VirtualInstanceCreators.Clone(
     template: Instance | VirtualInstance,
     props: {[string]: any}?,
@@ -54,10 +58,12 @@ function VirtualInstanceCreators.Clone(
     )
 end
 
---[[
-    @param props: {[string]: any}? - If provided, initializes the VirtualInstance with property assignments
-    @param children: Dec.ChildMap? - If provided, initializes the VirtualInstance with children
-    @return Dec.VirtualInstance - A new pre-made VirtualInstance.
+--[=[
+    @function Premade
+    @within Dec
+    @param props {[string]: any}?
+    @param children Dec.ChildMap?
+    @return VirtualInstance
 
     Creates a new VirtualInstance that represents a pre-existing Roblox Instance
     to be decorated. This will modify the properties of an existing instance
@@ -67,7 +73,7 @@ end
     Dec.CreateRoot(), or a child of an existing virtual instance that Dec will
     automatically wait for (specified via
     `virtualInstance:Child(path, Dec.Premade( . . . ))` ).
-]]
+]=]
 function VirtualInstanceCreators.Premade(
     props: {[string]: any}?,
     children: ChildMap?

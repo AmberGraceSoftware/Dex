@@ -11,13 +11,15 @@ local function staticUpdateStream()
     end
 end
 
---[[
-    @param passedIn: unknown - The value to coerce.
-    @return Dec.Observable<T> - An Observable.
+--[=[
+    @function CoerceAsObservable
+    @within Dec
+    @param value CanBeObservable<T>
+    @return Observable<T>
 
     This function coerces the passed in value to an Observable. Useful for
     unwrapped the CanBeObservable<T> type in a component's props.
-]]
+]=]
 local function CoerceAsObservable<T>(passedIn: CanBeObservable<T>): Observable<T>
     if IsObservable(passedIn) then
         -- Passed in value is already an Observable

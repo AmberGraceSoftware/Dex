@@ -13,8 +13,7 @@ end
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param attributeMap: {[string]: any} - The attribute map to apply to the VirtualInstance
-    @return void
-
+    
     Applies an attribute map to a VirtualInstance, throwing any Roblox engine
     errors. If an error occurs, it should be logged to the console traced to
     the line of code where VirtualInstance:SetAttributes was called.

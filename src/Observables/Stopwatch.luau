@@ -12,6 +12,11 @@ type Stopwatch = Types.Stopwatch
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
+--- @class Stopwatch
+--- @tag Observable
+--- #### Inherits [Observable]
+--- Observable object which simulates in realtime while subscribed
+--- Can be constructed via [Dec.Stopwatch]
 local Stopwatch = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
