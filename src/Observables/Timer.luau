@@ -12,11 +12,20 @@ type Timer = Types.Timer
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
---- @class Timer
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates in realtime while subscribed
---- Can be constructed via [Dec.Timer]
+--[=[
+    @class Timer
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable which counts down from a max value in realtime whenever played
+    via [Timer:Start].
+
+    Includes utility methods for mapping this "remaining time" value into more
+    complex animationed sequences.
+
+    *(Constructed via [Dec.Timer])*
+]=]
 local Timer = {}
 -- Inherits Timer metamethods
 for k, v in Timer :: any do
@@ -36,31 +45,37 @@ for k, v in BaseTimer :: any do
 end
 Timer.__index._decobservabletype = "Timer"
 
---[[
-    @return Dec.Alpha
+--[=[
+    @method Alpha
+    @within Stopwatch
+    @return Alpha
 
-    Derives an Alpha observable object that maps the duration from 0 (start) to
-    1 (finish)
-]]
+    Derives an Alpha observable object that maps the current remaining time from
+    0 (start) to 1 (finish)
+]=]
 function Timer.__index.Alpha(self: Timer): Alpha
     return Alpha.new(self, self._duration, 0)
 end
 
---[[
-    @param duration: number
+--[=[
+    @method SetDuration
+    @within Timer
+    @param duration number
 
-    Sets the duration of the timer.
-]]
+    Sets the duration of the Timer.
+]=]
 function Timer.__index.SetDuration(self: Timer, duration: number): ()
     self._duration = duration
 end
 
---[[
-    @return Observable<T> - The interpolated Observable.
+--[=[
+    @method Lerp
+    @within Stopwatch
+    @return Observable<T>
 
     Creates an observable that outputs an interpolated value between
     the start value and end value based on the current remaining time.
-]]
+]=]
 function Timer.__index.Lerp<T>(
     self: Timer,
     startValue: T,
@@ -83,10 +98,13 @@ end
 
 
 --[[
-    @param duration: number
-    @return timer: Dec.Timer
+    @function Timer
+    @within Dec
+    @param duration number
+    @return Timer
 
-    Creates a new Timer observable with the given duration.
+    Creates a new Timer Observable, which simulates in realtime while
+    subscribed.
 ]]
 function Timer.new(duration: number): Timer
     local playState = State.new({

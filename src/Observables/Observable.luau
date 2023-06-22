@@ -6,10 +6,22 @@ local Types = require(script.Parent.Parent.Types)
 export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
 
---- @class Observable
---- Observables are objects that hold or derive some state, and forward updates
---- to listeners of this state when subscribed.
---- Can be constructed via [Dec.CustomObservable]
+--[=[
+    @class Observable
+
+    Observables are objects that resolve to some value, and can be subscribed to
+    detect updates whenver this value changes.
+
+    When setting a [VirtualInstance]'s properties to an Observable, the
+    properties in the mounted instance will automatically be updated by Dec to
+    match the current value of the observable whenever its value changes.
+
+    An observable will automatically be garbage collected so long as there are
+    no listeners are currently subscribed to it, and it is not currently being
+    used by a mounted VirtualInstance.
+
+    *(Constructed via [Dec.CustomObservable])*
+]=]
 local Observable = {}
 Observable.__index = {}
 Observable.__index._dectype = "Observable"
@@ -105,9 +117,27 @@ end
     is provided as a second argument, will also call the callback once
     immediately with the current value.
 
-    WARNING: Make sure you handle the Unsubscribe function whenever a calling
-    Subscribe! Observables do not garbage collect until all external listeners
-    are unsubscribed.
+    :::caution
+    Make sure you handle the returned "Unsubscribe" function whenever a calling
+    `Subscribe`! If you forget to do this, you may encounter memory leaks!
+    
+    Observables will remain in memory until all listeners are unsubscribed, and
+    all VirtualInstances using it are unmounted
+    ```lua
+    -- A new Observable can always be garbage collected if dereferenced
+    local coins = createCoinsObserver()
+
+    -- However, once we subscribe to it, it will stick around in memory until
+    -- we call Unsubscribe!
+    local unsubscribe = coins:Subscribe(function(value)
+        print("Coins is", value)
+    end, true)
+    task.wait(5)
+
+    -- The "coins" observable can now be garbage collected
+    unsubscribe() 
+    ```
+    :::
 ]=]
 function Observable.__index.Subscribe(
     self: Observable<any>,
@@ -142,7 +172,7 @@ end
     @method Destroy
     @within Observable
     Destroys the Observable, releasing all its resources and unsubscribing all
-    listeners.
+    listeners. All further [Observable:Subscribe] calls will error.
 ]=]
 function Observable.__index.Destroy(self: Observable<any>)
     if self._destroyed then

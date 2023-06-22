@@ -32,21 +32,25 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] Math operator overloads for scalar/vector/other types of observables
 - [X] Finalize `Dec.Dict` and `Dec.Record` observable objects
 - [X] Create a logo & clean up readme
-- [ ] Deploy a Documentation Site + workflow using Moonwave (In Progress)
+- [X] Deploy a Documentation Site + workflow using Moonwave (In Progress)
+- [ ] First argument to `Dec.Premade` is a ClassName for intuition, consistency, and production safety
+- [ ] Add usage guides to docs site
 - [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:Replace` function that changes all parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
 - [ ] Add reverse/repeat count parameters to `Alpha:Curve()` as well as reverse/repeat count/delay time/tween time to `BaseTimer:CurvedAlpha()`
 - [ ] More extensive Reconciler unit testing and examples
 - [ ] First Stable Release (In Progress)
+- [ ] Word-of-mouth / twitter marketing (so to speak), getting the library out there!
 - [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!)
 - [ ] Rx interop
-- [ ] Add usage guides to docs site
 
-## Post-Release Roadmap
+## Long term potential stretch goals
 - [ ] Create a simple Todo List Demo
 - [ ] Create a simple open-source demo game using Dec?
 - [ ] Create a simple open-source demo plugin using Dec?
 - [ ] Video tutorials?
-- [ ] Word-of-mouth / twitter marketing (so to speak), getting the library out there!
+- [ ] (SUPER strech) Transpiled `DSX` declarative language, which is a superset of luau simliar to TSX/JSX
+
+
 
 ## Contributing
 

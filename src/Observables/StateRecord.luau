@@ -7,19 +7,36 @@ type StateDict<K, V> = Types.StateDict<K, V>
 type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
---- @class Record
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which holds a table record of predefined keys and values,
---- with utility functions for observing and updating specific keys only.
---- Can be constructed via [Dec.Record]
 
---- @class Dict
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which holds a dictionary of predefined key and value
---- types, with utility functions for observing and updating specific keys only.
---- Can be constructed via [Dec.Record]
+--[=[
+    @class Record
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Writeable observable which holds a record table with predefined keys and
+    values.
+
+    Contains utility functions for observing and updating specific keys within
+    this table, as well as cheaply oobserving specific keys within this table.
+
+    *(Constructed via [Dec.Record])*
+]=]
+
+--[=[
+    @class Dict
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Writeable observable which refers to a dictionary of known key and value
+    types.
+
+    Contains utility functions for observing and updating specific keys within
+    this table, as well as cheaply observing specific keys within this table.
+
+    *(Constructed via [Dec.Dict])*
+]=]
 local StateRecord = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -75,6 +92,36 @@ function StateRecord.__index.Set(
     end
 end
 
+--[=[
+    @method Current
+    @within Record
+    @param key any?
+    @return any | T
+
+    Gets the current value at a specific key, or the current value of the whole
+    record if no first argument is provided.
+
+    :::caution
+    Currently, the value returned by `StateRecord:Current()` with no first
+    parameter is mutable! Modifying this value directly may cause unexpected
+    behavior!
+    :::
+]=]
+--[=[
+    @method Current
+    @within Dict
+    @param key K?
+    @return V | {[K: V]}
+
+    Gets the current value at a specific key, or the current value of the whole
+    dictionary if no first argument is provided.
+
+    :::caution
+    Currently, the value returned by `StateRecord:Current()` with no first
+    parameter is mutable! Modifying this value directly may cause unexpected
+    behavior!
+    :::
+]=]
 function StateRecord.__index.Current(
     self: StateRecord<any>,
     ...: any
@@ -87,6 +134,21 @@ function StateRecord.__index.Current(
     end
 end
 
+--[[
+    @method Replace
+    @within Record
+    @param newRecord T
+
+    Replaces entire record with a new value
+]]
+
+--[[
+    @method Replace
+    @within Dict
+    @param newDict {[K]: V}
+
+    Replaces the entire dictionary with a new value
+]]
 function StateRecord.__index.Replace(
     self: StateRecord<any>,
     newRecord: any
@@ -125,6 +187,32 @@ function Index.__index.Set(self: any, value: any)
     self._parent:Set(self._key, value)
 end
 
+--[=[
+    @method Index
+    @within Record
+    @param key any
+    @return State<any>
+
+    Creates a new observable which observes only a specific key within the
+    record. Changes in other keys will not affect subscribers to this indexed
+    state.
+
+    The returned observable is also a State object, and setting values in this
+    state will set values in the original Record object.
+]=]
+--[=[
+    @method Index
+    @within Dict
+    @param key K
+    @return State<V>
+
+    Creates a new observable which observes only a specific key within the
+    dictionary. Changes in other keys will not affect subscribers to this
+    indexed state.
+
+    The returned observable is also a State object, and setting values in this
+    state will set values in the original Dict object.
+]=]
 function StateRecord.__index.Index(
     self: StateRecord<any>,
     key: any
@@ -196,7 +284,7 @@ end
     @function Dict
     @within Dec
     @param initialValue: {[K]: V}
-    @return Dict<T>
+    @return Dict<K, V>
 
     Creates a new Dict state observable with the given initial value.
 ]=]

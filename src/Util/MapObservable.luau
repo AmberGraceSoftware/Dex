@@ -42,13 +42,14 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     observable from the dependent observables passed in.
     
     Example usage:
-
+    ```lua
     local x = Dec.State(2)
     local y = Dec.State(3)
     
     local sum = Dec.Map(x, y)(function(currentX, currentY)
         return currentX + currentY
     end)
+    ```
 ]=]
 local MapObservable: ReturnType = function(...: any): any
     local deps = table.pack(...)

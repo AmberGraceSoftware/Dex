@@ -62,7 +62,7 @@ end
     @function Premade
     @within Dec
     @param props {[string]: any}?
-    @param children Dec.ChildMap?
+    @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
 
     Creates a new VirtualInstance that represents a pre-existing Roblox Instance

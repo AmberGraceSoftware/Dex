@@ -7,7 +7,7 @@ type Symbol<Name> = Symbol.Symbol<Name>
     @prop Nil Symbol<"Nil">
     @within Dec
     Symbol that represents a "Nil" value. Because "nil" values can't be
-    represented as values of a Luau table, Dec.Nil can be used in its place.
+    represented as values of a Luau table, `Dec.Nil` can be used in its place.
     Example usage:
     ```lua
     Dec.New("BillboardGui", {

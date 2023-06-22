@@ -4,11 +4,18 @@ local Observable = require(script.Parent.Observable)
 
 export type State<T> = Types.State<T>
 
---- @class State
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which holds a value that can be updated via [State:Set()].
---- Can be constructed via [Dec.State]
+
+--[=[
+    @class State
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Writeable observable which holds a value which can be updated via
+    [State:Set]
+
+    *(Constructed via [Dec.State])*
+]=]
 local State = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do
@@ -24,11 +31,11 @@ for k, v in Observable.__index :: any do
 end
 State.__index._decobservabletype = "State"
 
---[[
-    @param value: any - The value to set.
+--[=[
+    @param value T
 
-    Sets the state value.
-]]
+    Updates the state's current value.
+]=]
 function State.__index.Set(
     self: State<any>,
     value: any
