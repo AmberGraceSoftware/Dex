@@ -1,5 +1,4 @@
 [[classOrder]]
-section = "Core"
 classes = ["Dec", "VirtualInstance", "Root"]
 
 [[classOrder]]
