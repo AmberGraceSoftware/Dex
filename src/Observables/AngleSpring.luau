@@ -59,12 +59,17 @@ local typeToSpringStepMethod = {
     ["Vector2"] = linearSpringStep,
 }
 
---- @class AngleSpring
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates critically damped spring motion in
---- realtime while subscribed, clamping values to the range [-pi, pi].
---- Can be constructed via [Dec.AngleSpring]
+--[=[
+    @class AngleSpring
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable object which simulates critically damped spring easing towards
+    another observable's value, clamping its output to the range `[-pi, pi]`.
+
+    *(Constructed via [Dec.AngleSpring])*
+]=]
 local AngleSpring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

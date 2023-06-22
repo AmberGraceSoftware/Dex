@@ -39,13 +39,20 @@ end
 type Observable<T> = Types.Observable<T>
 type IntSpring<T> = Types.IntSpring<T>
 
---- @class IntSpring
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates critically damped spring motion in
---- realtime while subscribed, rounding towards the nearest integer to the goal
---- value.
---- Can be constructed via [Dec.IntSpring]
+--[=[
+    @class IntSpring
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable object which simulates critically damped spring easing towards
+    another observable's value, rounding to the nearest integer towards the
+    target value.
+
+    Useful for UI components like currency counters.
+
+    *(Constructed via [Dec.IntSpring])*
+]=]
 local IntSpring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

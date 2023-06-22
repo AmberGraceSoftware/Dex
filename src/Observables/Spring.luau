@@ -117,13 +117,17 @@ local typeToSpringStepMethod = {
     ),
 }
 
---- @class Spring
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates critically damped spring motion in
---- realtime while subscribed, moving towards an input observable's current
---- value.
---- Can be constructed via [Dec.Spring]
+--[=[
+    @class Spring
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable object which simulates critically damped spring easing towards
+    another observable's current value
+
+    *(Constructed via [Dec.Spring])*
+]=]
 local Spring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do
@@ -151,10 +155,12 @@ Spring.StepMethods = typeToSpringStepMethod
     @return Observable<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring. The spring simulates in realtime until the target value is
-    reached. NOTE: Spring must have at lease one Subscriber (or be mounted on at
-    least one VirtualInstance) to simulate properly! Observables automatically
-    garbage collect once the object is dereferenced and all subscribers are
-    disconnected (and VirtualInstances unmounted)
+    reached.
+
+    :::caution
+    Spring must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 
 ]=]
 function Spring.new<T>(

@@ -33,6 +33,7 @@ One of Dec's core features is its unique Virtual Instance reconciler, similar to
 - [X] Finalize `Dec.Dict` and `Dec.Record` observable objects
 - [X] Create a logo & clean up readme
 - [X] Deploy a Documentation Site + workflow using Moonwave (In Progress)
+- [ ] First argument to `Dec.Premade` is a ClassName for intuition, consistency, and production safety
 - [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:Replace` function that changes all parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
 - [ ] Add reverse/repeat count parameters to `Alpha:Curve()` as well as reverse/repeat count/delay time/tween time to `BaseTimer:CurvedAlpha()`
 - [ ] More extensive Reconciler unit testing and examples

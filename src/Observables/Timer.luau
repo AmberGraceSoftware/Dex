@@ -12,11 +12,20 @@ type Timer = Types.Timer
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
---- @class Timer
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates in realtime while subscribed
---- Can be constructed via [Dec.Timer]
+--[=[
+    @class Timer
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable which counts down from a max value in realtime whenever played
+    via [Timer:Start].
+
+    Includes utility methods for mapping this "remaining time" value into more
+    complex animationed sequences.
+
+    *(Constructed via [Dec.Timer])*
+]=]
 local Timer = {}
 -- Inherits Timer metamethods
 for k, v in Timer :: any do

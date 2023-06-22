@@ -51,13 +51,20 @@ local function easingFunction<T>(
     return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
 end
 
---- @class Eased
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which eases in realtime using tween motion, towards an
---- input observaable's value, restarting the tween every time that value
---- changes.
---- Can be constructed via [Dec.Eased]
+--[=[
+    @class Eased
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable object which tweens towards another observable's current value
+    every time that value changes.
+
+    Useful for tween animations where the input state changes infrequently, such
+    as menu transitions.
+
+    *(Constructed via [Dec.Eased])*
+]=]
 local Eased = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

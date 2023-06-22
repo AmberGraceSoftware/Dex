@@ -12,11 +12,20 @@ type Stopwatch = Types.Stopwatch
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
---- @class Stopwatch
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which simulates in realtime while subscribed
---- Can be constructed via [Dec.Stopwatch]
+--[=[
+    @class Stopwatch
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable which counts up to a max value in realtime whenever played
+    via [Timer:Start].
+
+    Includes utility methods for mapping this "elapsed time" value into more
+    complex animationed sequences.
+
+    *(Constructed via [Dec.Stopwatch])*
+]=]
 local Stopwatch = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do

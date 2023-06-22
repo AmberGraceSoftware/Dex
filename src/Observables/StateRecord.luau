@@ -7,19 +7,36 @@ type StateDict<K, V> = Types.StateDict<K, V>
 type State<T> = Types.State<T>
 type Unsubscribe = Types.Unsubscribe
 
---- @class Record
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which holds a table record of predefined keys and values,
---- with utility functions for observing and updating specific keys only.
---- Can be constructed via [Dec.Record]
 
---- @class Dict
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which holds a dictionary of predefined key and value
---- types, with utility functions for observing and updating specific keys only.
---- Can be constructed via [Dec.Record]
+--[=[
+    @class Record
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Writeable observable which holds a record table with predefined keys and
+    values.
+
+    Contains utility functions for observing and updating specific keys within
+    this table, as well as cheaply oobserving specific keys within this table.
+
+    *(Constructed via [Dec.Record])*
+]=]
+
+--[=[
+    @class Dict
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Writeable observable which refers to a dictionary of known key and value
+    types.
+
+    Contains utility functions for observing and updating specific keys within
+    this table, as well as cheaply observing specific keys within this table.
+
+    *(Constructed via [Dec.Dict])*
+]=]
 local StateRecord = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do

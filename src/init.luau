@@ -42,7 +42,18 @@ export type Symbol<Name> = Types.Symbol<Name>
 export type Root = Types.Root
 export type Nil = Symbol<"Nil">
 
---- @class Dec
+--[=[
+    @class Dec
+
+    The Dec library contains a collection objects to create reactive UI
+    components under the Dec paradigm. For more information, see the
+    [Usage Guide](../docs/intro)
+
+    :::caution
+    Dec is currently in early development, and a stable first release has not
+    been finished or tested..
+    :::
+]=]
 local Dec = {}
 
 -- Basic State and Observables

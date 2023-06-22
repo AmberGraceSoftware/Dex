@@ -8,13 +8,18 @@ local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
---- @class Alpha
---- @tag Observable
---- #### Inherits [Observable]
---- Observable object which maps the number value from another
---- observable to the range [0, 1]. Contains helper functions for making
---- animations and state transitions.
---- Can be constructed via [Dec.Alpha]
+--[=[
+    @class Alpha
+    @tag Observable
+
+    #### Inherits [Observable]
+
+    Observable object which maps another numeric observable to the range [0, 1]
+    
+    Contains helper functions for makinganimations and state transitions.
+
+    *(Constructed via [Dec.CustomObservable])*
+]=]
 local Alpha = {}
 -- Inherits Observable metamethods
 for k, v in Observable :: any do

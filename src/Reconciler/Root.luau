@@ -10,24 +10,54 @@ type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type ReconciledNode = Types.ReconciledNode
 
---- @class Root
---- Root is an object which starts and stops rendering VirtualInstances passed
---- into it. In order to write a Dec application, you need to create a root via
---- [Dec.Root], and render an instance using [Root:Render()]
+--[=[
+    @class Root
+
+    Entry point for rendering Dec applications.
+
+    In order to write a Dec application, you need to first create a root via
+    [Dec.Root], and render an instance using [Root:Render()]
+
+    ```lua
+    local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+    local root = Dec.Root(PlayerGui)
+
+    local App = Dec.New("ScreenGui", {
+        ResetOnSpawn = false
+    }, {
+        HelloLabel = Dec.New("TextLabel", {
+            BackgroundColor3 = Color3.fromHex("ddd"),
+            Text = "Hello, World!",
+            TextColor3 = Color3.fromHex("000"),
+            TextStrokeTransparency = 1
+        }, {
+            RoundedRect = Dec.New("UICorner", {
+                CornerRadius = UDim.new(0.2, 0)
+            })
+        })
+    })
+
+    root.Render(App)
+    ```
+
+    *(Constructed via [Dec.Root])*
+]=]
 local Root = {}
 Root.__index = {}
 Root.__index._dectype = "Root"
 
---[[
-    @param node: Dec.VirtualInstance - The Virtual Instance to be reconciled.
-    @return Dec.ReconciledNode - The Reconciled Node from the given Virtual Instance.
+--[=[
+    @method Render
+    @within Root
+    @param node VirtualInstance
+    @return ReconciledNode
 
     Reconciles a Virtual Instance into the root's Roblox Instance. After the
     call, the Virtual Instance is sealed and cannot be mutated. Instead, you
     should use Dec Observers to mutate the Instance after reconciliation.
     
     It returns the Reconciled Node.
-]]
+]=]
 function Root.__index.Render(
     self: Root,
     node: VirtualInstance
@@ -41,10 +71,12 @@ function Root.__index.Render(
     return self._reconciled :: ReconciledNode
 end
 
---[[
-    Unmounts the Virtual Instance from the Root, causing it to be removed from
-    the DataModel but not destroyed.
-]]
+--[=[
+    @method Unmount
+    @within Root
+    Unmounts the Virtual Instance from the Root, causing it to be deleted from
+    the DataModel.
+]=]
 function Root.__index.Unmount(self: Root)
     if self._reconciled then
         UnmountVirtualInstance(self._reconciled)
@@ -52,11 +84,13 @@ function Root.__index.Unmount(self: Root)
     end
 end
 
---[[
+--[=[
+    @method Destroy
+    @within Root
     Unmounts and destroys the Root and its underlying Roblox Instance. This
     function should be called before discarding a Root object to ensure memory
     is properly freed.
-]]
+]=]
 function Root.__index.Destroy(self: Root)
     self:Unmount()
 end
@@ -64,7 +98,7 @@ end
 --[=[
     @function Root
     @within Dec
-    @param instance Instance
+    @param hostInstance Instance
     @return Root
 
     Creates a new Root instance. The Root is a reference to a real Roblox
