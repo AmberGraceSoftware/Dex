@@ -3,20 +3,25 @@
 <p align="center">
       <img src="logo/Logo256.png" />
       <br/>
+      <br/>
       Dec is a reactive UI library for <a href="https://www.roblox.com/home">Roblox</a>.
+      <br/>
       <br/>
       It provides a familiar, declarative syntax for building scalable UI components for any project's needs.
 </p>
 
 
-| DISCLAIMER: Dec is a work in progress project, and does NOT currently have a stable release, finalized API/documentation, or full test coverage. Please be patient as a first beta release is actively being developed! |
+| DISCLAIMER: Dec is a work in progress, and does NOT currently have a finalized release, API, or testing. Please be patient as a beta release is still being developed! |
 | --- |
 
 ## Features
 
-Dec is a **work in progress project** that started from a simple concept of ways to improve upon its predecessor, [Pract](https://github.com/AmberGraceRBLX/Pract), while using the most loved features of Elttob's [Fusion](https://elttob.uk/Fusion) with a cleaned up and much safer syntax for observables.
+Dec started from a simple concept of ways to improve upon its predecessor, [Pract](https://github.com/AmberGraceRBLX/Pract), while using the most loved features of Elttob's [Fusion](https://elttob.uk/Fusion) with a cleaned up and much safer syntax for observables.
 
-One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a truly declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to reconcile components and instance properties only exactly when and where it is needed, leading to great performance gains over [Roact](https://roblox.github.io/roact). Dec also has built-in support for object pooling, animation, and more with a very simple and familiar syntax.
+One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to creat/destroy/modify instances only when and where it is needed, leading to greater performance gains over [Roact](https://roblox.github.io/roact). Dec also has built-in support for object pooling, animation, and more with a very simple and familiar syntax.
+One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to creat/destroy/modify instances only when and where it is needed, leading to greater performance gains over [Roact](https://roblox.github.io/roact).
+
+Dec also first-class support for animation and other utilities, making it very easy to rapidly prototype a UI component!
 
 
 ## Project Roadmap
