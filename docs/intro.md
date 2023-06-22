@@ -18,19 +18,21 @@ feedback!
 For a sneak peak at the project's paradigm, checkout the
 [API Section!](../api/Dec)
 
-### Here's a Hello World written in Dec:
+### Here's a Hello World written in Dec!
 ```lua
-local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"))
-local root = Dec.Root(PlayerGui)
-
+-- Create our Dec application
 local App = Dec.New("ScreenGui", {
     ResetOnSpawn = false
 }, {
     HelloLabel = Dec.New("TextLabel", {
-        BackgroundColor3 = Color3.fromHex("ddd"),
         Text = "Hello, World!",
         TextColor3 = Color3.fromHex("000"),
         TextStrokeTransparency = 1
+        BackgroundColor3 = Color3.fromHex("ddd"),
+        Position = UDim2.fromScale(0.5, 0.5),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Size = UDim2.fromScale(2, 1),
+        SizeConstraint = Enum.SizeConstraint.RelativeYY,
     }, {
         RoundedRect = Dec.New("UICorner", {
             CornerRadius = UDim.new(0.2, 0)
@@ -38,5 +40,8 @@ local App = Dec.New("ScreenGui", {
     })
 })
 
+-- Render our Dec application under PlayerGui
+local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local root = Dec.Root(PlayerGui)
 root.Render(App)
 ```
