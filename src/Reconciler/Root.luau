@@ -19,24 +19,21 @@ type ReconciledNode = Types.ReconciledNode
     [Dec.Root], and render an instance using [Root:Render()]
 
     ```lua
-    local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"))
-    local root = Dec.Root(PlayerGui)
-
-    local App = Dec.New("ScreenGui", {
-        ResetOnSpawn = false
-    }, {
+    -- Create our Dec application
+    local App = Dec.New("ScreenGui", {ResetOnSpawn = false}, {
         HelloLabel = Dec.New("TextLabel", {
-            BackgroundColor3 = Color3.fromHex("ddd"),
             Text = "Hello, World!",
+            TestSize = 24,
+            BackgroundTransparency = 1, 
             TextColor3 = Color3.fromHex("000"),
-            TextStrokeTransparency = 1
-        }, {
-            RoundedRect = Dec.New("UICorner", {
-                CornerRadius = UDim.new(0.2, 0)
-            })
+            Position = UDim2.fromScale(0.5, 0.5),
+            AnchorPoint = Vector2.new(0.5, 0.5),
         })
     })
 
+    -- Render our Dec application under PlayerGui
+    local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local root = Dec.Root(PlayerGui)
     root.Render(App)
     ```
 

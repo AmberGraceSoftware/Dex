@@ -15,28 +15,20 @@ Stay tuned for a first stable release, guides, and API finalization!
 In the meantime, feel free to share awareness about the project and provide
 feedback!
 
-For a sneak peak at the project's paradigm, checkout the
+For a sneak peak at the project's API, checkout the
 [API Section!](../api/Dec)
 
 ### Here's a Hello World written in Dec!
 ```lua
 -- Create our Dec application
-local App = Dec.New("ScreenGui", {
-    ResetOnSpawn = false
-}, {
+local App = Dec.New("ScreenGui", {ResetOnSpawn = false}, {
     HelloLabel = Dec.New("TextLabel", {
         Text = "Hello, World!",
+        TestSize = 24,
+        BackgroundTransparency = 1, 
         TextColor3 = Color3.fromHex("000"),
-        TextStrokeTransparency = 1
-        BackgroundColor3 = Color3.fromHex("ddd"),
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Size = UDim2.fromScale(2, 1),
-        SizeConstraint = Enum.SizeConstraint.RelativeYY,
-    }, {
-        RoundedRect = Dec.New("UICorner", {
-            CornerRadius = UDim.new(0.2, 0)
-        })
     })
 })
 
