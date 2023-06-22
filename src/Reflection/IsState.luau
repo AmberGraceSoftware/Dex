@@ -6,7 +6,7 @@
     @param passedIn unknown
     @return boolean
 
-    This function checks if the passed in value is a Dec.State observable object
+    This function checks if the passed in value is a [State] observable object
 ]=]
 local function IsState(passedIn: unknown): boolean
     if typeof(passedIn) ~= "table" then

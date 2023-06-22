@@ -198,7 +198,7 @@ end
     @within VirtualInstance
     @param propName string
     @param initialValue T
-    @return Dec.Observable<T> - An observable with the same output type as initialValue.
+    @return Observable<T> - An observable with the same output type as initialValue.
 
     Creates an Observable object that updates to the original value of an
     property on the virtual instance once when it is mounted. This is useful
@@ -543,7 +543,7 @@ function VirtualInstance.__index.FindChild(
 end
 
 --[[
-    @return Dec.VirtualInstance - A new, empty Virtual Instance.
+    @return VirtualInstance - A new, empty Virtual Instance.
 
     A mutable element that Dec reconciles into a Roblox Instance.
     When a VirtualInstance is reconciled, its properties are sealed. A

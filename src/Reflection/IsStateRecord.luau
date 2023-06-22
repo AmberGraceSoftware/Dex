@@ -6,7 +6,7 @@
     @param passedIn unknown
     @return boolean
 
-    This function checks if the passed in value is a Dec.StateRecord observable
+    This function checks if the passed in value is a [StateRecord] observable
     object
 ]=]
 local function IsStateRecord(passedIn: unknown): boolean

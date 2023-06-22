@@ -122,7 +122,8 @@ local typeToSpringStepMethod = {
 --- #### Inherits [Observable]
 --- Observable object which simulates critically damped spring motion in
 --- realtime while subscribed, moving towards an input observable's current
---- value. Can be constructed via [Dec.Spring]
+--- value.
+--- Can be constructed via [Dec.Spring]
 local Spring = {}
 -- Inherits EasedObject metamethods
 for k, v in EasedObject :: any do

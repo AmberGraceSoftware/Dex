@@ -36,22 +36,26 @@ for k, v in BaseTimer :: any do
 end
 Stopwatch.__index._decobservabletype = "Stopwatch"
 
---[[
-    @return Dec.Alpha
+--[=[
+    @method Alpha
+    @within Stopwatch
+    @return Alpha
 
-    Derives an Alpha observable object that maps the duration from 0 (start) to
-    1 (finish)
-]]
+    Derives an Alpha observable object that maps the elasped time from 0 (start)
+    to 1 (finish)
+]=]
 function Stopwatch.__index.Alpha(self: Stopwatch): Alpha
     return Alpha.new(self, 0, self._duration)
 end
 
---[[
-    @return Observable<T> - The interpolated Observable.
+--[=[
+    @method Lerp
+    @within Stopwatch
+    @return Observable<T>
 
     Creates an observable that outputs an interpolated value between
     the start value and end value based on the current elapsed time.
-]]
+]=]
 function Stopwatch.__index.Lerp<T>(
     self: Stopwatch,
     startValue: T,
@@ -68,9 +72,12 @@ function Stopwatch.__index.Lerp<T>(
 end
 
 --[[
-    @return Dec.Stopwatch - The new Stopwatch observable.
+    @function Stopwatch
+    @within Dec
+    @return Stopwatch
 
-    Creates a new Stopwatch observable.
+    Creates a new Stopwatch Observable, which simulates in realtime while
+    subscribed.
 ]]
 function Stopwatch.new(maxDuration: number): Stopwatch
     local playState = State.new({
