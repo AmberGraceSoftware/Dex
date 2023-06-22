@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - docs/**
+      - .moonwave/**
       - moonwave.toml
       - .github/workflows/DeployDocs.yml
     branches: [ main ]

@@ -5,6 +5,7 @@ on:
     paths:
       - docs/**
       - moonwave.toml
+      - .moonwave/**
       - .github/workflows/DeployDocs.yml
     types:
       - opened
