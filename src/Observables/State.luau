@@ -31,11 +31,11 @@ for k, v in Observable.__index :: any do
 end
 State.__index._decobservabletype = "State"
 
---[[
-    @param value: any - The value to set.
+--[=[
+    @param value T
 
-    Sets the state value.
-]]
+    Updates the state's current value.
+]=]
 function State.__index.Set(
     self: State<any>,
     value: any
