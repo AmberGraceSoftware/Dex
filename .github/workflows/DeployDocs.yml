@@ -19,11 +19,10 @@ jobs:
           node-version: '18'
       - name: Install Moonwave
         run: npm i -g moonwave
-      - name: setup git config
+      - name: Setup Git config
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config user.name "github-actions-bot"
+          git config user.email "github-actions-bot@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
       - name: Build and publish docs site
         run: moonwave build --publish
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
