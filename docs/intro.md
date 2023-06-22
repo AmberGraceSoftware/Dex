@@ -1,10 +1,10 @@
 # Dec Introduction
 
 Dec is a modern reactive UI library for building declarative, stateful, and
-animated components that scale for a project's need.
+animated components that scale for a project's needs.
 
-It includes firsthand support for both fully managed UI trees, and templated UI
-trees, depending on your project's UI asset development pipeline.
+It includes first class support for UI components written entirely in code, as
+well as UI components that use a template asset, depending on your project's UI asset development pipeline.
 
 :::caution
 Dec is currently in early development, and a stable first release has not been
