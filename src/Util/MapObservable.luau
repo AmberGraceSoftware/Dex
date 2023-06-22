@@ -41,7 +41,7 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     Returns a curryable mapping function, which in turn returns a derived
     observable from the dependent observables passed in.
     
-    Example usage:
+    Example:
     ```lua
     local x = Dec.State(2)
     local y = Dec.State(3)
@@ -49,6 +49,20 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     local sum = Dec.Map(x, y)(function(currentX, currentY)
         return currentX + currentY
     end)
+
+    print(sum:Current()) -- 5
+    ```
+
+    For Observables where the values are a vector or scalar type, math
+    operations can be used as an alias for `Dec.Map`!
+
+    Example:
+    ```lua
+    local x = Dec.State(2)
+    local y = Dec.State(3)
+    local sum = x + y
+
+    print(sum:Current()) -- 5
     ```
 ]=]
 local MapObservable: ReturnType = function(...: any): any
