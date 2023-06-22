@@ -10,7 +10,8 @@ classes = ["Observable", "State", "Record", "Dict", "Stopwatch", "Timer",
 gitSourceBranch = "main"
 
 [docusaurus]
-url = "https://ambergracesoftware.com"
+url = "https://dec.ambergracesoftware.com"
+baseUrl = "/"
 tagline = "A reactive UI library for Roblox"
 
 [navbar]
