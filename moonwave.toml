@@ -19,7 +19,7 @@ title = ""
 
 [navbar.logo]
 alt = "Dec"
-src = "logo.png"
+src = "logo.svg"
 
 [home]
 enabled = true
