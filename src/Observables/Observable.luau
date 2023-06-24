@@ -200,7 +200,7 @@ end
     resources when the observable is no longer subscribed or mounted.
 
     :::warning
-    Make sure the `createUpdateStream` parameter correctly matches type, and
+    Make sure the `createUpdateStream` parameter correctly matches the type, and
     returns a "cleanup" function which fully cleans up all listeners or
     resources. Observables garbage collect ONLY when all subscribers are
     unsubscribed, and all VirtualInstances using them are unmounted.

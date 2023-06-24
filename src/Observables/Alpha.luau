@@ -18,7 +18,7 @@ type Observable<T> = Types.Observable<T>
     
     Contains helper functions for makinganimations and state transitions.
 
-    *(Constructed via [Dec.CustomObservable])*
+    *(Constructed via [Dec.Alpha])*
 ]=]
 local Alpha = {}
 -- Inherits Observable metamethods
