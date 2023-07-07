@@ -249,7 +249,8 @@ return function()
     
     it("extracts a child template via ExtractChildTemplate", function()
         local childPath = "ChildName"
-        local childVInst = virtualInstance:ExtractChildTemplate(childPath)
+        local childVInst =
+            virtualInstance:ExtractChildTemplate("Frame", childPath)
     
         checkLastDirective("Children", {[childPath] = childVInst})
         expect(childVInst._dectype).to.be.equal("VirtualInstance")
@@ -257,7 +258,7 @@ return function()
     
     it("finds a child via FindChild", function()
         local childPath = "ChildName"
-        local childVInst = virtualInstance:FindChild(childPath)
+        local childVInst = virtualInstance:FindChild("Frame", childPath)
     
         checkLastDirective("Children", {[childPath] = childVInst})
         expect(childVInst._dectype).to.be.equal("VirtualInstance")

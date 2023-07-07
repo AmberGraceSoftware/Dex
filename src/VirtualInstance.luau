@@ -469,10 +469,10 @@ end
     ```lua
     local function CardListUI()
         -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
-        local rootUI = Dec.Premade()
+        local rootUI = Dec.Premade("ScreenGui")
 
         -- Index a ScrollingFrame containing template cards
-        local cardList = rootUI:FindChild("ScrollingFrame")
+        local cardList = rootUI:FindChild("ScrollingFrame", "CardList")
 
         -- Extract the first template named "CardTemplate", and destroy all other
         -- premade templates with that same name
@@ -492,10 +492,11 @@ end
 ]=]
 function VirtualInstance.__index.ExtractChildTemplate(
     self: VirtualInstance,
+    className: string,
     childPath: ChildPath
 ): ()
     assertNotYetMounted(self)
-    local childVInst = self:FindChild(childPath)
+    local childVInst = self:FindChild(className, childPath)
     local templateParent = nil
     childVInst:OnMount(function(instance)
         templateParent = instance.Parent
@@ -521,18 +522,19 @@ end
 
     The following blocks of code are equivalent:
     ```lua
-    local parent = Dec.Premade()
-    local child = Dec.Premade()
+    local parent = Dec.Premade("Frame")
+    local child = Dec.Premade("Frame")
     parent:AddChild("ChildName", child)
     ```
 
     ```lua
-    local parent = Dec.Premade()
+    local parent = Dec.Premade("Frame")
     local child = parent:FindChild("ChildName")
     ```
 ]=]
 function VirtualInstance.__index.FindChild(
     self: VirtualInstance,
+    className: string,
     path: ChildPath
 ): VirtualInstance
     assertNotYetMounted(self)
@@ -541,7 +543,7 @@ function VirtualInstance.__index.FindChild(
     local VirtualInstanceCreators = (require :: any)(
         script.Parent.VirtualInstanceCreators)
 
-    local childVInst = VirtualInstanceCreators.Premade()
+    local childVInst = VirtualInstanceCreators.Premade(className)
     self:AddChild(path, childVInst)
     
     return childVInst

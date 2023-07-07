@@ -32,6 +32,8 @@ end
 State.__index._decobservabletype = "State"
 
 --[=[
+    @method Set
+    @within State
     @param value T
 
     Updates the state's current value.

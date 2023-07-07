@@ -39,11 +39,12 @@ return function()
         local props = {Size = Vector3.new(3, 3, 3)}
         local children = {Child3 = VirtualInstanceCreators.New("Part")}
 
-        local virtualInstance = VirtualInstanceCreators.Premade(props, children)
+        local virtualInstance =
+            VirtualInstanceCreators.Premade("Frame", props, children)
 
         expect(virtualInstance._dectype).to.equal("VirtualInstance")
         expect(virtualInstance._constructorType).to.equal("Premade")
-        expect(virtualInstance._constructorTypeArgument).to.equal(nil)
+        expect(virtualInstance._constructorTypeArgument).to.equal("Frame")
         expect(#virtualInstance._directives).to.equal(2)
         expect(virtualInstance._directives[1]._payload).to.equal(props)
         expect(virtualInstance._directives[2]._payload).to.equal(children)

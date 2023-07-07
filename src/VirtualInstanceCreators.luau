@@ -61,6 +61,7 @@ end
 --[=[
     @function Premade
     @within Dec
+    @param className string
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
@@ -75,12 +76,13 @@ end
     `virtualInstance:Child(path, Dec.Premade( . . . ))` ).
 ]=]
 function VirtualInstanceCreators.Premade(
+    className: string,
     props: {[string]: any}?,
     children: ChildMap?
 ): VirtualInstance
     return VirtualInstance.new(
         "Premade",
-        nil,
+        className,
         props,
         children,
         1

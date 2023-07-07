@@ -10,10 +10,9 @@ type Symbol<Name> = Symbol.Symbol<Name>
     represented as values of a Luau table, `Dec.Nil` can be used in its place.
     Example usage:
     ```lua
-    Dec.New("BillboardGui", {
-        Adornee = Dec.Map(props.adornee)(function(currentAdornee)
-            return currentAdornee or Dec.Nil
-        end),
+    return Dec.Premade("BillboardGui", {
+        -- Sets the Adornee property of the premade UI to "Nil" on mount
+        Adornee = Dec.Nil,
     })
     ```
 ]=]
