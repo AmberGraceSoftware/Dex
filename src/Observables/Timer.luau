@@ -47,7 +47,7 @@ Timer.__index._decobservabletype = "Timer"
 
 --[=[
     @method Alpha
-    @within Stopwatch
+    @within Timer
     @return Alpha
 
     Derives an Alpha observable object that maps the current remaining time from
@@ -70,7 +70,7 @@ end
 
 --[=[
     @method Lerp
-    @within Stopwatch
+    @within Timer
     @return Observable<T>
 
     Creates an observable that outputs an interpolated value between
