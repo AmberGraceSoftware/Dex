@@ -239,6 +239,35 @@ end
     return function to close the update stream is automatically called when the
     Observable's last subscriber is unsubscribed and/or the last VirtualInstance
     utilizing it is unmounted.
+
+    Putting it all together, we can create a custom observable which tracks the
+    ViewportSize of the player's camera:
+    ```lua
+    local function getCurrent()
+        return workspace.CurrentCamera.ViewportSize
+    end
+    local function createUpdateStream(notifyChange: () -> ())
+        -- Start tracking changes to ViewportSize, and
+        -- forward these to the `notifyChange` callback
+        local connection = workspace.CurrentCamera
+            :GetPropertyChangedSignal("ViewportSize")
+            :Connect(notifyChange)
+
+        -- Return a function which closes the update stream,
+        -- cleaning up our connection.
+        return function()
+            connection:Disconnect()
+        end
+    end
+    local playerViewportSize = Dec.CustomObservable(
+        getCurrent,
+        createUpdateStream
+    )
+    print(playerViewportSize:Current()) -- Output: 1920, 1080
+    ```
+
+    Custom observables may be useful for connecting third party libraries or
+    other systems in your game's codebase to a Dec UI application.
 ]=]
 function Observable.new<T>(
     getCurrent: () -> T,
