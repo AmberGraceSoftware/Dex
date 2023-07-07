@@ -9,7 +9,7 @@ html[data-theme='dark'] {
     --ifm-background-surface-color: #15232c;
     --ifm-color-info-contrast-background: rgb(25, 60, 71);
     --ifm-color-info-contrast-foreground: rgb(238, 249, 253);
-    --ifm-color-warning-contrast-background: rgb(121, 87, 10);
+    --ifm-color-warning-contrast-background: rgb(109, 94, 43);
     --ifm-color-warning-contrast-foreground: rgb(255, 248, 230);
     --ifm-color-danger-contrast-background: rgb(105, 44, 46);
     --ifm-color-danger-contrast-foreground: rgb(255, 235, 236);
