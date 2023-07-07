@@ -80,7 +80,7 @@ function Stopwatch.__index.Lerp<T>(
     end) :: any
 end
 
---[[
+--[=[
     @function Stopwatch
     @within Dec
     @param maxDuration number?
@@ -88,7 +88,7 @@ end
 
     Creates a new Stopwatch Observable, which simulates in realtime while
     subscribed.
-]]
+]=]
 function Stopwatch.new(maxDuration: number?): Stopwatch
     local playState = State.new({
         playing = false,

@@ -548,11 +548,14 @@ function VirtualInstance.__index.FindChild(
 end
 
 --[[
+    @function new
+    @within VirtualInstance
+    @private
     @return VirtualInstance - A new, empty Virtual Instance.
 
     A mutable element that Dec reconciles into a Roblox Instance.
     When a VirtualInstance is reconciled, its properties are sealed. A
-    VirtualInstance should only be mutated by componentt objects before it is
+    VirtualInstance should only be mutated by component objects before it is
     reconciled. Use Observers instead to mutate a VirtualInstance after it has
     been reconciled.
 ]]

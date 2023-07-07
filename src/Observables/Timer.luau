@@ -97,7 +97,7 @@ function Timer.__index.SetTimePosition(self: Timer, pos: number)
 end
 
 
---[[
+--[=[
     @function Timer
     @within Dec
     @param duration number
@@ -105,7 +105,7 @@ end
 
     Creates a new Timer Observable, which simulates in realtime while
     subscribed.
-]]
+]=]
 function Timer.new(duration: number): Timer
     local playState = State.new({
         playing = false,

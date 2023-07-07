@@ -154,6 +154,9 @@ end
     subscribed by at least one listener or mounted on a VirtualInstance to work
     correctly; otherwise, it will only simulate every time :Current() is called.
     
+    @function new
+    @within EasedObject
+    @private
     @param target The Observable whose changes should trigger transitions
     @param easingFunction The function determining the rate of transition
     @return An Observable that smoothly transitions to new values
