@@ -22,10 +22,10 @@ Paste the following code below the import statement:
 local App = Dec.New("ScreenGui", {ResetOnSpawn = false}, {
     HelloLabel = Dec.New("TextLabel", {
         Text = "Hello, World!",
-        TestSize = 24,
+        TextSize = 24,
         BackgroundTransparency = 1, 
         TextColor3 = Color3.fromHex("000"),
-        Position = UDim2.fromScale(0.5, 0.5),
+        Position = UDim2.fromScale(0.5, 0.25),
         AnchorPoint = Vector2.new(0.5, 0.5),
     })
 })
@@ -33,7 +33,9 @@ local App = Dec.New("ScreenGui", {ResetOnSpawn = false}, {
 -- Render our Dec application under PlayerGui when it loads
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local root = Dec.Root(PlayerGui)
-root.Render(App)
+root:Render(App)
 ```
 
 A simple Dec application will render upon playtesting in Roblox Studio!
+
+![Result](image.png)

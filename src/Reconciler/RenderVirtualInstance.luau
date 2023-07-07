@@ -14,7 +14,7 @@ type ReconciledNode = Types.ReconciledNode
     @return Dec.ReconciledNode - The reconciled node that was rendered.
     
     Entry point for the Dec reconciler on a VirtualInstance. This function is
-    called by Root objects (created via Dec.CreateRoot) when they are Rendered
+    called by Root objects (created via Dec.Root) when they are Rendered
     with a new VirtualInstance, and also by observable Children updates. Handles
     the logic for mounting, unmounting, and replacing VirtualInstances.
 ]]

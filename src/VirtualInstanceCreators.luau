@@ -70,7 +70,7 @@ end
     rather than creating or destroying new instanvces.
     
     The instance modified will either be the one that is passed into
-    Dec.CreateRoot(), or a child of an existing virtual instance that Dec will
+    Dec.Root(), or a child of an existing virtual instance that Dec will
     automatically wait for (specified via
     `virtualInstance:Child(path, Dec.Premade( . . . ))` ).
 ]=]
