@@ -47,8 +47,8 @@ to the Hello World text! Paste the following code into your LocalScript:
 --!strict
 local Dec = require(game.ReplicatedStorage.Packages.Dec)
 
--- Create a color shift observable
-local timer = Dec.Stopwatch(math.huge)
+-- Create a "Stopwatch" observable to track elapsed time
+local timer = Dec.Stopwatch()
 timer:Start()
 
 -- Create our Dec application
