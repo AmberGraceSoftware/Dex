@@ -124,13 +124,79 @@ for k, v in Observable.__index :: any do
 end
 EasedObject.__index._decobservabletype = "EasedObject"
 
+--[=[
+    @method ResetVelocity
+    @within Spring
+
+    Sets the velocity of the spring to the zero (or the origin vector). Useful
+    in conjunction with [Spring:SetPosition]
+]=]
+--[=[
+    @method ResetVelocity
+    @within AngleSpring
+
+    Sets the velocity of the spring to the zero (or the origin vector). Useful
+    in conjunction with [Spring:SetPosition]
+]=]
+--[=[
+    @method ResetVelocity
+    @within IntSpring
+
+    Sets the velocity of the spring to the zero (or the origin vector). Useful
+    in conjunction with [Spring:SetPosition]
+]=]
 function EasedObject.__index.ResetVelocity(self: EasedObject<any>)
     self._easingFrame.previousVelocity =
         typeToInitialVelocity[typeof(self._easingFrame.startValue)]
 end
+--[=[
+    @method CurrentTarget
+    @within Spring
+
+    Gets the current value of the spring's target observable.
+]=]
+--[=[
+    @method CurrentTarget
+    @within AngleSpring
+
+    Gets the current value of the spring's target observable.
+]=]
+--[=[
+    @method CurrentTarget
+    @within IntSpring
+
+    Gets the current value of the spring's target observable.
+]=]
+--[=[
+    @method CurrentTarget
+    @within Eased
+
+    Gets the current value of the eased object's target observable.
+]=]
 function EasedObject.__index.CurrentTarget(self: EasedObject<any>)
     return self._target:Current()
 end
+--[=[
+    @method SetPosition
+    @within Spring
+
+    Moves the current position of the spring to a new value, keeping the current
+    velocity intact.
+]=]
+--[=[
+    @method SetPosition
+    @within AngleSpring
+
+    Moves the current position of the spring to a new value, keeping the current
+    velocity intact.
+]=]
+--[=[
+    @method SetPosition
+    @within IntSpring
+
+    Moves the current position of the spring to a new value, keeping the current
+    velocity intact.
+]=]
 function EasedObject.__index.SetPosition(self: EasedObject<any>, pos: any)
     if typeof(pos) ~= typeof(self._easingFrame.startValue) then
         error(`Invalid argument to SetPosition (` ..

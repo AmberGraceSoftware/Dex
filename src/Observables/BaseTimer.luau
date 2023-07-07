@@ -32,12 +32,12 @@ end
 --[=[
     @method Stop
     @within Stopwatch
-    Stops the Stopwatch Observable.
+    Stops the Stopwatch Observable, reseting the elapsed time.
 ]=]
 --[=[
     @method Stop
     @within Timer
-    Stops the Timer Observable.
+    Stops the Timer Observable, reseting the remaining time.
 ]=]
 function BaseTimer.Stop(self: BaseTimer): ()
     self._playState:Set({
@@ -50,12 +50,12 @@ end
 --[=[
     @method Pause
     @within Stopwatch
-    Pauses the Stopwatch Observable.
+    Pauses the Stopwatch Observable at its current elapsed time position.
 ]=]
 --[=[
     @method Pause
     @within Timer
-    Pauses the Timer Observable.
+    Pauses the Timer Observable at its current remaining time position.
 ]=]
 function BaseTimer.Pause(self: BaseTimer): ()
     local currentTime = self:Current()

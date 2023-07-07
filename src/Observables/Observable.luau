@@ -247,14 +247,11 @@ end
         return workspace.CurrentCamera.ViewportSize
     end
     local function createUpdateStream(notifyChange: () -> ())
-        -- Start tracking changes to ViewportSize, and
-        -- forward these to the `notifyChange` callback
         local connection = workspace.CurrentCamera
             :GetPropertyChangedSignal("ViewportSize")
             :Connect(notifyChange)
-
-        -- Return a function which closes the update stream,
-        -- cleaning up our connection.
+        
+        -- closeUpdateStream:
         return function()
             connection:Disconnect()
         end
