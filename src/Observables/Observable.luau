@@ -192,14 +192,12 @@ end
 
 
     :::warning
-    Make sure to implement `getCurrent` and `createUpdateStream` correctly when
-    creating custom Dec observables, as failing to do so may cause memory leaks.
-    
     Consider opting for other Dec constructs (like State) over custom
-    observables, and if you do use custom observables, Make sure the 
-    `createUpdateStream` consistently tracks all changes to the value as
-    they happen, and properly cleans up any resources used to track these
-    changes in its return function in order to avoid memory leaks.
+    observables.
+    
+    When writing custom Dec observables, Make sure to implement the `getCurrent`
+    and `createUpdateStream` parameters correctly, as failing to do so may
+    cause memory leaks or unresponsive UI.
     :::
 
     Creates a new Dec Observable object. Observables are used to hold, derive,
