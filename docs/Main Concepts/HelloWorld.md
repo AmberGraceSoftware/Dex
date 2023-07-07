@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Hello, World!
 
 Now that Dec is installed, let's build a simple Roblox UI.
@@ -11,7 +15,7 @@ Add an import and `--strict` mode directive and import to utilize Dec's library 
 local Dec = require(game.ReplicatedStorage.Packages.Dec)
 ```
 
-Finally paste the following code in a LocalScript:
+Paste the following code below the import statement:
 
 ```lua
 -- Create our Dec application
@@ -33,5 +37,3 @@ root.Render(App)
 ```
 
 A simple Dec application will render upon playtesting in Roblox Studio!
-
-Up Next: [Writing a VirtualInstance Tree](./VirtualInstance.md)

@@ -11,8 +11,8 @@ type Symbol<Name> = Symbol.Symbol<Name>
     Example usage:
     ```lua
     Dec.New("BillboardGui", {
-        Adornee =  Dec.Map(props.adornee)(function(adorneeCurrent: Instance?)
-            return adorneeCurrent or Dec.Nil
+        Adornee = Dec.Map(props.adornee)(function(currentAdornee)
+            return currentAdornee or Dec.Nil
         end),
     })
     ```

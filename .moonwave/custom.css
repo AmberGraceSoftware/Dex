@@ -5,12 +5,20 @@
 }
 
 html[data-theme='dark'] {
-    --ifm-background-color: #343b41;
-    --ifm-background-surface-color: #1a252c;
+    --ifm-background-color: #1b2b38;
+    --ifm-background-surface-color: #15232c;
     --ifm-color-info-contrast-background: rgb(25, 60, 71);
     --ifm-color-info-contrast-foreground: rgb(238, 249, 253);
     --ifm-color-warning-contrast-background: rgb(121, 87, 10);
     --ifm-color-warning-contrast-foreground: rgb(255, 248, 230);
     --ifm-color-danger-contrast-background: rgb(105, 44, 46);
     --ifm-color-danger-contrast-foreground: rgb(255, 235, 236);
+}
+
+.footer--dark {
+    --ifm-footer-background-color: #15232c;
+}
+
+pre[class*="language-"][class*="language-"][class*="language-"] {
+    background: #1c2330
 }
