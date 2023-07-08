@@ -2,6 +2,7 @@
     --ifm-background-color: #f2f6fc;
     --ifm-background-surface-color: #ebeff6;
     --ifm-color-content: #374966;
+    --decdocs-moonwave-member-background-color: #ebeff6;
 }
 
 html[data-theme='dark'] {
@@ -13,12 +14,30 @@ html[data-theme='dark'] {
     --ifm-color-warning-contrast-foreground: rgb(255, 248, 230);
     --ifm-color-danger-contrast-background: rgb(105, 44, 46);
     --ifm-color-danger-contrast-foreground: rgb(255, 235, 236);
+    --decdocs-moonwave-member-background-color: #263144;
 }
 
 .footer--dark {
-    --ifm-footer-background-color: #15232c;
+    --ifm-footer-background-color: #151d2c;
 }
 
 pre[class*="language-"][class*="language-"][class*="language-"] {
-    background: #1c2330
+    background: #263144;
+    -webkit-font-smoothing: auto;
+    font-size: 16px;
+    line-height: 24px;
+}
+div[class="memberString_node_modules-docusaurus-plugin-moonwave-src-components-styles-module"]{
+    background: var(--decdocs-moonwave-member-background-color);
+    margin: 0.5rem;
+    padding: 1.5rem;
+    -webkit-font-smoothing: auto;
+    font-size: 18px;
+    line-height: 30px;
+}
+span[class*="token"] {
+    color: rgb(255 255 255);
+}
+span[style] {
+    font-style: normal !important;
 }
