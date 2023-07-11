@@ -5,6 +5,7 @@
     --decdocs-moonwave-member-background-color: #ebeff6;
     --decdocs-codeblock-background: #334460;
     --decdocs-comment-color: #74909c;
+    --ifm-font-size-base: 105%;
 }
 
 html[data-theme='dark'] {
