@@ -203,6 +203,62 @@ function Observable.__index.Subscribe(
 end
 
 --[=[
+    @method SubscribeWhileMounted
+    @within Observable
+    @param virtualInstance: VirtualInstance
+    @param listener (value: T) -> ()
+    @param immediatelyCallListenerOnMount boolean?
+
+    Subscribes a custom listener to the observable's value while a
+    VirtualInstance is mounted, and automatically unsubscribes the listener when
+    the VirtualInstance unmounts.
+
+    :::tip
+    SubscribeWhileMounted is much safer than calling [Observable:Subscribe]
+    directly, as you do not need to handle an unsubscribe function manually to
+    prevent memory leaks.
+
+    You can use this function to trigger side effects such as animations
+    whenever an observable value changes:
+    ```lua
+    local function PulseAnimation(valueToWatch: Dec.Observable)
+        -- Create a UIScale object that plays a 1-second "pulse" animation
+        -- whenever a stopwatch is played.
+        local stopwatch = Dec.Stopwatch(1)
+        local uiScale = Dec.New("UIScale", {
+            Scale = stopwatch:Map(function(currentTime)
+                return 1 + (0.5 - currentTime) * 0.1
+            end)
+        })
+
+        -- Play the stopwatch whenever the valueToWatch observable changes.
+        valueToWatch:SubscribeWhileMounted(uiScale, function()
+            stopwatch:Start()
+        end)
+
+        return uiScale
+    end
+    ```
+    :::
+]=]
+function Observable.__index.SubscribeWhileMounted(
+    self: Observable<any>,
+    virtualInstance: Types.VirtualInstance,
+    listener: (value: any) -> (),
+    immediatelyCallListenerOnMount: boolean?
+): ()
+    local unsubscribe: (() -> ())? = nil
+    virtualInstance:OnMount(function()
+        unsubscribe = self:Subscribe(listener, immediatelyCallListenerOnMount)
+    end)
+    virtualInstance:OnUnmount(function()
+        if unsubscribe then
+            unsubscribe()
+        end
+    end)
+end
+
+--[=[
     @method Destroy
     @within Observable
     Destroys the Observable, releasing all its resources and unsubscribing all
