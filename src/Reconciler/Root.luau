@@ -20,24 +20,30 @@ type ReconciledNode = Types.ReconciledNode
 
     ```lua
     -- Create our Dec application
-    local App = Dec.New("ScreenGui", {ResetOnSpawn = false}, {
-        HelloLabel = Dec.New("TextLabel", {
+    local App = Dec.Premade("ScreenGui", {}, {
+        Label = Dec.Premade("TextLabel", {
             Text = "Hello, World!",
-            TestSize = 24,
-            BackgroundTransparency = 1, 
-            TextColor3 = Color3.fromHex("000"),
-            Position = UDim2.fromScale(0.5, 0.5),
-            AnchorPoint = Vector2.new(0.5, 0.5),
         })
     })
 
-    -- Render our Dec application under PlayerGui
+    -- Render our Dec app over a premade ScreenGui template named "App"
     local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    local root = Dec.Root(PlayerGui)
+    local root = Dec.Root(PlayerGui:WaitForChild("App"))
     root.Render(App)
     ```
+    
+    ## Constructor
 
-    *(Constructed via [Dec.Root])*
+    ---
+
+    ### Dec.Root
+    
+    ```lua
+    Dec.Root(hostInstance: Instance) -> Root
+    ```
+
+    Creates a new [Root] instance. The Root is a reference to a real Roblox
+    Instance and can render VirtualInstances using [Root:Render].
 ]=]
 local Root = {}
 Root.__index = {}

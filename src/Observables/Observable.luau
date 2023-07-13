@@ -19,8 +19,31 @@ export type Unsubscribe = Types.Unsubscribe
     An observable will automatically be garbage collected so long as there are
     no listeners are currently subscribed to it, and it is not currently being
     used by a mounted VirtualInstance.
+    
+    ## Constructor
 
-    *(Constructed via [Dec.CustomObservable])*
+    ---
+
+    Observable is just the base class for a number of available subclasses, such
+    as [State], [Stopwatch], [Dict], [Alpha], etc.
+
+    Using Custom Observables should only be done with caution
+
+    ### Dec.CustomObservable
+
+    ```ts
+    Dec.CustomObservable<T>(
+        getCurrent: () -> T,
+        createUpdateStream: (notifyChange: () -> ()) -> (() -> ())
+    ) -> Observable<T>
+    ```
+
+    #### See: [Dec.CustomObservable] for full documentation
+
+    :::caution
+    Read the full [Dec.CustomObservable] documentation before writing Custom
+    Observables; otherwise, opt for other subclasses such as [State].
+    :::
 ]=]
 local Observable = {}
 Observable.__index = {}
@@ -92,8 +115,19 @@ end
     @param mappingFunction (value: T) -> any
     @return Observable<any>
 
-    Creates a new Observable that emits the values from the original Observable
-    mapped by the provided function.
+    Creates a new Observable that derives its value from this Observable, using
+    a mapping function in the domain of this Observable's value
+
+    Example of mapping a number to a currency display value:
+    ```lua
+    local money = Dec.State(3)
+
+    local moneyFormatted = money:Map(function(currentMoney)
+        return string.format("$%0.2f", currentMoney)
+    end)
+
+    print(moneyFormatted:Current()) -- $3.00
+    ```
 ]=]
 function Observable.__index.Map(
     self: Observable<any>,
