@@ -6,7 +6,8 @@ sidebar_position: 1
 
 :::caution
 Dec is currently in early development, and a stable first release has not been
-finished or tested. Stay tuned!
+finished or tested. DO NOT use Dec in production-bound projects until v1.0.0
+is released!
 :::
 
 Welcome to Dec! Dec enables you to write responsive UI for Roblox experiences

@@ -2,9 +2,13 @@
 sidebar_position: 8
 ---
 
-# Conditional Rendering
+# Creating/Destroying Children
 
-## Outline
+:::warning
+Tutorials are still in progress, and will be released section-by-section
+:::
+
+## Section Outline:
 - Writing subcomponents
 - Mapping Observables to VirtualInstances
 - Avoiding Reconciles - Passing State into subcomponent props

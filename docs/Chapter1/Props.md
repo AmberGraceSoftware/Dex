@@ -4,7 +4,11 @@ sidebar_position: 7
 
 # Passing in Props
 
-## Outline:
+:::warning
+Tutorials are still in progress, and will be released section-by-section
+:::
+
+## Section Outline:
 - Writing Re-usable components
 - Passing Customization Values through Props
 - Passing State through Props

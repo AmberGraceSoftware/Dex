@@ -1,10 +1,15 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 ---
 
-# Organizing your Application Code
+# Structuring your Application
 
-## Outline
+:::warning
+Tutorials are still in progress, and will be released section-by-section
+:::
+
+## Section Outline:
+- Passing Callbacks through Props
 - Scoping out responsibility of Views - Separation of Concerns
 - Nesting State Modules
 - Nesting Type Modules

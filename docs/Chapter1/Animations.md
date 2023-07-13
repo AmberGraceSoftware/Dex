@@ -1,10 +1,14 @@
 ---
-sidebar_position: 9
+sidebar_position: 10
 ---
 
-# Animating your Components
+# Animating UI Components
 
-# Outline
+:::warning
+Tutorials are still in progress, and will be released section-by-section
+:::
+
+## Section Outline:
 - Stopwatches and Timers
 - EasedValue
 - Springs
