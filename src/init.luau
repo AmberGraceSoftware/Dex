@@ -81,7 +81,7 @@ Dec.Clone = VirtualInstanceCreators.Clone
 Dec.Premade = VirtualInstanceCreators.Premade
 
 -- Root-Level Reconciler API
-Dec.CreateRoot = Root.new
+Dec.Root = Root.new
 
 -- Symbols
 Dec.Nil = Symbols.Nil

@@ -2,15 +2,50 @@
     --ifm-background-color: #f2f6fc;
     --ifm-background-surface-color: #ebeff6;
     --ifm-color-content: #374966;
+    --decdocs-moonwave-member-background-color: #ebeff6;
+    --decdocs-codeblock-background: #334460;
+    --decdocs-comment-color: #74909c;
+    --ifm-font-size-base: 105%;
 }
 
 html[data-theme='dark'] {
-    --ifm-background-color: #343b41;
-    --ifm-background-surface-color: #1a252c;
+    --ifm-background-color: #1b2b38;
+    --ifm-background-surface-color: #15232c;
     --ifm-color-info-contrast-background: rgb(25, 60, 71);
     --ifm-color-info-contrast-foreground: rgb(238, 249, 253);
-    --ifm-color-warning-contrast-background: rgb(121, 87, 10);
+    --ifm-color-warning-contrast-background: rgb(109, 94, 43);
     --ifm-color-warning-contrast-foreground: rgb(255, 248, 230);
     --ifm-color-danger-contrast-background: rgb(105, 44, 46);
     --ifm-color-danger-contrast-foreground: rgb(255, 235, 236);
+    --decdocs-moonwave-member-background-color: #263144;
+    --decdocs-codeblock-background: #263144;
+    --decdocs-comment-color: #637d89;
+}
+
+.footer--dark {
+    --ifm-footer-background-color: #151d2c;
+}
+
+pre[class*="language-"][class*="language-"][class*="language-"] {
+    background: var(--decdocs-codeblock-background);
+    -webkit-font-smoothing: auto;
+    font-size: 16px;
+    line-height: 24px;
+}
+div[class="memberString_node_modules-docusaurus-plugin-moonwave-src-components-styles-module"]{
+    background: var(--decdocs-moonwave-member-background-color);
+    margin: 0.5rem;
+    padding: 1.5rem;
+    -webkit-font-smoothing: auto;
+    font-size: 20px;
+    line-height: 30px;
+}
+span[class*="token"] {
+    color: rgb(255 255 255);
+}
+.token.comment {
+    color: var(--decdocs-comment-color) !important;
+}
+span[style] {
+    font-style: normal !important;
 }

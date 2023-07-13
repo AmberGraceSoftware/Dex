@@ -1,8 +1,13 @@
+order = ["Introduction"]
+
+
 [[classOrder]]
+collapsed = false
 classes = ["Dec", "VirtualInstance", "Root"]
 
 [[classOrder]]
 section = "Observables"
+collapsed = false
 classes = ["Observable", "State", "Record", "Dict", "Stopwatch", "Timer",
     "Alpha", "Eased", "Spring", "AngleSpring", "IntSpring"]
 
@@ -23,3 +28,17 @@ src = "logo.svg"
 [home]
 enabled = true
 includeReadme = false
+
+
+[[home.features]]
+title = "Feature 1"
+description = "This is a feature"
+image = "logo.svg"
+
+[[home.features]]
+title = "Feature 2"
+description = "This is also a feature"
+image = "logo.svg"
+
+[footer]
+copyright = "Written by Amber Grace. Built with Moonwave and Docusaurus"

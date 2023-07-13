@@ -17,7 +17,7 @@ return function()
     end)
 
     it("returns the constructor type for Premade VirtualInstance", function()
-        local virtualInstance = VirtualInstanceCreators.Premade()
+        local virtualInstance = VirtualInstanceCreators.Premade("Instance")
         local constructorType = GetVirtualInstanceType(virtualInstance)
         expect(constructorType).to.equal("Premade")
     end)

@@ -51,12 +51,12 @@ return function()
 
         local root = Root.new(hostInstance)
 
-        local virtualInstance = Dec.Premade({
+        local virtualInstance = Dec.Premade("Part", {
             Transparency = 0.5
         })
         expect(root._reconciled).to.equal(nil)
 
-        local App = Dec.Premade({}, {
+        local App = Dec.Premade("Folder", {}, {
             ExistingInstance = virtualInstance
         })
         local reconciledNode = root:Render(App)

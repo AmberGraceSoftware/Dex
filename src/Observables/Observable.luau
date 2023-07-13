@@ -113,9 +113,9 @@ end
     @return () -> ()
 
     Subscribes to changes in the Observable. Returns a function that, when
-    called, will unsubscribe the callback from the Observable updates. If `true`
-    is provided as a second argument, will also call the callback once
-    immediately with the current value.
+    called, will unsubscribe the listener from the Observable's changes. If
+    `true` is provided as a second argument, will also call the listener once
+    immediately with the current value of the Observable.
 
     :::caution
     Make sure you handle the returned "Unsubscribe" function whenever a calling
@@ -127,8 +127,8 @@ end
     -- A new Observable can always be garbage collected if dereferenced
     local coins = createCoinsObserver()
 
-    -- However, once we subscribe to it, it will stick around in memory until
-    -- we call Unsubscribe!
+    -- However, once we subscribe to it, it will stick
+    -- around in memory until we call Unsubscribe!
     local unsubscribe = coins:Subscribe(function(value)
         print("Coins is", value)
     end, true)
@@ -190,21 +190,81 @@ end
     @param createUpdateStream (notifyChange: () -> ()) -> (() -> ())
     @return Observable<T>
 
+
+    :::warning
+    Consider opting for other Dec constructs (like State) over custom
+    observables.
+    
+    When writing custom Dec observables, Make sure to implement the `getCurrent`
+    and `createUpdateStream` parameters correctly, as failing to do so may
+    cause memory leaks or unresponsive UI.
+    :::
+
     Creates a new Dec Observable object. Observables are used to hold, derive,
     or map state within a Dec application.
 
     The first parameter should be a function that always returns the current
-    state of the observable whenever called. The second parameter is a function
-    which sets up resources to notify its first paramter whenever the current
-    state changes, then returns a "cleanup" function which takes down these
-    resources when the observable is no longer subscribed or mounted.
+    state of the observable whenever called.
 
-    :::warning
-    Make sure the `createUpdateStream` parameter correctly matches the type, and
-    returns a "cleanup" function which fully cleans up all listeners or
-    resources. Observables garbage collect ONLY when all subscribers are
-    unsubscribed, and all VirtualInstances using them are unmounted.
-    :::
+    For example, to observe the value of `workspace.CurrentCamera.ViewportSize`:
+    ```lua
+    local function getCurrent()
+        return workspace.CurrentCamera.ViewportSize
+    end
+    ```
+    
+    The second parameter is a callback which sets up any event handling required
+    to notify whenever the current state changes, and returns a "cleanup"
+    function to close the event handling.
+    
+    For example, to observe the value of `workspace.CurrentCamera.ViewportSize`:
+    ```lua
+    local function createUpdateStream(notifyChange: () -> ())
+        -- Start tracking changes to ViewportSize, and
+        -- forward these to the `notifyChange` callback
+        local connection = workspace.CurrentCamera
+            :GetPropertyChangedSignal("ViewportSize")
+            :Connect(notifyChange)
+
+        -- Return a function which closes the update stream,
+        -- cleaning up our connection.
+        return function()
+            connection:Disconnect()
+        end
+    end
+    ```
+
+    `createUpdateStream` is automatically called by Dec the first time an
+    observable is subscribed (or used by a mounted VirtualInstance), and its
+    return function to close the update stream is automatically called when the
+    Observable's last subscriber is unsubscribed and/or the last VirtualInstance
+    utilizing it is unmounted.
+
+    Putting it all together, we can create a custom observable which tracks the
+    ViewportSize of the player's camera:
+    ```lua
+    local function getCurrent()
+        return workspace.CurrentCamera.ViewportSize
+    end
+    local function createUpdateStream(notifyChange: () -> ())
+        local connection = workspace.CurrentCamera
+            :GetPropertyChangedSignal("ViewportSize")
+            :Connect(notifyChange)
+        
+        -- closeUpdateStream:
+        return function()
+            connection:Disconnect()
+        end
+    end
+    local playerViewportSize = Dec.CustomObservable(
+        getCurrent,
+        createUpdateStream
+    )
+    print(playerViewportSize:Current()) -- Output: 1920, 1080
+    ```
+
+    Custom observables may be useful for connecting third party libraries or
+    other systems in your game's codebase to a Dec UI application.
 ]=]
 function Observable.new<T>(
     getCurrent: () -> T,

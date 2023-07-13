@@ -99,7 +99,7 @@ local function ApplyChildrenDirective(
                     finalChildKey = name
                 else
                     local child = chainedVirtualInstance
-                    local parent = VirtualInstanceCreators.Premade()
+                    local parent = VirtualInstanceCreators.Premade("Instance")
                     parent:AddChild(name, child)
                     chainedVirtualInstance = parent
                     for _, parentDirective in parent._directives do

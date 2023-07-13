@@ -61,6 +61,7 @@ end
 --[=[
     @function Premade
     @within Dec
+    @param className string
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
@@ -70,17 +71,18 @@ end
     rather than creating or destroying new instanvces.
     
     The instance modified will either be the one that is passed into
-    Dec.CreateRoot(), or a child of an existing virtual instance that Dec will
+    Dec.Root(), or a child of an existing virtual instance that Dec will
     automatically wait for (specified via
     `virtualInstance:Child(path, Dec.Premade( . . . ))` ).
 ]=]
 function VirtualInstanceCreators.Premade(
+    className: string,
     props: {[string]: any}?,
     children: ChildMap?
 ): VirtualInstance
     return VirtualInstance.new(
         "Premade",
-        nil,
+        className,
         props,
         children,
         1

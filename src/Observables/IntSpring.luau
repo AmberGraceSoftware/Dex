@@ -84,7 +84,8 @@ end
     @return Observable<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, constrained to the Integer range. Rounds the current position
-    towards the target value, useful for elements like counters. 
+    towards the target value, which is useful for UI components like currency or
+    ammo counters. 
     
     :::caution
     Springs must have at least one Subscriber (or be mounted on at least one

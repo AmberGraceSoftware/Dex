@@ -4,6 +4,7 @@ local EmitTracedError = require(script.Parent.EmitTracedError)
 local IsVirtualInstance = require(ReplicatedStorage.Packages.Dec.Reflection.IsVirtualInstance)
 local Types = require(script.Parent.Parent.Types)
 type VirtualInstance = Types.VirtualInstance
+type VirtualInstanceTrace = Types.VirtualInstanceTrace
 
 local WAIT_FOR_CHILD_TIMEOUT = 30
 local DEFAULT_CREATED_CHILD_NAME = "DecRoot"
@@ -12,6 +13,15 @@ type PseudoPromise = {
     andThen: (callback: (Instance) -> ()) -> (),
     cancel: () -> (),
 }
+
+local function getFirstTrace(virtualInstance: VirtualInstance): VirtualInstanceTrace?
+    for _, directive in virtualInstance._directives do
+        if directive._trace then
+            return directive._trace
+        end
+    end
+    return nil
+end
 
 local function CreateNewReconciledInstance(
     childPath: string?,
@@ -27,21 +37,41 @@ local function CreateNewReconciledInstance(
     }
 end
 
+local function findFirstChildOfNameAndClass(
+    root: Instance,
+    name: string,
+    className: string
+): Instance?
+    local firstNameMatch = root:FindFirstChild(name)
+    if firstNameMatch and firstNameMatch:IsA(className) then
+        return firstNameMatch
+    end
+    for _, child in root:GetChildren() do
+        if child.Name == name and child:IsA(className) then
+            return child
+        end
+    end
+    return nil
+end
+
 local function FindChildReconciledInstance(
     hostInstance: Instance,
-    childPath: string?
+    childClassName: string,
+    childPath: string?,
+    virtualInstance: VirtualInstance
 ): PseudoPromise
     local result: Instance? = nil
     local onResultCallbacks: {(Instance) -> ()} = {}
     local childAddedConn: RBXScriptConnection? = nil
     local cancelled = false
     if childPath then
-        local initialChild = hostInstance:FindFirstChild(childPath)
+        local initialChild = findFirstChildOfNameAndClass(hostInstance,
+            childPath, childClassName)
         if initialChild then
             result = initialChild
         else
             childAddedConn = hostInstance.ChildAdded:Connect(function(child)
-                if child.Name == childPath then
+                if (child.Name == childPath) and child:IsA(childClassName) then
                     result = child
                     for _, cb in onResultCallbacks do
                         task.spawn(cb, child)
@@ -61,6 +91,14 @@ local function FindChildReconciledInstance(
         end
     else
         result = hostInstance
+        if not hostInstance:IsA(childClassName) then
+            EmitTracedError(
+                "Instance ClassName mismatch when mounting root-level " .. 
+                "premade instance of type '" .. childClassName .. "' on host" ..
+                "instance of type '" .. hostInstance.ClassName .. "'",
+                getFirstTrace(virtualInstance)
+            )
+        end
     end
     return {
         andThen = function(callback)
@@ -95,21 +133,8 @@ local function CloneLatentResolvedTemplate(
         end
         local templateNode = templateArg._reconciledNode
         if not templateNode then
-            local firstEncounteredTrace = nil
-            for _, directive in virtualInstance._directives do
-                if directive._trace then
-                    firstEncounteredTrace = directive._trace
-                    break
-                end
-            end
-            if not firstEncounteredTrace then
-                for _, directive in templateArg._directives do
-                    if directive._trace then
-                        firstEncounteredTrace = directive._trace
-                        break
-                    end
-                end
-            end
+            local firstEncounteredTrace = getFirstTrace(virtualInstance)
+                or getFirstTrace(templateArg)
             EmitTracedError(
                 "Error when mounting cloned VirtualInstance: The " .. 
                 "provided template must be an Instance, or a " .. 
@@ -230,7 +255,12 @@ local function CreateOrFindReconciledInstance(
     elseif virtualInstance._constructorType == "Clone" then
         return CloneTemplateReconciledInstance(childPath, virtualInstance)
     else
-        return FindChildReconciledInstance(hostInstance, childPath)
+        return FindChildReconciledInstance(
+            hostInstance,
+            virtualInstance._constructorTypeArgument,
+            childPath,
+            virtualInstance
+        )
     end
 end
 return CreateOrFindReconciledInstance
