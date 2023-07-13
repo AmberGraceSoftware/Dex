@@ -19,7 +19,7 @@ Now that Dec is installed, let's try it out with a plussed-up rainbow
 <br/>
 <br/>
 
-First, make sure the Dec package is [properly installed](../Installation.md) and
+First, make sure the Dec package is [properly installed](Installation.md) and
 located in `game.ReplicatedStorage.Packages.Dec`
 
 Next, in Roblox Studio, create a LocalScript under
