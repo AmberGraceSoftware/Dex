@@ -68,7 +68,26 @@ local typeToSpringStepMethod = {
     Observable object which simulates critically damped spring easing towards
     another observable's value, clamping its output to the range `[-pi, pi]`.
 
-    *(Constructed via [Dec.AngleSpring])*
+    ## Constructor
+
+    ---
+
+    ### Dec.AngleSpring
+    ```ts
+    Dec.AngleSpring<T>(
+        target: Observable<T>
+        angularFrequency: number?
+    ) -> AngleSpring<T>
+    ```
+    
+    Creates an easing observable that simulates the behavior of a critically
+    damped spring, wrapped around the range [-pi, pi]. The spring simulates in
+    realtime until the target value is reached.
+
+    :::caution
+    AngleSpring must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 ]=]
 local AngleSpring = {}
 -- Inherits EasedObject metamethods

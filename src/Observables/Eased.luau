@@ -63,7 +63,25 @@ end
     Useful for tween animations where the input state changes infrequently, such
     as menu transitions.
 
-    *(Constructed via [Dec.Eased])*
+    ## Constructor
+
+    ---
+
+    ### Dec.Eased
+    ```ts
+    Dec.Eased<T>(
+        target: Observable<T>
+        info: TweenInfo
+    ) -> Observable<T>
+    ```
+
+    Creates an Observable that eases in realtime every time the input Observable
+    changes its value, based on the TweenInfo provided.
+    
+    :::caution
+    Eased must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 ]=]
 local Eased = {}
 -- Inherits EasedObject metamethods

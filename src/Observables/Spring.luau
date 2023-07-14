@@ -126,7 +126,26 @@ local typeToSpringStepMethod = {
     Observable object which simulates critically damped spring easing towards
     another observable's current value
 
-    *(Constructed via [Dec.Spring])*
+    ## Constructor
+
+    ---
+
+    ### Dec.Spring
+    ```ts
+    Dec.Spring<T>(
+        target: Observable<T>
+        angularFrequency: number?
+    ) -> Spring<T>
+    ```
+
+    Creates an easing observable that simulates the behavior of a critically
+    damped spring. The spring simulates in realtime until the target value is
+    reached.
+
+    :::caution
+    Spring must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 ]=]
 local Spring = {}
 -- Inherits EasedObject metamethods

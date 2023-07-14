@@ -51,7 +51,27 @@ type IntSpring<T> = Types.IntSpring<T>
 
     Useful for UI components like currency counters.
 
-    *(Constructed via [Dec.IntSpring])*
+    ## Constructor
+
+    ---
+
+    ### Dec.IntSpring
+    ```ts
+    Dec.IntSpring<T>(
+        target: Observable<T>
+        angularFrequency: number?
+    ) -> IntSpring<T>
+    ```
+    
+    Creates an easing observable that simulates the behavior of a critically
+    damped spring, constrained to the Integer range. Rounds the current position
+    towards the target value, which is useful for UI components like currency or
+    ammo counters. 
+
+    :::caution
+    IntSpring must have at least one Subscriber (or be mounted on at least one
+    VirtualInstance) to simulate in realtime!
+    :::
 ]=]
 local IntSpring = {}
 -- Inherits EasedObject metamethods

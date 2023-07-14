@@ -24,7 +24,20 @@ type Observable<T> = Types.Observable<T>
     Includes utility methods for mapping this "elapsed time" value into more
     complex animationed sequences.
 
-    *(Constructed via [Dec.Stopwatch])*
+    ## Constructor
+    
+    ---
+    
+    ### Dec.Stopwatch
+    ```lua
+    Dec.Stopwatch(maxDuration number?) -> Stopwatch
+    ```
+
+    Creates a new [Stopwatch] Observable, the value of which increases in realtime
+    after [Stopwatch:Start] is called.
+
+    Stopwatches can safely be garbage collected while dereferenced, unsubscribed,
+    and unused by a VirtualInstance.
 ]=]
 local Stopwatch = {}
 -- Inherits Observable metamethods

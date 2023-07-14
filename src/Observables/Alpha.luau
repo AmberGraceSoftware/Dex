@@ -18,7 +18,22 @@ type Observable<T> = Types.Observable<T>
     
     Contains helper functions for makinganimations and state transitions.
 
-    *(Constructed via [Dec.Alpha])*
+    ## Constructor
+    
+    ---
+
+    ### Dec.Alpha
+    ```lua
+    Dec.Alpha(
+        source: Observable<number>,
+        sourceRangeMin: number,
+        sourceRangeMax: number
+    ) -> Alpha
+    ```
+
+    Creates a new [Alpha] Observable object, which maps the current value of the
+    source observable to the range [0, 1] based on where the source value falls
+    between sourceRangeMin and sourceRangeMax
 ]=]
 local Alpha = {}
 -- Inherits Observable metamethods
