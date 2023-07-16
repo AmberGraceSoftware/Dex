@@ -1,8 +1,13 @@
 [package]
 name = "ambergracesoftware/dec"
-version = "0.1.0"
+description = "A libary for building Roblox user interfaces"
+version = "0.1.1"
+authors = [ "Amber Grace" ]
+license = "MIT"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
+
+exclude = ["aftman.toml"]
 
 [dev-dependencies]
 TestEZ = "roblox/testez@0.4.1"

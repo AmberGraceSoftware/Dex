@@ -18,9 +18,14 @@ jobs:
           cp README.md temp/src
           cp LICENSE temp/src
           cp default.project.json temp/src
-          cd temp/src
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
+      - name: Change to temp directory
+        run: |
+          rm wally.toml
+          rm aftman.toml
+          rm default.project.json
+          cd temp/src
       - name: Log in to wally
         env:
           WALLY_AUTH: ${{ secrets.WALLY_AUTH }}
