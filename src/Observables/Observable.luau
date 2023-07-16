@@ -19,8 +19,31 @@ export type Unsubscribe = Types.Unsubscribe
     An observable will automatically be garbage collected so long as there are
     no listeners are currently subscribed to it, and it is not currently being
     used by a mounted VirtualInstance.
+    
+    ## Constructor
 
-    *(Constructed via [Dec.CustomObservable])*
+    ---
+
+    Observable is just the base class for a number of available subclasses, such
+    as [State], [Stopwatch], [Dict], [Alpha], etc.
+
+    Using Custom Observables should only be done with caution
+
+    ### Dec.CustomObservable
+
+    ```ts
+    Dec.CustomObservable<T>(
+        getCurrent: () -> T,
+        createUpdateStream: (notifyChange: () -> ()) -> (() -> ())
+    ) -> Observable<T>
+    ```
+
+    #### See: [Dec.CustomObservable] for full documentation
+
+    :::caution
+    Read the full [Dec.CustomObservable] documentation before writing Custom
+    Observables; otherwise, opt for other subclasses such as [State].
+    :::
 ]=]
 local Observable = {}
 Observable.__index = {}
@@ -92,8 +115,19 @@ end
     @param mappingFunction (value: T) -> any
     @return Observable<any>
 
-    Creates a new Observable that emits the values from the original Observable
-    mapped by the provided function.
+    Creates a new Observable that derives its value from this Observable, using
+    a mapping function in the domain of this Observable's value
+
+    Example of mapping a number to a currency display value:
+    ```lua
+    local money = Dec.State(3)
+
+    local moneyFormatted = money:Map(function(currentMoney)
+        return string.format("$%0.2f", currentMoney)
+    end)
+
+    print(moneyFormatted:Current()) -- $3.00
+    ```
 ]=]
 function Observable.__index.Map(
     self: Observable<any>,
@@ -166,6 +200,62 @@ function Observable.__index.Subscribe(
             stopObservingIdempotent(self)
         end
     end
+end
+
+--[=[
+    @method SubscribeWhileMounted
+    @within Observable
+    @param virtualInstance: VirtualInstance
+    @param listener (value: T) -> ()
+    @param immediatelyCallListenerOnMount boolean?
+
+    Subscribes a custom listener to the observable's value while a
+    VirtualInstance is mounted, and automatically unsubscribes the listener when
+    the VirtualInstance unmounts.
+
+    :::tip
+    SubscribeWhileMounted is much safer than calling [Observable:Subscribe]
+    directly, as you do not need to handle an unsubscribe function manually to
+    prevent memory leaks.
+
+    You can use this function to trigger side effects such as animations
+    whenever an observable value changes:
+    ```lua
+    local function PulseAnimation(valueToWatch: Dec.Observable)
+        -- Create a UIScale object that plays a 1-second "pulse" animation
+        -- whenever a stopwatch is played.
+        local stopwatch = Dec.Stopwatch(1)
+        local uiScale = Dec.New("UIScale", {
+            Scale = stopwatch:Map(function(currentTime)
+                return 1 + (0.5 - currentTime) * 0.1
+            end)
+        })
+
+        -- Play the stopwatch whenever the valueToWatch observable changes.
+        valueToWatch:SubscribeWhileMounted(uiScale, function()
+            stopwatch:Start()
+        end)
+
+        return uiScale
+    end
+    ```
+    :::
+]=]
+function Observable.__index.SubscribeWhileMounted(
+    self: Observable<any>,
+    virtualInstance: Types.VirtualInstance,
+    listener: (value: any) -> (),
+    immediatelyCallListenerOnMount: boolean?
+): ()
+    local unsubscribe: (() -> ())? = nil
+    virtualInstance:OnMount(function()
+        unsubscribe = self:Subscribe(listener, immediatelyCallListenerOnMount)
+    end)
+    virtualInstance:OnUnmount(function()
+        if unsubscribe then
+            unsubscribe()
+        end
+    end)
 end
 
 --[=[

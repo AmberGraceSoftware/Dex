@@ -24,7 +24,20 @@ type Observable<T> = Types.Observable<T>
     Includes utility methods for mapping this "remaining time" value into more
     complex animationed sequences.
 
-    *(Constructed via [Dec.Timer])*
+    ## Constructor
+    
+    ---
+    
+    ### Dec.Timer
+    ```lua
+    Dec.Timer(duration number) -> Tmier
+    ```
+
+    Creates a new [Timer] Observable, the value of which decreases in realtime
+    after [Timer:Start] is called.
+
+    Timers can safely be garbage collected while dereferenced, unsubscribed,
+    and unused by a VirtualInstance.
 ]=]
 local Timer = {}
 -- Inherits Timer metamethods

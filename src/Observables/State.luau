@@ -11,10 +11,39 @@ export type State<T> = Types.State<T>
 
     #### Inherits [Observable]
 
-    Writeable observable which holds a value which can be updated via
+    Writeable observable which holds a value which can be re-assigned via
     [State:Set]
 
-    *(Constructed via [Dec.State])*
+    ## Constructor
+
+    ---
+
+    ### Dec.State
+
+    ```ts
+    Dec.State<T>(initialValue: T) -> State<T>
+    ```
+
+    Creates a new [State] observable with the given initial value,
+    matching the type of the value passed in.
+
+    If you pass in `nil` or table with optional values as the inital value, you
+    should give the initial value a type annotation:
+    ```lua
+    local notification = Dec.State(nil :: {
+        id: string,
+        message: string,
+    }?)
+
+    -- . . . OK
+    notification:Set({id = "Foo", message = "Fighters"})
+
+    -- . . . Also OK
+    notification:Set(nil)
+
+    -- Will always be of type `{id: string, message: string}?`
+    local currentNotification = notification:Current()
+    ```
 ]=]
 local State = {}
 -- Inherits Observable metamethods

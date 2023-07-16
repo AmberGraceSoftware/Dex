@@ -16,7 +16,7 @@ gitSourceBranch = "main"
 [docusaurus]
 url = "https://dec.ambergracesoftware.com"
 baseUrl = "/"
-tagline = "A reactive UI library for Roblox"
+tagline = "A Library for Building Roblox User Interfaces"
 
 [navbar]
 title = ""
@@ -28,17 +28,6 @@ src = "logo.svg"
 [home]
 enabled = true
 includeReadme = false
-
-
-[[home.features]]
-title = "Feature 1"
-description = "This is a feature"
-image = "logo.svg"
-
-[[home.features]]
-title = "Feature 2"
-description = "This is also a feature"
-image = "logo.svg"
 
 [footer]
 copyright = "Written by Amber Grace. Built with Moonwave and Docusaurus"

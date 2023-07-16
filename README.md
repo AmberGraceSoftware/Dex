@@ -1,63 +1,75 @@
 # Dec
 
 <p align="center">
-      <img src="logo/Logo256.png" />
-      <br/>
-      <br/>
-      Dec is a reactive UI library for <a href="https://www.roblox.com/home">Roblox</a>.
-      <br/>
-      <br/>
-      It provides a familiar, declarative syntax for building scalable UI components for any project's needs.
+    <img src="logo/Logo256.png" />
+    <br/>
+    <br/>
+    Dec is a library for building Roblox User Interfaces.
+    <br/>
+    <br/>
 </p>
 
+Dec provides tools to prototype animated, responsive UI Components, and
+manage state across an entire Roblox project. Dec Components can be written
+entirely in Luau, or use premade assets built using Studio's UI editor.
 
-| DISCLAIMER: Dec is a work in progress, and does NOT currently have a finalized release, API, or testing. Please be patient as a beta release is still being developed! |
+<br/>
+
+| DISCLAIMER: Dec is a work in progress, and does NOT currently have a full release! Please do not use Dec in production-bound code until v1.0.0 has been released. |
 | --- |
 
-## Features
+<br/>
 
-Dec started from a simple concept of ways to improve upon its predecessor, [Pract](https://github.com/AmberGraceRBLX/Pract), while using the most loved features of Elttob's [Fusion](https://elttob.uk/Fusion) with a cleaned up and much safer syntax for observables.
+# Documentation
 
-One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to creat/destroy/modify instances only when and where it is needed, leading to greater performance gains over [Roact](https://roblox.github.io/roact). Dec also has built-in support for object pooling, animation, and more with a very simple and familiar syntax.
-One of Dec's core features is its unique Virtual Instance reconciler, similar to [React's Virtual DOM](https://react.dev), which makes Dec a declarative UI framework while providing first class support and familiar syntax that you would expect from standalone Roblox UI development. Like Fusion, Dec uses observables to creat/destroy/modify instances only when and where it is needed, leading to greater performance gains over [Roact](https://roblox.github.io/roact).
+Please see the [Documentation Site](https://dec.ambergracesoftware.com) for
+tutorials, a full API reference, and more!
 
-Dec also first-class support for animation and other utilities, making it very easy to rapidly prototype a UI component!
+<br/>
 
+# Installation
 
-## Project Roadmap
-- [X] API, concepts, and types defined
-- [X] Basic Public API Skeleton Structure
-- [X] Reconciler API Skeleton Structure
-- [X] CI Workflows
-- [X] VirtualInstance API Implementation
-- [X] State and Observables API Implementation
-- [X] Reconciler Full Implementation
-- [X] Unit Test Skeleton Structure
-- [X] Initial test coverage of Most Modules
-- [X] Math operator overloads for scalar/vector/other types of observables
-- [X] Finalize `Dec.Dict` and `Dec.Record` observable objects
-- [X] Create a logo & clean up readme
-- [X] Deploy a Documentation Site + workflow using Moonwave (In Progress)
-- [ ] First argument to `Dec.Premade` is a ClassName for intuition, consistency, and production safety
-- [ ] Add usage guides to docs site
-- [ ] `Dec.Tween`, which uses the same syntax as `TweenService:Create()` with a `:Replace` function that changes all parameters of the tween in a very familiar syntax. Limited to a fixed set of properties, should consider other observable types for animation instead in some cases.
-- [ ] Add reverse/repeat count parameters to `Alpha:Curve()` as well as reverse/repeat count/delay time/tween time to `BaseTimer:CurvedAlpha()`
-- [ ] More extensive Reconciler unit testing and examples
-- [ ] First Stable Release (In Progress)
-- [ ] Word-of-mouth / twitter marketing (so to speak), getting the library out there!
-- [ ] Full Fusion and Roact interop (Support for Fusion StateObjects interop done!)
-- [ ] Rx interop
+Dec can either be imported into your Roblox project, or installed via Wally.
 
-## Long term potential stretch goals
-- [ ] Create a simple Todo List Demo
-- [ ] Create a simple open-source demo game using Dec?
-- [ ] Create a simple open-source demo plugin using Dec?
-- [ ] Video tutorials?
-- [ ] (SUPER strech) Transpiled `DSX` declarative language, which is a superset of luau simliar to TSX/JSX
+#### Roblox Studio Installation
 
+To add Dec to your Roblox Studio project, download the
+[latest `.rbxmx` release from Github](https://github.com/AmberGraceSoftware/Dec/releases/latest),
+then drag the model file into Roblox Studio. Place the Dec library somewhere in
+ReplicatedStorage.
 
+#### Rojo + Wally Installation
 
-## Contributing
+To install Dec using Wally, first install [Rojo](https://rojo.space/docs/v7/)
+and [Wally](https://wally.run/install), then search for the last published Dec
+release on the [Wally website](https://wally.run/package/ambergracesoftware/dec),
+or run the following command to get the latest version:
+```sh
+$ wally search ambergracesoftware/dec
+```
+To add Dec to your project, add an entry under the `[dependencies]` section of
+your project's `wally.toml` file, replacing `X.Y.Z` with Dec's latest version
+number:
+```toml
+Dec = "ambergracesoftware/dec@X.Y.Z"
+```
+
+Finally, run
+```sh
+$ wally install
+```
+On the command line to get have the latest install added to your project's
+Packages folder.
+
+It is also recommended you run the
+[wally-package-types](https://crates.io/crates/wally-package-types) tool after
+installing or updating Dec, as well as the
+[Luau LSP](https://github.com/JohnnyMorganz/luau-lsp) in order to utilize Dec
+with Luau's type safety features.
+
+<br/>
+
+# Contributing
 
 To contribute to Dec's development, you may fork this repository.
 

@@ -16,8 +16,8 @@ local VirtualInstanceCreators = {}
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
 
-    Creates a new VirtualInstance that represents a newly-created Roblox
-    Instance (via Instance.new(className)).
+    Creates a new [VirtualInstance] that represents a newly-created Roblox
+    Instance (via `Instance.new(className)`).
 ]=]
 function VirtualInstanceCreators.New(
     className: string,
@@ -41,8 +41,8 @@ end
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
 
-    Creates a new VirtualInstance that represents a cloned Roblox Instance
-    from a given template instance (via template:Clone()).
+    Creates a new [VirtualInstance] that represents a cloned Roblox Instance
+    from a given template instance (via `template:Clone()`).
 ]=]
 function VirtualInstanceCreators.Clone(
     template: Instance | VirtualInstance,
@@ -67,13 +67,10 @@ end
     @return VirtualInstance
 
     Creates a new VirtualInstance that represents a pre-existing Roblox Instance
-    to be decorated. This will modify the properties of an existing instance
-    rather than creating or destroying new instanvces.
-    
-    The instance modified will either be the one that is passed into
-    Dec.Root(), or a child of an existing virtual instance that Dec will
-    automatically wait for (specified via
-    `virtualInstance:Child(path, Dec.Premade( . . . ))` ).
+    to be modified by Dec.
+
+    If passed into the the Render function for a [Dec.Root] component, the root
+    instance will be used used.
 ]=]
 function VirtualInstanceCreators.Premade(
     className: string,

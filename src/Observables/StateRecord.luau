@@ -20,7 +20,18 @@ type Unsubscribe = Types.Unsubscribe
     Contains utility functions for observing and updating specific keys within
     this table, as well as cheaply oobserving specific keys within this table.
 
-    *(Constructed via [Dec.Record])*
+    ## Constructor
+
+    ---
+
+    ### Dec.Record
+    ```ts
+    Dec.Record<T>(
+        initialValue T
+    ) -> Record<T>
+    ```
+
+    Creates a new [Record] observable with the given initial value.
 ]=]
 
 --[=[
@@ -35,7 +46,18 @@ type Unsubscribe = Types.Unsubscribe
     Contains utility functions for observing and updating specific keys within
     this table, as well as cheaply observing specific keys within this table.
 
-    *(Constructed via [Dec.Dict])*
+    ## Constructor
+
+    ---
+
+    ### Dec.Dict
+    ```ts
+    Dec.Dict<K, V>(
+        initialValue {[K]: V}
+    ) -> Dict<K, V>
+    ```
+
+    Creates a new [Dict] observable with the given initial value.
 ]=]
 local StateRecord = {}
 -- Inherits Observable metamethods
@@ -134,21 +156,20 @@ function StateRecord.__index.Current(
     end
 end
 
---[[
+--[=[
     @method Replace
     @within Record
     @param newRecord T
 
     Replaces entire record with a new value
-]]
-
---[[
+]=]
+--[=[
     @method Replace
     @within Dict
     @param newDict {[K]: V}
 
     Replaces the entire dictionary with a new value
-]]
+]=]
 function StateRecord.__index.Replace(
     self: StateRecord<any>,
     newRecord: any
@@ -199,6 +220,29 @@ end
 
     The returned observable is also a State object, and setting values in this
     state will set values in the original Record object.
+
+    Example:
+    ```lua
+    local record = Dec.Record({
+        coins = 0,
+        items = {},
+    })
+
+    local coins = record:Index("coins") :: Dec.State<number>
+    local items = record:Index("items") :: Dec.State<number>
+
+    -- . . . Updates in stateRecord will be reflected in coins/items:
+    record:Replace({
+        coins = 100,
+        items = {"Sword"},
+    })
+    print(coins:Current()) -- 100
+    print(items:Current()[1]) -- "Sword"
+
+    -- . . . And vice versa!
+    coins:Set(42)
+    print(record:Current().coins) -- 42
+    ```
 ]=]
 --[=[
     @method Index
@@ -212,6 +256,23 @@ end
 
     The returned observable is also a State object, and setting values in this
     state will set values in the original Dict object.
+
+    Example:
+    ```lua
+    local playerCoinsDict = Dec.Dict({} :: {[Player]: number})
+    
+    -- Use Index to observe states at a particular key. 
+    local player = game.Players.LocalPlayer
+    local ourCoins = playerCoinsDict:Index(player)
+
+    -- . . . Updates in dict will be reflected in ourCoins:
+    playerCoinsDict:Replace({ [player] = 100 })
+    print(coins:Current()) -- 100
+
+    -- . . . And vice versa!
+    coins:Set(42)
+    print(playerCoinsDict:Current()[player]) -- 42
+    ```
 ]=]
 function StateRecord.__index.Index(
     self: StateRecord<any>,

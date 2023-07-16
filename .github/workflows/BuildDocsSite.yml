@@ -28,5 +28,5 @@ jobs:
           node-version: '18'
       - name: Install Moonwave
         run: npm i -g moonwave
-      - name: Build and docs site
+      - name: Build docs site
         run: moonwave build

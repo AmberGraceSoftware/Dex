@@ -69,7 +69,50 @@ end
     VirtualInstances are "Mounted" by Dec's reconciler engine,
     creating/destoying/modifying these real instances automatically as needed.
 
-    *(Constructed via [Dec.New], [Dec.Premade], and [Dec.Clone])*
+    ## Constructors
+    ---
+
+    ### Dec.New
+    ```lua
+    Dec.New(
+        className: string,
+        props: {[string]: any}?,
+        children: {[any]: CanBeObservable<VirtualInstance?>}
+    ) -> VirtualInstance
+    ```
+
+    Creates a new [VirtualInstance] that represents a newly-created Roblox
+    Instance (via `Instance.new(className)`).
+
+    ---
+
+    ### Dec.Clone
+    ```lua
+    Dec.Clone(
+        template: Instance,
+        props: {[string]: any}?,
+        children: {[any]: CanBeObservable<VirtualInstance?>}
+    ) -> VirtualInstance
+    ```
+    Creates a new [VirtualInstance] that represents a cloned Roblox Instance
+    from a given template instance (via `template:Clone()`).
+
+    ---
+
+    ### Dec.Premade
+    ```lua
+    Dec.Premade(
+        className: stirng,
+        props: {[string]: any}?,
+        children: {[any]: CanBeObservable<VirtualInstance?>}
+    ) -> VirtualInstance
+    ```
+
+    Creates a new VirtualInstance that represents a pre-existing Roblox Instance
+    to be modified by Dec.
+
+    If passed into the the Render function for a [Dec.Root] component, the root
+    instance will be used used.
 ]=]
 local VirtualInstance = {}
 VirtualInstance.__index = {}
