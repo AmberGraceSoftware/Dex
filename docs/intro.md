@@ -4,29 +4,28 @@ sidebar_position: 1
 
 # Introduction
 
+#### Dec is a library for building User Interfaces for Roblox projects. It's easy to write Dec components, small modules of code responsible for specific portions of UI, which can work together to render a full experience or plugin UI at any scale
+
 :::caution
 Dec is currently in early development, and a stable first release has not been
 finished or tested. DO NOT use Dec in production-bound projects until v1.0.0
 is released!
-:::
+:::.
 
-Welcome to Dec! Dec enables you to write responsive UI for Roblox experiences
-and plugins.
 
-With Dec, you can write your UI applications entirely in code, or utilize
-pre-made assets designed in Roblox Studio's UI editor.
-
-## Why Dec?
-
-Dec has many advantages over both standalone UI or other UI frameworks. Notably,
-it:
-- Makes it easy to rapidly prototype UI and adjust code when requirements change
-- Makes it effortless to animate and write UI transitions to meet your vision
-- Makes it easy to scale performant, complex menus and interactions to match
-a project's needs
-- Offers a robust repository of open source utilities that lend themselves
-to well-understood code, with a detailed documentation to refer to at all times
-as the only onboarding cost for new developers
-- Offers first class support both for using pre-designed templates in Roblox
-Studio, as well as writing components entirely in code depending on project
-preferences and needs.
+<span style={{"display": "flex", "align-items": "center"}}>
+    <i>To install Dec in your project:&nbsp;&nbsp;</i>
+    <div class="cta-button">
+        <a class="button button--primary button-lg" href="../api/Dec">
+            Installation → 
+        </a>
+    </div>
+</span>
+<span style={{"display": "flex", "align-items": "center"}}>
+    <i>To view Dec's API:&nbsp;&nbsp;</i>
+    <div class="cta-button">
+        <a class="button button--primary button-lg" href="../api/Dec">
+            API Reference → 
+        </a>
+    </div>
+</span>

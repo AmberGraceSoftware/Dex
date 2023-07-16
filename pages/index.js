@@ -3,7 +3,6 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import clsx from "clsx";
 import React from "react";
-import "./home.css";
 import styles from "./index.module.css";
 
 function Header() {
@@ -11,21 +10,31 @@ function Header() {
   return (
     <header className={clsx("hero", styles.heroBanner)}>
       <div className="container">
-        <h1 className="hero__title">
-          <img
-            src={siteConfig.baseUrl + "logo.svg"}
-            className="bigLogo"
-            alt="Moonwave"
-          />
-        </h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro"
-          >
-            Get Started →
-          </Link>
+        <img
+          src={siteConfig.baseUrl + "logo.svg"}
+          className="bigLogo"
+          alt="Dec"
+        />
+        <br/>
+        <br/>
+        <h1>{siteConfig.tagline}</h1>
+        <div className="callToAction">
+          <div className="cta-button" >
+            <Link
+              className="button button--primary button--lg"
+              to="/docs/intro"
+            >
+              Get Started →
+            </Link>
+          </div>
+          <div className="cta-button" >
+            <Link
+              className="button button--secondary button--lg"
+              to="/api/Dec"
+            >
+              API Reference →
+            </Link>
+          </div>
         </div>
       </div>
     </header>
@@ -38,7 +47,7 @@ export default function Home() {
     <Layout title={siteConfig.title} description={tagline}>
       <Header />
       <main>
-        <p className={styles.tagline}>
+        <p className="library-tagline">
           Dec is a UI library which enables Roblox developers to easily bring
           their UI designs to life.
         </p>

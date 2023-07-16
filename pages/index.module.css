@@ -18,12 +18,6 @@
     }
   }
   
-  .buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
   .features {
     display: flex;
     flex-direction: column;
@@ -31,13 +25,6 @@
     padding: 2rem 0;
     width: 100%;
     gap: 4rem;
-  }
-  
-  .tagline {
-    max-width: 800px;
-    font-size: 1.5rem;
-    padding: 0 2rem;
-    margin: 3rem auto;
   }
   
   .feature {
