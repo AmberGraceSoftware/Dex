@@ -9,22 +9,20 @@
     <br/>
 </p>
 
-<p font-size="large">
 Dec provides tools to prototype animated, responsive UI Components, and
 manage state across an entire Roblox project. Dec Components can be written
 entirely in Luau, or use premade assets built using Studio's UI editor.
-</p>
 
 
 | DISCLAIMER: Dec is a work in progress, and does NOT currently have a full release! Please do not use Dec in production-bound code until v1.0.0 has been released. |
 | --- |
 
-## Documentation
+# Documentation
 
 Please see the [Documentation Site](https://dec.ambergracesoftware.com) for
 tutorials, a full API reference, and more!
 
-## Installation
+# Installation
 
 Dec can either be imported into your Roblox project, or installed via Wally.
 
@@ -64,7 +62,7 @@ installing or updating Dec, as well as the
 [Luau LSP](https://github.com/JohnnyMorganz/luau-lsp) in order to utilize Dec
 with Luau's type safety features.
 
-## Contributing
+# Contributing
 
 To contribute to Dec's development, you may fork this repository.
 
