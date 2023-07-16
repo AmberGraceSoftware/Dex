@@ -4,6 +4,12 @@ sidebar_position: 1
 
 # Introduction
 
+:::warning
+Dec is still a work in progress and does not currently have a full release!
+Please avoiding Dec in production-bound projects, as the library is not fully
+tested, and the API may be subject to change
+:::
+
 <p className="highlight-paragraph">
 Dec is a library for building the User Interfaces of Roblox projects. Dec makes
 it simple to write Components—smaller pieces of code responsible for specific

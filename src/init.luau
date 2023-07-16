@@ -45,14 +45,15 @@ export type Nil = Symbol<"Nil">
 --[=[
     @class Dec
 
+    :::warning
+    Dec is still a work in progress and does not currently have a full release!
+    Please avoiding Dec in production-bound projects, as the library is not fully
+    tested, and the API may be subject to change
+    :::
+
     Dec contains a collection of objects for create reactive UI components
     
     For more information, see the [Usage Guide](../docs/intro)
-
-    :::caution
-    Dec is currently in early development, and a stable first release has not
-    been finished or tested..
-    :::
 ]=]
 local Dec = {}
 

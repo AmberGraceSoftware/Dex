@@ -4,7 +4,13 @@ sidebar_position: 2
 
 # Installation
 
-Dec can either be imported into your Roblox project, or installed via Wally.
+:::warning
+Dec is still a work in progress and does not currently have a full release!
+Please avoiding Dec in production-bound projects, as the library is not fully
+tested, and the API may be subject to change
+:::
+
+Dec can be installed using Wally, or imported into your Roblox project directly.
 
 ## Roblox Studio Installation
 
