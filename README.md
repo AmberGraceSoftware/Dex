@@ -13,9 +13,12 @@ Dec provides tools to prototype animated, responsive UI Components, and
 manage state across an entire Roblox project. Dec Components can be written
 entirely in Luau, or use premade assets built using Studio's UI editor.
 
+<br/>
 
 | DISCLAIMER: Dec is a work in progress, and does NOT currently have a full release! Please do not use Dec in production-bound code until v1.0.0 has been released. |
 | --- |
+
+<br/>
 
 # Documentation
 
