@@ -12,6 +12,10 @@
     --ifm-heading-line-height: 1.75;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.125em !important;
+}
+
 html[data-theme='dark'] {
     --ifm-background-color: #1b2b38;
     --ifm-background-surface-color: #15232c;
@@ -40,6 +44,8 @@ pre[class*="language-"][class*="language-"][class*="language-"] {
     -webkit-font-smoothing: auto;
     font-size: 16px;
     line-height: 24px;
+    margin: 0 0 0 ;
+    padding: 0.5rem;
 }
 div[class="memberString_node_modules-docusaurus-plugin-moonwave-src-components-styles-module"]{
     background: var(--decdocs-moonwave-member-background-color);
@@ -71,8 +77,8 @@ span[style] {
     font-size: larger;
 }
 
-.no-top-margin {
-    margin-top: 0 !important;
+.less-top-margin {
+    margin-top: 0.125em !important;
 }
 
 .align-center {
