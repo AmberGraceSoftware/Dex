@@ -9,7 +9,7 @@
     <br/>
 </p>
 
-<p text-size="large">
+<p font-size="large">
 Dec provides tools to prototype animated, responsive UI Components, and
 manage state across an entire Roblox project. Dec Components can be written
 entirely in Luau, or use premade assets built using Studio's UI editor.
