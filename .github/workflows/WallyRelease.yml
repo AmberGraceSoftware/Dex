@@ -20,16 +20,16 @@ jobs:
           cp default.project.json temp/src
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
-      - name: Change to temp directory
+      - name: Clean up temp directory
         run: |
           rm wally.toml
           rm aftman.toml
+          aftman install
           rm default.project.json
-          cd temp/src
-      - name: Log in to wally
+      - name: Push Release to Wally
         env:
           WALLY_AUTH: ${{ secrets.WALLY_AUTH }}
         run: |
+          cd temp/src
           wally login --token $WALLY_AUTH
-      - name: Push Release to Wally
-        run: wally publish
+          wally publish
