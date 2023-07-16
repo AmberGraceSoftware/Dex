@@ -1,7 +1,6 @@
 name: Publish Wally Package
 
 on:
-  release:
   workflow_dispatch:
 
 jobs:
@@ -27,7 +26,5 @@ jobs:
         run: |
           mkdir ~/.wally
           printenv WALLY_AUTH > ~/.wally/auth.toml
-      - name: Remove non-essential files for wally release
-        run: rm aftman.toml
       - name: Push Release to Wally
         run: wally publish
