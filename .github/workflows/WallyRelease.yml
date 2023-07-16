@@ -17,11 +17,14 @@ jobs:
           cp aftman.toml temp/src
           cp README.md temp/src
           cp LICENSE temp/src
+          cp default.project.json temp/src
           cd temp/src
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
-      - name: Push Release to Wally
+      - name: Log in to wally
         env:
           WALLY_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          wally publish --token $WALLY_AUTH_TOKEN
+          wally login --token $WALLY_AUTH_TOKEN
+      - name: Push Release to Wally
+        run: wally publish
