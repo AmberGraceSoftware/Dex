@@ -48,7 +48,7 @@ Roblox experience.
 ---
 
 <h2 className="less-top-margin">
-    Animated "Hello World" Example:
+    Animated "Hello World" Using Dec:
 </h2>
 
 
@@ -77,7 +77,7 @@ local root = Dec.Root(game.Players.LocalPlayer:WaitForChild("PlayerGui"))
 root:Render(App())
 ```
 
-<video className="align-center" width="80%" controls autoplay muted loop>
+<video className="align-center" width="90%" controls autoplay muted loop>
     <source src="/helloRainbow.mov" type="video/mp4" />
     ***Your browser does not support HTML Videos.***
     
@@ -86,6 +86,9 @@ root:Render(App())
     correctly.***
 </video>
 
-<br/>
-
-(Create a LocalScript under `game.StarterPlayer.StarterPlayerScripts` to run)
+<center>
+    <i>
+        (Paste the example code into LocalScript under
+        `game.StarterPlayer.StarterPlayerScripts`)
+    </i>
+</center>
