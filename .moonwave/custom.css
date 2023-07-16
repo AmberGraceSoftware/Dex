@@ -10,6 +10,8 @@
     --dec-footer-color: #1b2b38;
     --doc-sidebar-width: 320px !important;
     --ifm-heading-line-height: 1.75;
+    --ifm-code-border-radius: 0.65rem;
+    --ifm-pre-padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -45,15 +47,22 @@ pre[class*="language-"][class*="language-"][class*="language-"] {
     font-size: 16px;
     line-height: 24px;
     margin: 0 0 0 ;
-    padding: 0.5rem;
+    padding: 1.5rem;
+    border-radius: var(--ifm-code-border-radius);
 }
-div[class="memberString_node_modules-docusaurus-plugin-moonwave-src-components-styles-module"]{
+
+div.memberString_node_modules-docusaurus-plugin-moonwave-src-components-styles-module{
     background: var(--decdocs-moonwave-member-background-color);
     margin: 0.5rem;
     padding: 1.5rem;
     -webkit-font-smoothing: auto;
     font-size: 20px;
     line-height: 30px;
+    border-radius: var(--ifm-code-border-radius);
+}
+.buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module{
+    top: 3% !important;
+    right: 2.5% !important;
 }
 span[class*="token"] {
     color: rgb(255 255 255);
