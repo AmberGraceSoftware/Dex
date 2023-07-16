@@ -23,8 +23,8 @@ jobs:
         uses: ok-nick/setup-aftman@v0.3.0
       - name: Log in to wally
         env:
-          WALLY_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WALLY_AUTH: ${{ secrets.WALLY_AUTH }}
         run: |
-          wally login --token $WALLY_AUTH_TOKEN
+          wally login --token $WALLY_AUTH
       - name: Push Release to Wally
         run: wally publish
