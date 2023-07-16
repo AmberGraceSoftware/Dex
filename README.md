@@ -7,11 +7,12 @@
     Dec is a library for building Roblox User Interfaces.
     <br/>
     <br/>
-    Dec makes it easy to quickly prototype animated, responsive UI, and
-    manage state across an entire Roblox project.
-    <br/>
-    Dec Components can be written entirely from Luau source code, or utilize
-    pre-made assets built in Roblox Studio's UI editor.
+</p>
+
+<p text-size="large">
+Dec provides tools to prototype animated, responsive UI Components, and
+manage state across an entire Roblox project. Dec Components can be written
+entirely in Luau, or use premade assets built using Studio's UI editor.
 </p>
 
 
