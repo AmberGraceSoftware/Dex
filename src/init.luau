@@ -9,6 +9,7 @@
     Github Repository: AmberGraceSoftware/Dec
     Wally Package ID: ambergracesoftware/dec
     Documentation: Found on Github
+    License: MIT
 ]]
 
 local Types = require(script.Types)
