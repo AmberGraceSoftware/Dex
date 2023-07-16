@@ -20,10 +20,8 @@ jobs:
           cd temp/src
       - name: Setup aftman toolchain
         uses: ok-nick/setup-aftman@v0.3.0
-      - name: Log in to wally
+      - name: Push Release to Wally
         env:
           WALLY_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          wally login --token "$WALLY_AUTH_TOKEN"
-      - name: Push Release to Wally
-        run: wally publish
+          wally publish --token $WALLY_AUTH_TOKEN
