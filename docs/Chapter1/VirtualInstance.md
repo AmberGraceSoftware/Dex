@@ -8,6 +8,10 @@ sidebar_position: 4
 Tutorials are still in progress, and will be released section-by-section
 :::
 
+## Installation
+
+See the [Installation Section](../Installation) to get started with Dec!
+
 ## Section Outline:
 - What is a Virtual Instance? (Declarative Programming - concerned with what
 _is_ more than the procedures of how exactly things work behind the scenes)
