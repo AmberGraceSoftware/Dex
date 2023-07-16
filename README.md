@@ -25,9 +25,13 @@ entirely in Luau, or use premade assets built using Studio's UI editor.
 Please see the [Documentation Site](https://dec.ambergracesoftware.com) for
 tutorials, a full API reference, and more!
 
+<br/>
+
 # Installation
 
 Dec can either be imported into your Roblox project, or installed via Wally.
+
+<br/>
 
 #### Roblox Studio Installation
 
@@ -35,6 +39,8 @@ To add Dec to your Roblox Studio project, download the
 [latest `.rbxmx` release from Github](https://github.com/AmberGraceSoftware/Dec/releases/latest),
 then drag the model file into Roblox Studio. Place the Dec library somewhere in
 ReplicatedStorage.
+
+<br/>
 
 #### Rojo + Wally Installation
 
@@ -64,6 +70,8 @@ It is also recommended you run the
 installing or updating Dec, as well as the
 [Luau LSP](https://github.com/JohnnyMorganz/luau-lsp) in order to utilize Dec
 with Luau's type safety features.
+
+<br/>
 
 # Contributing
 
