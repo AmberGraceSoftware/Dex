@@ -31,16 +31,12 @@ tutorials, a full API reference, and more!
 
 Dec can either be imported into your Roblox project, or installed via Wally.
 
-<br/>
-
 #### Roblox Studio Installation
 
 To add Dec to your Roblox Studio project, download the
 [latest `.rbxmx` release from Github](https://github.com/AmberGraceSoftware/Dec/releases/latest),
 then drag the model file into Roblox Studio. Place the Dec library somewhere in
 ReplicatedStorage.
-
-<br/>
 
 #### Rojo + Wally Installation
 
