@@ -7,7 +7,7 @@ license = "MIT"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
-exclude = ["aftman.toml"]
+exclude = ["aftman.toml", "default.project.json"]
 
 [dev-dependencies]
 TestEZ = "roblox/testez@0.4.1"
