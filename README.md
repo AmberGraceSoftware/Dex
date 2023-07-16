@@ -4,14 +4,14 @@
     <img src="logo/Logo256.png" />
     <br/>
     <br/>
-    Dec is a library for building
-    <a href="https://www.roblox.com/home">Roblox</a> User Interfaces.
+    Dec is a library for building Roblox User Interfaces.
     <br/>
     <br/>
-    Dec's API makes it easy to quickly prototype animated and responsive UI,
-    manage state across a full-scale Roblox Experience. UI can be written
-    entirely from Luau source code, or utilize pre-made assets built in Roblox
-    Studio's UI editor!
+    Dec makes it easy to quickly prototype animated, responsive UI, and
+    manage state across an entire Roblox project.
+    
+    Dec Components can be written entirely from Luau source code, or utilize
+    pre-made assets built in Roblox Studio's UI editor.
 </p>
 
 
@@ -27,14 +27,14 @@ tutorials, a full API reference, and more!
 
 Dec can either be imported into your Roblox project, or installed via Wally.
 
-### Roblox Studio Installation
+#### Roblox Studio Installation
 
 To add Dec to your Roblox Studio project, download the
 [latest `.rbxmx` release from Github](https://github.com/AmberGraceSoftware/Dec/releases/latest),
 then drag the model file into Roblox Studio. Place the Dec library somewhere in
 ReplicatedStorage.
 
-### Rojo + Wally Installation
+#### Rojo + Wally Installation
 
 To install Dec using Wally, first install [Rojo](https://rojo.space/docs/v7/)
 and [Wally](https://wally.run/install), then search for the last published Dec
