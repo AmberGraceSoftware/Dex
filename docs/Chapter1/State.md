@@ -128,8 +128,8 @@ end)
 
 print(coinsFormatted:Current()) -- £0.00
 coins:Set(42)
-currency:Set("¥")
-print(coinsFormatted:Current()) -- ¥42.00
+currency:Set("$")
+print(coinsFormatted:Current()) -- $42.00
 ```
 
 We can also use `coins:Map()` as a shorthand—however, doing so will limit the
