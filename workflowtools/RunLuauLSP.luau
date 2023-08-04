@@ -34,6 +34,7 @@ local function RunLuauLSP()
             )
         end
     end
+    print("luau-lsp " .. table.concat(args, " "))
     local result = process.spawn("luau-lsp", args)
     if result.ok then
         print("Luau LSP exited with no errors")
