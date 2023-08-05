@@ -4,62 +4,77 @@ sidebar_position: 4
 
 # Virtual Instances
 
-:::warning
-Tutorials are still in progress, and will be released section-by-section
-:::
+## Before We Begin...
 
-## Installation
-
-See the [Installation Section](../Installation) to get started with Dec!
+See the [Installation Section](../Installation) to make sure Dec is properly
+installed in your Roblox experience.
 
 ## UI Components
 
 At its heart, Dec is a language for writing ***Components***. Components are
-portions of code responsible for specific portions of UI, and building a
-large-scale user interface with
-Dec requires thinking in terms of *Components*.
+portions of code responsible for specific portions of UI. Building a
+large-scale user interface with Dec requires breaking it down into small
+building blocks.
 
 To illustrate this, imagine a Roblox game displays a shop menu to the player
-upon speaking to an NPC. The modal which pops up might look something like this:
+upon speaking to an NPC. The menu which pops up might look something like this:
 
-(Image of Gec the Buccaneer UI)
+![NPC Shop](/TutorialAssets/Chapter1/VirtualInstance/GecsSeafaringSupplies.jpg)
 
-We can group this UI into logical parts responsible for different tasks:
+This menu contains different visual elements, which can be grouped together
+based on location and shared function:
 
-(Image of Component Breakdown)
+![NPC Shop UI Breakdown](/TutorialAssets/Chapter1/VirtualInstance/GecsSeafaringSuppliesComponentBreakdown.jpg)
 
-Dec takes on a *modular* approach to UI development, where each logical part
-of an application are grouped together into separate Component functions, with
-these functions often being placed inside their own ModuleScript.
+In Dec, Components are *functions*, named in `PascalCase`, which output a
+description of how a piece of UI is put together given some input parameters.
 
-## "CoinCointer" Component
+In the example of the NPC shop menu, the whole menu can be represented as 6 Dec
+Components:
 
-Let's write a component for the Coin counter in the above example. In Dec, we do
-not directly create instances using `Instance.new` but rather use
-***Virtual Instances*** to describe how to put together a particular UI
-component.
+- `ShopHeader` - Shows the current display name for the NPC's shop
+- `CoinCounter` - Displays many coins the user has
+- `TextButton` - Displays certain text, darkens in color when hovered/pressed,
+and performs some action when clicked on.
+- `ShopItems` - Manages which shop items are appearing to the user at a time,
+and decides what happens when the left/right buttons are pressed.
+- `ShopItem` - Displays info about a single ingame item—its cost, a thumbnail,
+and a display name—and performs some action when the circle is clicked on.
+- `NPCShop` - A top-level component that generates all of these UI elements
+at once!
 
-The CoinsCounter should generate a UI that includes a TextLabel and ImageLabel
-inside a larger Frame. We will create each of these using `Dec.New`, passing in
-the ClassName as the first argument, and a table of properties as a second
-argument:
+![NPC Shop Component Breakdown](/TutorialAssets/Chapter1/VirtualInstance/GecsSeafaringSuppliesComponentBreakdown2.jpg)
+
+## `CoinCointer` Component
+
+Let's write a component for the Coin counter in the above example. In Dec,
+instances are not directly created using `Instance.new`; instead, Dec utilizes
+***Virtual Instances*** to describe how a UI component is pieced together.
+
+The `CoinsCounter` needs to generate two Instances: a `TextLabel` and an
+`ImageLabel` We will represent these as ***Virtual Instances*** using
+`Dec.New`, which takes a class name and a table of properties as arguments.
 
 ```lua
 local coinsLabel = Dec.New("TextLabel", {
     Text = "42",
     TextScaled = true,
+    TextColor3 = Color3.fromRGB(255, 252, 238),
+    Font = Enum.Font.Antique,
+    TextXAlignment = Enum.TextXAlignment.Right,
     BackgroundTransparency = 1,
-    Size = UDim2.fromScale(0.6, 0),
+    Size = UDim2.fromScale(0.675, 1),
 })
 ```
 
 ```lua
 local coinsIcon = Dec.New("ImageLabel", {
-    Image = "rbxassetid://12345678",
+    Image = "rbxassetid://14319400598",
     BackgroundTransparency = 1,
-    Size = UDim2.fromScale(0.4, 0.4),
-    SizeConstraint = Enum.SizeConstraint.RelativeYY
-    Position = UDim2.fromSCale(0.7, 0)
+    Size = UDim2.fromScale(0.8, 0.8),
+    SizeConstraint = Enum.SizeConstraint.RelativeYY,
+    Position = UDim2.fromScale(0.7, 1),
+    AnchorPoint = Vector2.new(0, 1),
 })
 ```
 
@@ -69,9 +84,9 @@ of the child, and the values are the virtual instance to embed under the parent:
 
 ```lua
 local coinCointer = Dec.New("Frame", {
-    Size = UDim2.fromScale(0.2, 0.2),
-    Position = UDim2.fromScale(1, 0),
-    AnchorPoint = Vector2.new(1, 1),
+    Size = UDim2.fromScale(0.3, 0.4),
+    Position = UDim2.fromScale(1, 0.5),
+    AnchorPoint = Vector2.new(1, 0.5),
     BackgroundTransparency = 1,
 }, {
     CoinsLabel = coinsLabel,
@@ -79,30 +94,33 @@ local coinCointer = Dec.New("Frame", {
 })
 ```
 
-Finally, to make this into a Component and test it out, we can simply wrap it
-into a function which returns the VirtualInstance tree. We will also need to
-create a ***Root*** to actually render the component:
+In order to truly make this into a ***Dec Component***, the virtual instance
+should be wrapped in a function. We will also need to create a [Root](/api/Root)
+object to actually render the virtual instances:
 ```lua
 local function CoinCointer()
     return Dec.New("Frame", {
         Size = UDim2.fromScale(0.3, 0.4),
-        Position = UDim2.fromScale(1, 0),
-        AnchorPoint = Vector2.new(1, 1),
+        Position = UDim2.fromScale(1, 0.5),
+        AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
     }, {
         CoinsLabel = Dec.New("TextLabel", {
             Text = "42",
             TextScaled = true,
-            TextXAlignment = Enum.TextXAlignment.Right
+            TextColor3 = Color3.fromRGB(255, 252, 238),
+            Font = Enum.Font.Antique,
+            TextXAlignment = Enum.TextXAlignment.Right,
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(0.6, 1),
-        })
+            Size = UDim2.fromScale(0.675, 1),
+        }),
         CoinsIcon = Dec.New("ImageLabel", {
-            Image = "rbxassetid://12345678",
+            Image = "rbxassetid://14319400598",
             BackgroundTransparency = 1,
-            Size = UDim2.fromScale(1, 1),
-            SizeConstraint = Enum.SizeConstraint.RelativeYY
-            Position = UDim2.fromSCale(0.7, 0)
+            Size = UDim2.fromScale(0.8, 0.8),
+            SizeConstraint = Enum.SizeConstraint.RelativeYY,
+            Position = UDim2.fromScale(0.7, 1),
+            AnchorPoint = Vector2.new(0, 1),
         }),
         -- Make the component look consistent on different screens
         AspectRatio = Dec.New("UIAspectRatioConstraint", {
@@ -113,20 +131,22 @@ end
 
 -- Here, we define a top-level component which holds our CoinCointer
 local function Gui()
-    return Dec.New("ScreenGui", {}, {
+    return Dec.New("ScreenGui", {
+        ResetOnSpawn = false,
+    }, {
         CoinCointer = CoinCointer(),
     })
 end
 
-local Root = Dec.Root(game.Players:WaitForChild("PlayerGui"))
-Root:Render(Gui())
+-- root:Render() tells Dec to convert out VirtualInstances into real instances
+local root = Dec.Root(game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+root:Render(Gui())
 ```
 
 When playtesting with the above code in a LocalScript, the coins component will
-render with a static "42" being displayed. Later in this section, we will go
-over how to render ***States*** such as coins in our virtual instance.
+render with a static "42" being displayed.
 
-(image of CoinCointer in game)
+![Coin Counter Ingame](/TutorialAssets/Chapter1/VirtualInstance/CoinCounterIngame.jpg)
 
 ## Using Premade templates
 
@@ -136,20 +156,27 @@ defined in code that is already easy to create in Roblox Studio's UI editor.
 Dec is versatile in that it allows three types of VirtualInstances: `New`,
 `Clone`, and `Premade`.
 
-`New` Virtual Instances are created by the Dec library itself, as seen in the
+- `New` Virtual Instances are created by the Dec library itself, as seen in the
 previous example.
 
-`Clone` Virtual Instances are also created by Dec, but are created created by
+- `Clone` Virtual Instances are also created by Dec, but are created created by
 copying an existing template, passed in as the first argument to `Dec.Clone()`
 
-`Premade` Virtual Instances, on the other hand, are only *modified* by Dec, and
-simply modify an existing virtual instance.
+- `Premade` Virtual Instances, on the other hand, are only *modified* by Dec,
+without creating or destroying any additional instance.
 
 Going back to the `CoinCointer` component, we can greatly simplify the code by
 represent our component as a tree of `Premade` Virtual Instances, using this
 downloadable template:
 
-(Download)
+<a href="/TutorialAssets/Chapter1/VirtualInstance/PremadeCoinCounter.rbxmx" download target="_blank">(Premade Template Download)</a>
+
+This can be placed directly in StarterGui and used by Dec:
+
+![Premade Coin Counter UI in StarterGui](/TutorialAssets/Chapter1/VirtualInstance/PremadeCoinCounterScreenshot.jpg)
+
+Once the template is in place, the CoinCounter component code can be greatly
+simplified!
 
 ```lua
 local function CoinCointer()
@@ -166,12 +193,22 @@ local function Gui()
     })
 end
 
-local Root = Dec.Root(game.Players:WaitForChild("PlayerGui"))
+local Root = Dec.Root(game.Players.LocalPlayer
+	:WaitForChild("PlayerGui"):WaitForChild("PremadeGui"))
 Root:Render(Gui())
 ```
 
 When playtested, this will change the number of coins in our template to `42`,
-without needing to affect other values!
+without needing to worry about the specifics of how the rest of the UI looks!
 
 The next step is to render the actual number of coins the player has by
-utilizing ***State***, which will be covered in the next section.
+utilizing ***States***, which will be covered in the next section.
+
+----
+
+*[Coin icon created by Freepik - Flaticon.](https://www.flaticon.com/free-icons/coin)*
+
+*Assets provided for download in this article are provided for educational
+purposes only. License is not extended by the maintainers of Dec to use the
+provided coin icon in any project, and is subject to FlatIcon's original
+[license agreement](https://www.freepikcompany.com/legal#nav-flaticon-agreement)*
