@@ -100,7 +100,7 @@ local coinCounter = Dec.New("Frame", {
 
 So far, this translates to the following instance tree:
 
-![Instance Tree Visualization](/TutorialAssets/Chapter1/VirtualInstance/CoinCounterIntermediaryInstanceOut.jpg)
+![Instance Tree Visualization](/TutorialAssets/Chapter1/VirtualInstance/CoinCounterSimple.jpg)
 
 In order to make this a proper ***Dec Component***, we should create a
 function named `CoinCounter` which returns this virtual instance tree.
@@ -192,7 +192,7 @@ downloadable template:
 
 This can be placed directly in StarterGui and used by Dec:
 
-![Premade Coin Counter UI in StarterGui](/TutorialAssets/Chapter1/VirtualInstance/PremadeCoinCounterScreenshot.jpg)
+![Premade Coin Counter UI in StarterGui](/TutorialAssets/Chapter1/VirtualInstance/CoinCounterFull.jpg)
 
 Once the template is in place, the `CoinCounter` component's code can be greatly
 simplified to only modify the text of the CoinsLabel object, since that is the

@@ -487,35 +487,33 @@ local function createMappingMetamethod(
     binop: (a: number, b: number) -> number
 ): (any, any) -> any
     return function(a, b)
-        if IsObservable(a) then
-            if IsObservable(b) then
-                -- Map from two constant observables
-                return Observable.new(function()
-                    return applyBinopPolymorphic(
-                        a:Current(),
-                        b:Current(),
-                        binop
-                    )
-                end, function(notifyUpdates)
-                    local unsubscribeA = a:Subscribe(notifyUpdates)
-                    local unsubscribeB = b:Subscribe(notifyUpdates)
-                    return function()
-                        unsubscribeA()
-                        unsubscribeB()
-                    end
-                end)
-            else
-                -- lhs is observable, rhs is constant
-                return a:Map(function(aCurrent)
-                    return applyBinopPolymorphic(aCurrent, b, binop)
-                end)
-            end
-        else
+        if not IsObservable(a) then
             -- rhs is observable, lhs is constant
             return b:Map(function(bCurrent)
                 return applyBinopPolymorphic(a, bCurrent, binop)
             end)
         end
+        if not IsObservable(b) then
+            -- lhs is observable, rhs is constant
+            return a:Map(function(aCurrent)
+                return applyBinopPolymorphic(aCurrent, b, binop)
+            end)
+        end
+        -- Map from two constant observables
+        return Observable.new(function()
+            return applyBinopPolymorphic(
+                a:Current(),
+                b:Current(),
+                binop
+            )
+        end, function(notifyUpdates)
+            local unsubscribeA = a:Subscribe(notifyUpdates)
+            local unsubscribeB = b:Subscribe(notifyUpdates)
+            return function()
+                unsubscribeA()
+                unsubscribeB()
+            end
+        end)
     end
 end
 Observable.__add = createMappingMetamethod(function(a, b)

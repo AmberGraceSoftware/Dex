@@ -49,7 +49,7 @@
 				<bool name="ClipsDescendants">false</bool>
 				<bool name="Draggable">false</bool>
 				<int name="LayoutOrder">0</int>
-				<string name="Name">CoinCointer</string>
+				<string name="Name">CoinCounter</string>
 				<Ref name="NextSelectionDown">null</Ref>
 				<Ref name="NextSelectionLeft">null</Ref>
 				<Ref name="NextSelectionRight">null</Ref>
