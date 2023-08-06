@@ -52,7 +52,8 @@ export type Nil = Symbol<"Nil">
     tested, and the API may be subject to change
     :::
 
-    Dec contains a collection of objects for create reactive UI components
+    The Dec library contains a collection of objects for creating reactive UI
+    components
     
     For more information, see the [Usage Guide](../docs/intro)
 ]=]
