@@ -4,89 +4,137 @@ sidebar_position: 5
 
 # Creating & Mapping State
 
-:::warning
-Tutorials are still in progress, and will be released section-by-section
-:::
+At its heart, Dec is also a language for representing ***State***. State is any
+hidden variable that, when changed, will eventually lead to something updating
+in a User Interface. State can be things like coins, whether or not a player is
+hovering/pressing over a UI component, the price/display name/thumbnail of an
+item being sold to the user, and more. Creating reactive UI Components in Dec
+requires breaking down what simple variables are being displayed to the user
+on-screen.
 
-## Using State in your Components
+In the last section, we showed an example of a shop menu which appears when a
+player interacts with an NPC:
 
-At its heart, Dec is also a language for representing ***State***, and having
-instances reactively change their properties based on changes in state. States
-are any variables underlying what's being rendered. Writing effective Dec
-applications also requires down what *States* each component is rendering:
+![NPC Shop](/TutorialAssets/Chapter1/VirtualInstance/GecsSeafaringSupplies.jpg)
 
-(image of state breakdown)
+We can break this UI down into *States* by thinking about what hidden variables
+are being conveyed to the user. Here's a breakdown of what states some of these
+UI components are using:
 
-In the previous section, we created a CoinCounter UI using a premade template.
-In this example, the only state that CoinCounter needs to render is a number
-representing how many coins a player has. We can create this state using
-`Dec.State`, passing in an initial value for the coins as a first argument:
+### `ShopHeader`:
+```lua
+local title: string -- The display name of the NPC's shop
+```
+
+### `CoinCounter`:
+```lua
+local coins: number -- How many coins the player currently has
+```
+
+### `ShopItem`:
+```lua
+local id: string -- What's the ID of the item we're showing?
+local thumbnail: string -- What's the ID of the image thumbnail we're showing?
+local displayName: string -- e.g. "Flintlock", "Sword"
+local price: number -- How many coins does this cost?
+```
+
+Beyond just generating UI, Dec is a library that makes it easy to translate
+these state variables into the desired visuals for your project!
+
+## `CoinCounter` Component
+
+Let's turn the "coins" variable in our CoinCounter example into a State. We can
+create a State that holds a number variable by calling the function
+[Dec.State](/api/State):
 
 ```lua
 local coins = Dec.State(0)
 ```
 
-Dec States can be updated using `Set()`, and their current value can be
-retreived using `Current()`:
+We can use `:Set()` to update this state and `:Current()` to get its current
+value:
+
 ```lua
 print(coins:Current()) -- 0
 coins:Set(42)
 print(coins:Current()) -- 42
 ```
 
-So far, we've seen VirtualInstances defining the static properties of an
-instance to be renderered — however, we can also have these properties change
-*reactively* to state
+Let's now utilize this state in our UI.
+
+So far, we've seen examples of using ***VirtualInstances*** to assign static
+properties of an instance:
+```lua
+local coinsLabel = Dec.Premade("TextLabel", {
+    Text = "42",
+})
+```
+
+Dec also supports passing in *States* to the property table of a virtual
+instance. Doing so will cause the UI to change to match the current value of the
+State, and will automatically react to changes to this state's value!
+
 ```lua
 local coinsLabel = Dec.Premade("TextLabel", {
     Text = coins,
 })
 ```
 
-(Image of coin counter showing 42 coins)
+![Reactive Coins UI](/TutorialAssets/Chapter1/State/CoinsReactive.gif)
+
+The way in which Dec Components generate visuals from State follows a software
+paradigm called [*Reactive Programming*](https://en.wikipedia.org/wiki/Reactive_programming).
+To gain a better understanding of how Reactive Programming works in Dec, let's
+quickly go over a core concept in Dec: ***Observables***
 
 ## Observables
 
-States are actually a type of ***Observable***. Observables are objects that,
-generally speaking, *hold some value* and can *listen to changes in this value*.
-`Dec.State` is a special type of Observable in that its value can be written
-to; however, many times, we only need to read the value of an Observable rather
-than writing to it.
+***State*** actually inherits a base class called ***Observable***. Observables
+are objects that  *hold some value* and can *listen to changes in this value*.
 
-Observables can be passed as ***Props*** to a Component. Props is essentially
-a table of named parameters to a Dec component which affects the final
-output of the component:
+`Dec.State` is a special type of Observable in that its value can be *written
+to;* however, some observables are "read-only" and their value depends on other
+factors.
+
+Let's pass "coins" as a paramater to the CoinCounter component. "coins" is both
+a ***State*** object and an ***Observable*** object; however, since we only need
+to read from this state within the `CoinCounter` component, we can type this
+parameter as an ***Observable.***
 
 ```lua
-local function CoinCounter(props: {
-    coins: Dec.Observable<number>
-})
+local function CoinCounter(coins: Dec.Observable<number>)
     return Dec.Premade("Frame", {}, {
         CoinsLabel = Dec.Premade("TextLabel", {
-            Text = props.coins,
+            Text = coins,
         })
     })
 end
 ```
 
-In this example, we can use the CoinCounter to modify a premade asset by
-updating the text label "CoinsLabel" to match the value of an observable state
-we pass in:
+If we now render this component in our application, we can write some code that
+1) Creates a Coins state; 2) Creates a CoinCounter that reactively renders this
+state; and 3) updates this state over time.
 
 ```lua
--- CoinCounter will start rendering "0"
+-- Create a state to hold coins
 local coins = Dec.State(0)
-local CoinCounter = CoinCounter({
-    coins = coins,
-})
 
-task.wait(3)
+-- Render a new CoinCounter component within a Dec.Root object (presumed to
+-- exist in this scope)
+root:Render(CoinCounter(coins))
 
-coins:Set(42) -- CoinCounter will now render with "42" after 3 seconds
+-- Increment the value of coins every second
+while task.wait(1) do
+    coins:Set(coins:Current() + 1)
+end
 ```
 
-(video of animation changing the coins display from 0 to 42 in realtime after 3
-seconds)
+![Reactive Coins UI](/TutorialAssets/Chapter1/State/CoinsCountToTen.gif)
+
+The CoinCounter is now a fully *reactive* Component, as it generates visuals
+based on the current value of an ***Observable*** object, and reactively updates
+these visuals whenever that Observable's current value changes.
 
 ## Mapping Observables
 
@@ -96,9 +144,10 @@ and two decimal points, so that `42` shows up as `£42.00`. To do this, we will
 need to transform the coins state somehow.
 
 ***Mapping*** Is the process of transforming one observable to another by using
-a mapping functions. Mapping is achieved in Dec by using `Dec.Map`, with the
-input observables as arguments. This function returns another function
-which should be called with the ***Mapping Function*** as a first argument:
+a mapping functions. Mapping is achieved in Dec by using
+[Dec.Map](/api/Dec#Map), with the input observables as arguments. This function
+returns another function which should be called with the ***Mapping Function***
+as a first argument:
 
 ```lua
 local coinsFormatted = Dec.Map(coins)(function(currentCoins)
@@ -125,26 +174,25 @@ local coinsFormatted = Dec.Map(currency, coins)(function(
 )
     return string.format("%s%.2f", currentCurrency, currentCoins)
 end)
-
 print(coinsFormatted:Current()) -- £0.00
+
 coins:Set(42)
 currency:Set("$")
 print(coinsFormatted:Current()) -- $42.00
 ```
 
-We can also use `coins:Map()` as a shorthand—however, doing so will limit the
-mapping function to one argument, and will discard the type information of the
-returned observable. It's recommended to only call the `:Map()` in cases
-like VirtualInstances properties, the value returned by `:Map()` is only used
-in one place and never stored directly in a variable:
+We can also use [coins:Map()](/api/Observable#Map) as a shorthand for calling
+`Dec.Map(coins)`; however, doing so will limit the mapping function to one
+argument, and will discard the type information of the returned observable. It
+is recommended to only use the `:Map()` method in cases like VirtualInstances
+properties, where the value returned by `:Map()` is only used in one place and
+never stored directly in a variable:
 
 ```lua
-local function CoinCounter(props: {
-    coins: Dec.Observable<number>
-})
+local function CoinCounter(coins: Dec.Observable<number>)
     return Dec.Premade("Frame", {}, {
         CoinsLabel = Dec.Premade("TextLabel", {
-            Text = props.coins:Map(function(currentCoins)
+            Text = coins:Map(function(currentCoins)
                 return string.format("£%.2f", currentCoins)
             end),
         })
@@ -152,7 +200,7 @@ local function CoinCounter(props: {
 end
 ```
 
-(Image of formatted CoinCounter UI)
+![Mapping In Use](/TutorialAssets/Chapter1/State/CoinsPoundsFormat.gif)
 
 ## Using Math Operations on Observables
 
@@ -214,14 +262,12 @@ This is useful for components that have side effects on an input observable,
 such as printing:
 
 ```lua
-local function ComponentWithSideEffects(props: {
-    value: Dec.Observable<number>
-})
+local function ComponentWithSideEffects(value: Dec.Observable<number>)
     local frame = Dec.Premade("Frame")
 
     -- This will keep printing until ComponentWithSideEffects is no longer
     -- rendered.
-    props.value:SubscribeWhileMounted(frame, function(currentValue)
+    value:SubscribeWhileMounted(frame, function(currentValue)
         print("The current value is", currentValue)
     end)
 
