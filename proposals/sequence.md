@@ -1,10 +1,21 @@
-# API Propposal: Timed sequences
+# Proposal: Timed sequences
+
+This is a proposal to add a observable subclass, created via `Dec.Sequence`,
+which is an object that holds state about a timed sequence.
 
 # Status: Unimplemented
 
-This is pretty important for a number of use cases. I figure, since Dec already 
-contains a number of utility subclasses for observable, having one for sequences
-would be immeasurably useful, provided the API is easy to get a hang of.
+## Use Case:
+
+Sequences are pretty important for a number of use cases involving animations
+that have multiple steps.
+
+I figure, since Dec already contains a number of utility subclasses for
+observables involving animations/timing, having one for discretely-steped
+sequences would be immeasurably useful, provided the API is easy to get a hang
+of.
+
+## Example:
 
 ```lua
 --!nocheck
