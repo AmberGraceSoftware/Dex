@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# Creating/Destroying Children
+# Mapping Child Components
 
 :::warning
 Tutorials are still in progress, and will be released section-by-section

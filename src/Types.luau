@@ -3,13 +3,13 @@
     Stores all internal and external Types for Dec
 ]]
 export type Unsubscribe = () -> ()
-export type Set<T = any> = {[T]: true}
+export type Set<T> = {[T]: true}
 
 export type MappingBinopMetamethod<Simple, Complex> =
     ((lhs: Complex, rhs: Complex) -> Complex)
     & ((lhs: Simple, rhs: Complex) -> Complex)
     & ((lhs: Complex, rhs: Simple) -> Complex)
-export type Observable<T = any> = typeof(setmetatable(
+export type Observable<T> = typeof(setmetatable(
     {} :: {
         _cachedValue: T,
         _getCurrent: () -> T,
@@ -42,7 +42,7 @@ export type Observable<T = any> = typeof(setmetatable(
         __unm: (self: Observable<T>) -> Observable<T>,
     }
 ))
-export type State<T = any> = Observable<T> & typeof(setmetatable(
+export type State<T> = Observable<T> & typeof(setmetatable(
     {} :: {
         _valueRef: {value: T},
         _notifyUpdate: (() -> ())?,
@@ -51,7 +51,7 @@ export type State<T = any> = Observable<T> & typeof(setmetatable(
         Set: (self: State<T>, T) -> (),
     }}
 ))
-export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
+export type StateRecord<T> = Observable<T> & typeof(setmetatable(
     {} :: {
         _valueRef: {value: T},
         _notifyUpdate: (() -> ())?,
@@ -64,7 +64,7 @@ export type StateRecord<T = any> = Observable<T> & typeof(setmetatable(
         Index: (self: StateRecord<T>, key: any) -> State<any>,
     }}
 ))
-export type StateDict<K = string, V = any> = Observable<{[K]: V}> & typeof(setmetatable(
+export type StateDict<K, V> = Observable<{[K]: V}> & typeof(setmetatable(
     {} :: {
         _valueRef: {value: {[K]: V}},
         _notifyUpdate: (() -> ())?,
@@ -78,7 +78,7 @@ export type StateDict<K = string, V = any> = Observable<{[K]: V}> & typeof(setme
         Index: (self: StateDict<K, V>, key: K) -> State<V>,
     }}
 ))
-export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(
+export type EasedObject<T> = Observable<T> & typeof(setmetatable(
     {} :: {
         _target: Observable<T>,
         _easingFrame: any,
@@ -89,15 +89,15 @@ export type EasedObject<T = any> = Observable<T> & typeof(setmetatable(
         ResetVelocity: (self: EasedObject<T>) -> (),
     }}
 ))
-export type Spring<T = any> = EasedObject<T> & typeof(setmetatable(
+export type Spring<T> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _angularFrequency: any, -- CanBeObservable<number>
     },
     {} :: {__index: { }}
 ))
 export type AngleSpring<T> = Spring<T>
-export type IntSpring<T = any> = Spring<T>
-export type EasedValue<T = any> = EasedObject<T> & typeof(setmetatable(
+export type IntSpring<T> = Spring<T>
+export type EasedValue<T> = EasedObject<T> & typeof(setmetatable(
     {} :: {
         _info: TweenInfo,
     },

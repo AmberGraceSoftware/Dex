@@ -19,14 +19,14 @@ local Root = require(script.Reconciler.Root)
 local Observable = require(script.Observables.Observable)
 
 export type Unsubscribe = Types.Unsubscribe
-export type Observable<T> = Types.Observable<T>
-export type State<T> = Types.State<T>
-export type Record<T> = Types.StateRecord<T>
-export type Dict<T> = Types.StateDict<T>
-export type Spring<T> = Types.Spring<T>
-export type AngleSpring<T> = Types.AngleSpring<T>
-export type IntSpring<T> = Types.IntSpring<T>
-export type EasedValue<T> = Types.EasedValue<T>
+export type Observable<T = any> = Types.Observable<T>
+export type State<T = any> = Types.State<T>
+export type Record<T = {[any]: any}> = Types.StateRecord<T>
+export type Dict<K = string, V = any> = Types.StateDict<K, V>
+export type Spring<T = any> = Types.Spring<T>
+export type AngleSpring<T = any> = Types.AngleSpring<T>
+export type IntSpring<T = any> = Types.IntSpring<T>
+export type EasedValue<T = any> = Types.EasedValue<T>
 export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
