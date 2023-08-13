@@ -240,7 +240,7 @@ a:Set(4)
 print(sum:Current()) -- 8
 ```
 
-~~In the above example, `sum` is equivalent to mapping `a` and `b` with an
+~~In the example above, `sum` is equivalent to mapping `a` and `b` with an
 summation mapping function:~~
 ```lua
 local sum = Dec.Map(a, b)(function(currentA, currentB)

@@ -48,7 +48,7 @@ and describes how they are all laid out together.
 
 ## `CoinCounter` Component
 
-Let's write the CoinCounter component defined in the above example. In
+Let's write the CoinCounter component defined in the example above. In
 Dec, instances are not directly created using `Instance.new`; instead, Dec
 components use ***Virtual Instances*** to describe how a UI component is pieced
 together and interacted with, which Dec then uses to create, destroy, and modify
