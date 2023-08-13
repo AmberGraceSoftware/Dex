@@ -2,23 +2,34 @@
 sidebar_position: 7
 ---
 
-# Structure of a Component
+# Structure of Dec Components
 
-The previous two sections covered the fundamentals of
+The previous two sections covers the fundamentals of
 [Virtual Instances](./VirtualInstance) and [State](./State), and how to use them
 to write UI components.
 
-This section will go over some ideas on how to _scale up_ many components in an
-application to meet a project's needs, and some conventions / best practices for
-doing so.
+This section will go over some conventions and best practices for _structuring_
+UI components in Dec components.
 
 ## Using _Props_ in Dec
 
-_Props_ is a concept borrowed primarily from the JavaScript framework
-[React](https://react.dev/learn/passing-props-to-a-component) as a way for
-standardizing the parameters of a Dec Component. In Dec, you can define your
-Component with as many arguments as you want, but it is recommended you use a
-single table parameter called _props_:
+In Dec, you can define a UI Component that takes in as many parameters as
+needed:
+
+```lua
+local function Component(text: string, position: UDim2)
+    return Dec.New("TextLabel", {
+        Text = text,
+        Position = position,
+        -- . . .
+    })
+end
+```
+
+However, as more and more parameters are added to a UI component, it becomes
+increasingly more confusing what order each argument should go in, and what
+each argument does. Because of this, it is recommended you always use a table
+parameter called _props_ as the only parameter for all Dec Components:
 
 ```lua
 local function Component(props)
@@ -26,19 +37,25 @@ local function Component(props)
     local text = props.text
     local position = props.position
 
-    -- Return a VirtualInstance based on the values in the props table
-    return Dec.New( . . . )
+    return Dec.New("TextLabel", {
+        Text = text,
+        Position = position,
+        -- . . .
+    })
 end
 ```
 
-This mirrors the way ***Virtual Instance*** are defined, where `Dec.New` accepts
-a properties table, which can take in both static values and states to define
-how the object is put together:
+_Props_ is a concept borrowed primarily from the JavaScript framework
+[React](https://react.dev/learn/passing-props-to-a-component), and mirrors
+the way ***Virtual Instance*** are defined. Functions like `Dec.New`
+accept a "Properties Table" argument, which can hold _Observable values_,
+_static values_, and _callback functions_:
 
 ```lua
 local function Button()
     local buttonText = Dec.State("Click Me!")
     return Dec.New("TextButton", {
+        -- "Properties Table" values are defined here:
         Activated = function()
             buttonText:Set("Button was clicked!")
         end,
@@ -57,16 +74,18 @@ local function Button()
 end
 ```
 
-<center>
-    <img width="85%" src="/TutorialAssets/Chapter1/Props/ClickyButton.gif" />
-</center>
-
 The example above shows [Dec.New](/api/Dec#New) taking in three different types
-of properties:
+of properties which work together to create an interactive UI:
 
 - **Static Values** (e.g. `number`, `UDim2`, `Vector2`, and `Color3` values)
 - **States** (e.g. `buttonText`)
 - **Callbacks** (e.g. connecting to the "Activated" event)
+
+<center>
+    <img width="85%" src="/TutorialAssets/Chapter1/Props/ClickyButton.gif" />
+</center>
+
+<br/>
 
 In much the same way that Dec allows you to define a VirtualInstance using a
 table of _properties_, you can pass these same three types of arguments to a Dec
@@ -90,24 +109,24 @@ local function Button(props: {
 })
 ```
 
-Here, we defined the structure of our props table using a _type annotation_. Dec
+Here, we defined the structure of the props table using a _type annotation_. Dec
 makes use of [Luau's Static Type System](https://luau-lang.org/typecheck), and
-it is recommended to give type annotations to the parameters of Dec Components,
+it is recommended to give type annotations to the props table of Dec Components,
 with `--!strict` mode enabled where possible.
 
 The type annotation in the example above defines the following values in
 `props`:
-- `position`: A ***static UDim2 value***, representing where the button should
-be positioned.
-- `text`: An ***Observable string*** representing the current text to
-display in the button, which may change over time.
-- `activated`: A ***callback function*** which is called whenever the button is
-clicked. It takes in no arguments and returns no values.
+- `position`: A ***Static UDim2*** value, representing where to place the
+button.
+- `text`: An ***Observable string***, representing the text to display with the
+button (which changes over time).
+- `activated`: A ***Callback*** function, which is called when the button is
+pressed.
 
-The original component can now be refactored to utilize the three values we
-defined in props, as well as utilizing a
-[Cloned Templates](./VirtualInstance#using-premade-templates) to simplify the
-code:
+We can now refactor the `Button` Component to utilize the three values we
+defined in props, as well as utilize a
+[Cloned Template](./VirtualInstance#using-premade-templates:~:text=Clone%20Virtual%20Instances%20are%20also%20created%20by%20Dec%2C%20but%20are%20created%20created%20by%20copying%20an%20existing%20template%2C%20passed%20in%20as%20the%20first%20argument%20to%20Dec.Clone())
+to simplify the code:
 
 ```lua
 local function Button(props: {
@@ -145,18 +164,20 @@ root:Render(Gui())
     <img width="85%" src="/TutorialAssets/Chapter1/Props/ClickyButton2.gif" />
 </center>
 
-In Dec, the best practice for writing components is this: **Components should
+<br/>
+
+In Dec, the best practice for writing components is that **Components should
 take in a single Props table as a parameter, and return a single VirtualInstance
 depending on the value of these Props.**
 
 ## Re-Using Components
 
-In the previous example, we saw a way of using props to aid in the _abstraction_
-of a UI component. Doing this also makes it easy to _re-use_ code for UI
-components that appear to the user in multiple instances!
+We just saw a way of using props to aid in the _abstraction_ of a UI component.
+Doing this also makes it easy to _re-use_ code for UI components that appear to
+the user in multiple instances!
 
-Let's refactor the code in the previous example to have the button component
-show a secret message when clicked:
+Let's write a Dec Component that creates a button which reveals a secret message
+when clicked:
 
 ```lua
 local function SpoilerButton(props: {
@@ -186,13 +207,12 @@ local function SpoilerButton(props: {
 end
 ```
 
-In the example above, the _props_ parameter was refactored to only take three
-static values, then using [Observable Mapping](./State#mapping-observables) to
-switch between showing the preview text and the secret text based on a single
-boolean state of whether or not the secret should be shown.
+Here, the _props_ parameter takes in three static values, then uses
+[Observable Mapping](./State#mapping-observables) to switch between showing the
+preview text and the secret text based on an internal `boolean` state.
 
-The `SpoilerButton` component can now be re-used many times in the main Gui
-component to show three different secrets:
+We can now re-use the interactive `SpoilerButton` component multiple times in
+our UI at once:
 
 ```lua
 local function OpinionBio()
@@ -216,7 +236,8 @@ local function OpinionBio()
 end
 ```
 
-With [Premade Templates](./VirtualInstance#using-premade-templates) we can also
+Since `SpoilerButton` uses a
+[Premade Template](./VirtualInstance#using-premade-templates), we can also
 adjust things like font, color, and padding in the UI without changing any of
 the code itself:
 
@@ -228,18 +249,19 @@ the code itself:
 
 ## _Optionally Observable_ Props
 
-Previously, we saw cases where _static values_ and _Observable values_ can be
-passed as an argument to a UI Component. However, there may be cases where both
-might be supported.
-
-In the `SpoilerButton` example, `previewText` and `secretText` must remain the
-same over time. But what if you wanted to make it possible for `secretText` to
-change over time?
+Props can define _Static values_ or _Observable values_ depending on the needs
+of a Component. However, there may be cases where you want to define a value
+that can be either a Static value _or_ an Observable value
 
 Dec provides a utility type [CanBeObservable](/api/Dec#CanBeObservable), which
-allows for something to be a static value _or_ an Observable value in props!
-For any value type `T`, `CanBeObservable<T>` is just shorthand for the union
-type `T | CanBeObservable<T>`
+allows for something to be a static value _or_ an Observable value in props.
+For any value type `T`, `CanBeObservable<T>` is just shorthand for the
+[union type](https://luau-lang.org/syntax#type-annotations:~:text=Additionally%2C%20the%20type,all%20possible%20types.)
+`T | Observable<T>` (i.e. "A value of type `T` or of type `Observable<T>`")
+
+In the `SpoilerButton` Component, we can use the `CanBeObservable` type to allow
+both a Static `string` and an Observable `string` to be defined in props for
+`previewText` and `secretText`:
 
 ```lua
 local function SpoilerButton(props: {
@@ -249,8 +271,8 @@ local function SpoilerButton(props: {
 })
 ```
 
-When a prop has this type, you can pass in both states and static values as an
-argument to the Component:
+Now we can create a spoiler button with a _Static string_ for `previewText`,
+and an _Observable string_ for `secretText`, which changes every 4 seconds:
 
 ```lua
 local secret = Dec.State(tostring(math.random(1, 1000)))
@@ -267,13 +289,10 @@ local button = SpoilerButton({
 })
 ```
 
-In the example above, we passed a ***static string*** to `previewText` and an
-***Observable String*** to `secretText` which changes its value every 4 seconds.
-
-In order to parse this in our component, we will need to use the helper function
+In order to parse this in a Component, we will need to use a helper function
 provided by Dec: [CoerceAsObservable](/api/Dec#CoerceAsObservable). This
 function takes in an object that can be an observable (`CanBeObservable<T>`),
-and returns an observable object (`Observable<T>`) of that same type!
+and returns an observable object (`Observable<T>`) of that same type.
 
 Let's implement this in the `SpoilerButton` component:
 
@@ -318,9 +337,16 @@ end
 
 The `SpoilerButton` Component will now work the same as it did before in the
 `OpinionBio` example, where `secretText` is a *static string* value, but will also
-now work in the "Reveal Secret Number" example, where `secretText` is an
-*Observable string*:
+now work in cases where `secretText` is an *Observable string*:
 
 <center>
     <img width="85%" src="/TutorialAssets/Chapter1/Props/SecretNumber.gif" />
 </center>
+
+----
+
+The conventions outlined in this section are helpful for writing reactive and
+re-usable Dec Components.
+
+The next section will cover one final aspect concept needed to scale up a Dec
+user interface: dynamically Creating & Destroying UI Components based on state.
