@@ -27,9 +27,10 @@ end
 ```
 
 However, as more and more parameters are added to a UI component, it becomes
-increasingly more confusing what order each argument should go in, and what
-each argument does. Because of this, it is recommended you always use a table
-parameter called _props_ as the only parameter for all Dec Components:
+increasingly more confusing what each argument is responsible for, and what
+order they should be passed in. Because of this, the convention for Dec
+Components is to always pass a single _table_ argument to components called
+"props":
 
 ```lua
 local function Component(props)
@@ -45,17 +46,13 @@ local function Component(props)
 end
 ```
 
-_Props_ is a concept borrowed primarily from the JavaScript framework
+_Props_ is a concept borrowed from
 [React](https://react.dev/learn/passing-props-to-a-component), and mirrors
-the way ***Virtual Instance*** are defined. Functions like `Dec.New`
-accept a "Properties Table" argument, which can hold _Observable values_,
-_static values_, and _callback functions_:
+the way new ***Virtual Instances*** are created:
 
 ```lua
-local function Button()
     local buttonText = Dec.State("Click Me!")
     return Dec.New("TextButton", {
-        -- "Properties Table" values are defined here:
         Activated = function()
             buttonText:Set("Button was clicked!")
         end,
@@ -66,20 +63,17 @@ local function Button()
         AnchorPoint = Vector2.new(0.5, 0.5),
         Size = UDim2.fromScale(0.5, 0.1),
         TextScaled = true,
-    }, {
-        Dec.New("UICorner", {
-            CornerRadius = UDim.new(0.5, 0)
-        })
-    })
-end
+    }
 ```
 
-The example above shows [Dec.New](/api/Dec#New) taking in three different types
-of properties which work together to create an interactive UI:
+In this example, [Dec.New](/api/Dec#New) takes in three different types
+of objects as "properties" which work together to make an interactive UI:
 
-- **Static Values** (e.g. `number`, `UDim2`, `Vector2`, and `Color3` values)
-- **States** (e.g. `buttonText`)
-- **Callbacks** (e.g. connecting to the "Activated" event)
+- **Static Values** (e.g. `number`, `UDim2`, `Vector2`, and `Color3`), which do
+not change over time
+- **Observable Values** (e.g. `buttonText`), which can change over time
+- **Callbacks** (e.g. `Activated = function() ... end`), which connect to input
+events
 
 <center>
     <img width="85%" src="/TutorialAssets/Chapter1/Props/ClickyButton.gif" />
@@ -87,13 +81,9 @@ of properties which work together to create an interactive UI:
 
 <br/>
 
-In much the same way that Dec allows you to define a VirtualInstance using a
-table of _properties_, you can pass these same three types of arguments to a Dec
-Component via _props_.
-
-Let's add a _props_ parameter to the `Button` component, allowing for `Button`
-components to be instantiated multiple times in the UI. To do this, let's first
-lay out some design requirements:
+Props can also mirror this structure. Let's add a _props_ parameter to the
+`Button` component, allowing for `Button` components to be instantiated multiple
+times in the UI. To do this, let's first lay out some design requirements:
 
 - Each button should have a different _position_
 - Each button should have a different _text_ value, which can _change over time_
