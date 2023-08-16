@@ -35,6 +35,8 @@ handleDirective.OutInstance = OutputInstanceRefThrows
 handleDirective.OnMount = HandleOnMountCallbackThrows
 handleDirective.OnUnmount = HandleOnUnmountCallbackThrows
 handleDirective.Children = function() end
+handleDirective.MapChildren = function() end
+handleDirective.MapChildrenByKey = function() end
 
 local typeToPriority: {[string]: (payload: any) -> number} = {
     ["OutProperty"] = function(payload)

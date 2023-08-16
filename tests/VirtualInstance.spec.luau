@@ -1,6 +1,10 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualInstance = require(ReplicatedStorage.Packages.Dec.VirtualInstance)
+local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
+local Types = require(ReplicatedStorage.Packages.Dec.Types)
+
+type Observable<T> = Types.Observable<T>
 
 --[[
     Deeply compares two values. If they are tables, checks all nested keys and
@@ -221,6 +225,57 @@ return function()
         virtualInstance:AddChildren(childMap)
     
         checkLastDirective("Children", childMap)
+    end)
+    
+    it("maps individual children via MapChildren", function()
+        local input = State.new({} :: {[string]: number})
+        local mapFunction = function(key: string, value: number)
+            return VirtualInstance.new("New", "TextLabel", {
+                Text = key .. " + 1 is " .. tostring(value + 1)
+            })
+        end
+        virtualInstance:MapChildren(input, mapFunction)
+        
+        checkLastDirective("MapChildren", {
+            input = input,
+            map = mapFunction
+        })
+    end)
+    
+    it("maps individual children via MapChildrenByKey", function()
+        local input = State.new({} :: {[string]: number})
+        local mapFunction = function(key: string, value: Observable<number>)
+            return VirtualInstance.new("New", "TextLabel", {
+                Text = value:Map(function(currentValue)
+                    return key .. " + 1 is " .. tostring(currentValue + 1)
+                end)
+            })
+        end
+        virtualInstance:MapChildrenByKey(input, mapFunction)
+        
+        checkLastDirective("MapChildrenByKey", {
+            input = input,
+            map = mapFunction
+        })
+    end)
+    
+    it("maps individual children via MapChildrenByValue", function()
+        local input = State.new({} :: {[string]: number})
+        local mapFunction = function(value: number, key: Observable<string>)
+            return VirtualInstance.new("New", "TextLabel", {
+                Text = key:Map(function(currentKey)
+                    return currentKey .. " + 1 is " .. tostring(value + 1)
+                end)
+            })
+        end
+        virtualInstance:MapChildrenByValue(input, mapFunction)
+        
+        local lastDirective =
+            virtualInstance._directives[#virtualInstance._directives]
+        checkLastDirective("MapChildrenByKey", {
+            input = lastDirective._payload.input,
+            map = mapFunction
+        })
     end)
     
     it("adds a mount lifecycle callback via OnMount", function()

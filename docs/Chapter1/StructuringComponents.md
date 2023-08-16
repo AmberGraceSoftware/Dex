@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # Structuring Dec Components
 
-The previous two sections covers the fundamentals of
+The previous two sections cover the fundamentals of
 [Virtual Instances](./VirtualInstance) and [State](./State), and how to use to
 write reactive Components with Dec.
 
@@ -326,8 +326,8 @@ end
 ```
 
 The `SpoilerButton` Component will now work the same as it did before in the
-`OpinionBio` example, where `secretText` is a *static string* value, but will also
-now work in cases where `secretText` is an *Observable string*:
+`OpinionBio` example, where `secretText` is a *static string* value, but will
+also now work in cases where `secretText` is an *Observable string*:
 
 <center>
     <img width="85%" src="/TutorialAssets/Chapter1/Props/SecretNumber.gif" />
