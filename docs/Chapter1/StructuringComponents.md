@@ -2,18 +2,18 @@
 sidebar_position: 7
 ---
 
-# Structure of Dec Components
+# Structuring Dec Components
 
-The previous two sections covers the fundamentals of
-[Virtual Instances](./VirtualInstance) and [State](./State), and how to use them
-to write UI components.
+The previous two sections cover the fundamentals of
+[Virtual Instances](./VirtualInstance) and [State](./State), and how to use to
+write reactive Components with Dec.
 
 This section will go over some conventions and best practices for _structuring_
-UI components in Dec components.
+UI components with Dec.
 
 ## Using _Props_ in Dec
 
-In Dec, you can define a UI Component that takes in as many parameters as
+With Dec, you can define a UI Component that takes in as many parameters as
 needed:
 
 ```lua
@@ -326,8 +326,8 @@ end
 ```
 
 The `SpoilerButton` Component will now work the same as it did before in the
-`OpinionBio` example, where `secretText` is a *static string* value, but will also
-now work in cases where `secretText` is an *Observable string*:
+`OpinionBio` example, where `secretText` is a *static string* value, but will
+also now work in cases where `secretText` is an *Observable string*:
 
 <center>
     <img width="85%" src="/TutorialAssets/Chapter1/Props/SecretNumber.gif" />

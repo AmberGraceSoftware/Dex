@@ -456,6 +456,185 @@ function VirtualInstance.__index.AddChildren(
 end
 
 --[=[
+    @method MapChildren
+    @within VirtualInstance
+    @param input Observable<{[K]: V}>
+    @param map (key: K, value: V) -> VirtualInstance?
+
+    Creates a child VirtualInstance for each key/value pair of the input
+    observable. When a Key/Value pair changes, the existing
+    VirtualInstance at that key is destroyed (if it exists), and a new one is
+    created (if the value is not `nil`).
+
+    The mapping function should create a single VirtualInstance based on the
+    current key and value. 
+
+    This performs better than directly calling [VirtualInstance:AddChildren]
+    with an Observable input, as this only creates/destroys virtual instances on
+    the specific key/value pairs that have changed whenever the input observable
+    updates.
+
+    Example:
+    ```lua
+    local function ItemList()
+        local visibleItemIds = Dec.State({"Sword", "Gun", "MagicStaff"})
+        local scrollingFrame = Dec.New("ScrollingFrame", {
+            Size = UDim2.fromScale(1, 1)
+        })
+        scrollingFrame:MapChildren(visibleItemIds, function(i, id)
+            -- Instantiate a child ItemCard component for this given item ID,
+            -- and destroy/re-create a new item card when this ID changes.
+            return ItemCard({
+                id = id,
+                layoutOrder = i,
+            })
+        end)
+        return scollingFrame
+    end
+    ```
+]=]
+function VirtualInstance.__index.MapChildren(
+    self: VirtualInstance,
+    input: Observable<any>,
+    map: (key: any, value: any) -> VirtualInstance?
+)
+    assertNotYetMounted(self)
+
+    table.insert(self._directives, {
+        _type = "MapChildren",
+        _payload = {
+            input = input,
+            map = map,
+        },
+        _trace = getTrace("VirtualInstance:MapChildren", 1),
+    })
+end
+
+--[=[
+    @method MapChildrenByKey
+    @within VirtualInstance
+    @param input Observable<{[K]: V}>
+    @param map (key: K, value: Observable<V>) -> VirtualInstance?
+
+    Creates a child VirtualInstance for each key of the input
+    observable. VirtualInstances will only be created/destroyed according to the
+    provided mapping function when a new key is added or removed from the table.
+
+    The value is wrapped in an observable, and will forward updates to the
+    mapping function when the value at a particlar key changes.
+
+    The mapping function should create a single VirtualInstance based on the
+    current key and observable value at that key.
+    
+    This is useful for instances where the input observable is a "Map", "Set",
+    or "Dictionary" type, and may perform better than
+    [VirtualInstance:MapObservable] in that case by minimizing
+    creation/destruction of virtual instances.
+
+    Example:
+    ```lua
+    local function ItemList()
+        local visibleItemIdSet = Dec.State({
+            ["Sword"] = true,
+            ["Gun"] = true,
+            ["MagicStaff"] = true}
+        )
+        local scrollingFrame = Dec.New("ScrollingFrame", {
+            Size = UDim2.fromScale(1, 1)
+        })
+        scrollingFrame:MapChildrenByKey(visibleItemIds, function(id)
+            return ItemCard({
+                id = id,
+            })
+        end)
+        return scollingFrame
+    end
+    ```
+]=]
+function VirtualInstance.__index.MapChildrenByKey(
+    self: VirtualInstance,
+    input: Observable<any>,
+    map: (key: any, value: Observable<any>) -> VirtualInstance?
+)
+    assertNotYetMounted(self)
+
+    table.insert(self._directives, {
+        _type = "MapChildrenByKey",
+        _payload = {
+            input = input,
+            map = map,
+        },
+        _trace = getTrace("VirtualInstance:MapChildrenByKey", 1),
+    })
+end
+
+--[=[
+    @method MapChildrenByValue
+    @within VirtualInstance
+    @param input Observable<{[K]: V}>
+    @param map (value: V, key: Observable<K>) -> VirtualInstance?
+
+    Creates a child VirtualInstance for each value of the input
+    observable. VirtualInstances will only be created/destroyed according to the
+    provided mapping function when a new value is added or removed from the
+    table.
+
+    In the case of duplicate values, the last key/value pair defined in the
+    input table will be considered.
+
+    The key is wrapped in an observable, and will forward updates to the
+    mapping function if the value is moved to another key.
+
+    The mapping function should create a single VirtualInstance based on the
+    current value and observable key for each value.
+    
+    This is useful for instances where the input observable is an "Array" "Map",
+    or "Dictionary" type, and may perform better than
+    [VirtualInstance:MapObservable] in that case by minimizing
+    creation/destruction of virtual instances.
+
+    Example:
+    ```lua
+    local function ItemList()
+        local visibleItemIdSet = Dec.State({"Sword", "Gun", "MagicStaff"})
+        local scrollingFrame = Dec.New("ScrollingFrame", {
+            Size = UDim2.fromScale(1, 1)
+        })
+        scrollingFrame:MapChildrenByValue(visibleItemIds, function(id, i)
+            return ItemCard({
+                id = id,
+                layoutOrder = i, -- Observable<number>
+            })
+        end)
+        return scollingFrame
+    end
+    ```
+]=]
+function VirtualInstance.__index.MapChildrenByValue(
+    self: VirtualInstance,
+    input: Observable<any>,
+    map: (key: any, value: Observable<any>) -> VirtualInstance?
+)
+    assertNotYetMounted(self)
+
+    local reverseLookup = input:Map(function(currentInput)
+        local transformed = {}
+        for k, v in currentInput do
+            transformed[v] = k
+        end
+        return transformed
+    end)
+    table.insert(self._directives, {
+        _type = "MapChildrenByKey",
+        _payload = {
+            input = reverseLookup,
+            map = map,
+        },
+        _trace = getTrace("VirtualInstance:MapChildrenByValue", 1),
+    })
+end
+
+--[=[
     @method OnMount
     @within VirtualInstance
     @param callback (instance: Instance) -> ()
