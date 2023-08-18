@@ -100,6 +100,7 @@ local function TodoList(props: {
         local childList = {
             -- Layout constraint
             Dec.New("UIListLayout", {
+                SortOrder = Enum.SortOrder.LayoutOrder,
                 HorizontalAlignment = Enum.HorizontalAlignment.Center,
                 Padding = UDim.new(0.05, 0),
             }),
@@ -226,6 +227,7 @@ local function TodoList(props: {
     }, {
         -- Layout constraint
         Dec.New("UIListLayout", {
+            SortOrder = Enum.SortOrder.LayoutOrder,
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
             Padding = UDim.new(0.05, 0),
         }),
@@ -367,12 +369,23 @@ todoItems:Set({
 })
 ```
 
-In addition to `:MapChildren()`, dec provides two more directives:
-[:MapChildrenByKey()](/API/VirtualInstance#MapChildrenByKey) and
-[:MapChildrenByValue()](/API/VirtualInstance#MapChildrenByValue).
+<center>
+    <img width="80%" src="/TutorialAssets/Chapter1/MappingChildComponents/MapByKVColored.gif" />
+    <br/>
+    <i>(Each TextLabel is assigned a unique color to demonstrate creation and destruction)</i>
+</center>
+<br/>
 
-- ***MapChildren*** creates a new instance for every key/value pair, and
-destroys the instance in place if a key _or_ value changes.
+In addition to [:MapChildren()](/API/VirtualInstance#MapChildren), Dec also
+provides the directives
+[:MapChildrenByKey()](/API/VirtualInstance#MapChildrenByKey) and
+[:MapChildrenByValue()](/API/VirtualInstance#MapChildrenByValue), which behave
+in slightly different ways:
+
+- ***MapChildren*** creates a new instance for every key/value pair. If a key
+_or_ value is ever changed, the instance assigned to that key is destroyed and a
+new one is created in its place. The mapping function
+takes in a ***Key*** and ***Value*** as parameters.
 - ***MapChildrenByKey*** Creates a new instance for every _key_, but does not
 destroy the instance if the value for that key changes. The mapping function
 takes in a ***Key*** and an ***Observable Value*** as parameters.
@@ -381,7 +394,8 @@ not destroy the instance when the key referring to this value changes. The
 mapping function takes in a ***Value*** and an ***Observable Key*** as
 parameters.
 
-The TodoList can be re-implemented using `MapChildrenByValue`:
+In this case, the TodoList can be best optimized by implementing
+`MapChildrenByValue`:
 ```lua
 local function TodoList(props: {
     items: Dec.Observable<{string}>
@@ -418,7 +432,7 @@ todoItems:Set({
     "Baz"
 })
 
--- 1 value is added, so only 1 instance gets created for Qux:
+-- 1 value (Qux) was added, so only 1 instance gets created:
 todoItems:Set({
     "Foo",
     "Fighters",
@@ -426,21 +440,24 @@ todoItems:Set({
     "Qux"
 })
 
--- 1 value is removed, so only 1 instance gets destroyed:
+-- 1 value was removed, so only 1 instance gets destroyed:
 todoItems:Set({
-    [1] = "Fighters",
-    [2] = "Baz",
-    [3] = "Qux"
+    "Fighters",
+    "Baz",
+    "Qux"
 })
 ```
+<center>
+    <img width="80%" src="/TutorialAssets/Chapter1/MappingChildComponents/MapByValueColored.gif" />
+    <br/>
+    <i>(Each TextLabel is assigned a unique color to demonstrate creation and destruction)</i>
+</center>
+<br/>
 
 ## Object Pooling With `:MapChildrenByKey()`
 
-Another viable option for implementing the todo list is mapping children by
-_key_ instead of value. This will only create the exact _number_ of instances
-needed, and update the text of each item by the order that their values appear
-in, with the `description` variable being an observable string:
-
+An equally viable option for optimizing the `TodoList` component is by mapping
+children by key instead of by value:
 
 ```lua
 local function TodoList(props: {
@@ -467,8 +484,23 @@ local function TodoList(props: {
 end
 ```
 
+<center>
+    <img width="80%" src="/TutorialAssets/Chapter1/MappingChildComponents/MapByKeyColored.gif" />
+    <br/>
+    <i>(Each TextLabel is assigned a unique color to demonstrate creation and destruction)</i>
+</center>
+<br/>
+
 This example implements true
 [Object Pooling](https://en.wikipedia.org/wiki/Object_pool_pattern), since only
-the exact _number_ of instances needed are created or destroyed. There are pros
-and cons to this approach, so whether you map by key or value is ultimately up
-to your component's use cases.
+the exact _number_ of instances needed are ever created or destroyed. When value
+for a specific index is changed, the Text property updates to match the new
+value.
+
+There are pros and cons to each child mapping approach, so whether you map by
+key or value, or both, is up to your component's design needs.
+
+In this section, we covered ***Directives*** and how they can be used to assign
+_properties_ and organize _children_ of a parent virtual instance. The next
+section will go over move directives in Dec, and how each of them can be used
+for performing various different use cases with Dec.
