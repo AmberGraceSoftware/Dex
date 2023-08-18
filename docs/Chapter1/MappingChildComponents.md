@@ -48,32 +48,17 @@ local list = ItemList({
 -- . . .
 
 items:Set({
-    Dec.New("TextLabel", {
+    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 1",
-        TextSize = 24,
-        Size = UDim2.fromScale(0.75, 0.15),
-        AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.3),
-        BorderSizePixel = 0,
-        BackgroundColor3 = Color3.fromHex("fff"),
     }),
-    Dec.New("TextLabel", {
+    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 2",
-        TextSize = 24,
-        Size = UDim2.fromScale(0.75, 0.15),
-        AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundColor3 = Color3.fromHex("fff"),
     }),
-    Dec.New("TextLabel", {
+    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 3",
-        TextSize = 24,
-        Size = UDim2.fromScale(0.75, 0.15),
-        AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.7),
-        BorderSizePixel = 0,
-        BackgroundColor3 = Color3.fromHex("fff"),
     }),
 })
 ```
@@ -81,15 +66,12 @@ items:Set({
 
 <center>
     <img width="25%" src="/TutorialAssets/Chapter1/MappingChildComponents/ObservableChildren1.png" />
-    <br/>
-    <i>(output from code sample above)</i>
 </center>
 <br/>
 
-While you can pass in a state containing a list of VirtualInstances directly
-as a child table, you can also use
-[Observable Mapping](./State.md#mapping-observables) to generate children
-dynamically based on another state:
+When generating multiple child VirtualInstances, it is recommended you use
+[Observable Mapping](./State.md#mapping-observables) to generate instances
+dynamically based on another table state (like a list of strings):
 
 ```lua
 local function TodoList(props: {
@@ -143,9 +125,7 @@ local function TodoList(props: {
 end
 ```
 
-Using child mapping, you can set the items state to a list of strings to
-generate the final visual output:
-
+(Then, to instantiate the `TodoList` component):
 ```lua
 local function Gui()
     local todoItems = Dec.State({} :: {string})
@@ -166,7 +146,7 @@ end
 
 ![Todo List Example](/TutorialAssets/Chapter1/MappingChildComponents/TodoList.png)
 
-## Using Mutliple Observables for Children
+## `:AddChildren()` Directives
 
 Let's briefly go over a feature of VirtualInstances: ***Directives***.
 
@@ -210,64 +190,7 @@ _added_ to a VirtualInstance, but never _removed_. Changing the visual output
 of a VirtualInstance should always be done by using Observables.
 :::
 
-In the case of the todo list, we can use multiple `:AddChildren()` directives
-to define the static (unchanging) and dynamic (changing) parts of the UI:
-
-```lua
-local function TodoList(props: {
-    items: Dec.Observable<{string}>
-})
-    -- Define the static (unchanging) portions of the todo list
-    local listFrame = Dec.New("Frame", {
-        Size = UDim2.fromScale(0.7, 0.6),
-        SizeConstraint = Enum.SizeConstraint.RelativeYY,
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.fromScale(0.5, 0.5),
-        BackgroundTransparency = 1,
-    }, {
-        -- Layout constraint
-        Dec.New("UIListLayout", {
-            SortOrder = Enum.SortOrder.LayoutOrder,
-            HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            Padding = UDim.new(0.05, 0),
-        }),
-        -- Heading
-        Dec.New("TextLabel", {
-            Text = "Todo List:",
-            LayoutOrder = 0,
-            TextSize = 18,
-            Size = UDim2.fromScale(1, 0.15),
-            BackgroundTransparency = 1,
-            TextColor3 = Color3.fromHex("fff"),
-        })
-    })
-
-    -- Generate a child VirtualInstance for each item in the list when the
-    -- "items" prop changes:
-    listFrame:AddChildren(props.items:Map(function(currentItems)
-        local childList = {}
-        for i, description in currentItems do
-            table.insert(childList, Dec.New("TextLabel", {
-                Text = description,
-                LayoutOrder = i,
-                TextSize = 18,
-                Size = UDim2.fromScale(1, 0.15),
-                BorderSizePixel = 0,
-                BackgroundColor3 = Color3.fromHex("fff"),
-            }, {
-                Dec.New("UICorner", {
-                    CornerRadius = UDim.new(0.2, 0)
-                })
-            }))
-        end
-        return childList
-    end))
-
-    return listFrame
-end
-```
-
-## `:MapChildren()` Directive
+## `:MapChildren()` Directives
 
 In the previous examples, Dec automatically deletes all child instances
 and re-creates new ones every time the children observable changes. In most
@@ -333,7 +256,7 @@ end)
     <img width="80%" src="/TutorialAssets/Chapter1/MappingChildComponents/MapChildrenExample.gif" />
 </center>
 
-## Optimizing Further With `:MapChildrenByValue()`
+## Optimizing With `:MapChildrenByValue()`
 
 In the example above, a label is created for every unique key/value pair, and
 only as needed. There is, however, one problem in this example: if you added
@@ -491,16 +414,15 @@ end
 </center>
 <br/>
 
-This example implements true
-[Object Pooling](https://en.wikipedia.org/wiki/Object_pool_pattern), since only
-the exact _number_ of instances needed are ever created or destroyed. When value
-for a specific index is changed, the Text property updates to match the new
-value.
+In this example, instances are generated based on the _number_ of TextLabels
+needed. When value at a specific index is changed, the Text property is updated
+reactively.
 
 There are pros and cons to each child mapping approach, so whether you map by
 key or value, or both, is up to your component's design needs.
 
-In this section, we covered ***Directives*** and how they can be used to assign
-_properties_ and organize _children_ of a parent virtual instance. The next
-section will go over move directives in Dec, and how each of them can be used
-for performing various different use cases with Dec.
+----
+This section, we covered ***Directives*** and how they can be used to
+_set properties_ and _add children_ to a parent instance. Next
+section will go over more VirtualInstance directives, and how each of them
+can be used to meet specific use cases in UI development.
