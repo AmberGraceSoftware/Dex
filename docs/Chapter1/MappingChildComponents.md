@@ -377,7 +377,7 @@ todoItems:Set({
 </center>
 <br/>
 
-## Object Pooling With `:MapChildrenByKey()`
+## Optimizing With `:MapChildrenByKey()`
 
 An equally viable option for optimizing the `TodoList` component is by mapping
 children by key instead of by value:
