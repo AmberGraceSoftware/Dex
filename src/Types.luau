@@ -160,7 +160,7 @@ export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
-    [ChildPath]: any--[[CanBeObservable<
+    [any]: any--[[[ChildPath]: CanBeObservable<
         Instance | VirtualInstance | nil
     >]]
 }>
