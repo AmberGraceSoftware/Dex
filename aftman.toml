@@ -6,5 +6,5 @@
 rojo = "rojo-rbx/rojo@7.3.0"
 selene = "Kampfkarren/selene@0.25.0"
 wally = "UpliftGames/wally@0.3.2"
-luau-lsp = "JohnnyMorganz/luau-lsp@1.23.0"
+luau-lsp = "JohnnyMorganz/luau-lsp@1.24.0"
 lune = "filiptibell/lune@0.7.6"
