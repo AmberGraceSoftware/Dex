@@ -661,6 +661,35 @@ function VirtualInstance.__index.MapChildrenByValue(
     })
 end
 
+
+--[=[
+    @method DestroyPremadeChildren
+    @within VirtualInstance
+    @param filter string | ((child: Instance) -> boolean) | nil
+
+    Adds a directive to destroy children of the VirtualInstance once it is
+    mounted.
+
+    This is useful for scenarios where the design of a premade template contains
+    objects that should be destroyed before rendering the actual UI.
+
+    The "filter" argument can be a name or predicate describing which children
+    to destroy. If a name is defined, all children found with this name will be
+    destroyed. If a predicate is defined, all children for which this function
+    returns true will be destroyed.
+]=]
+function VirtualInstance.__index.DestroyPremadeChildren(
+    self: VirtualInstance,
+    filter: string | ((child: Instance) -> boolean)?
+): ()
+    assertNotYetMounted(self)
+    table.insert(self._directives, {
+        _type = "DestroyPremadeChildren",
+        _payload = filter,
+        _trace = getTrace("VirtualInstance:DestroyPremadeChildren", 1),
+    })
+end
+
 --[=[
     @method OnMount
     @within VirtualInstance
