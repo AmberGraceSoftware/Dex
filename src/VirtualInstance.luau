@@ -348,6 +348,33 @@ end
     @return Observable<Instance?>
 
     Outputs a reference to the reconciled instance to a Dec State object.
+
+    :::danger
+    Using OutInstance to directly edit the rendered instance's properties may
+    lead to unexpected behavior. It is recommended to only use OutInstance where
+    no alternatives are available within the Dec API for your use case.
+
+    ## Use Case Alternatives
+
+    ### Preformating an instance
+    If an instance requires some amount of preformatting (e.g. deleting children
+    of a premade template), you can use the directive
+    [VirtualInstance:DestroyPremadeChildren] to destroy template UI elements
+    within a design.
+
+    Most other use cases for preformatting can usually be handled through the
+    :SetProperties directive.
+
+    ### Using a nested template for [Dec.Clone]
+    Dec.Clone supports passing in another _VirtualInstance_ as an argument, as
+    long as there are no circular dependencies. This will wait until the
+    template VirtualInstance is mounted to instantiate the cloned instance.
+
+    ### OnMount/OnUnmount
+    These methods allow side effects to be performed during the
+    VirtualInstance's rendering lifecycle. If your use case does not require a
+    direct reference to the rendered instance, this may be the best option.
+    :::
 ]=]
 function VirtualInstance.__index.OutInstance(
     self: VirtualInstance
