@@ -187,7 +187,8 @@ export type VirtualInstance = typeof(setmetatable(
             trace: VirtualInstanceTrace?,
         }}?,
         _directives: {VirtualInstanceDirective},
-        _reconciledNode: ReconciledNode?
+        _reconciledNode: ReconciledNode?,
+        _onReconciledNodeCallbacks: {[(ReconciledNode) -> ()]: boolean},
     },
     {} :: {__index: {
         _dectype: string,
