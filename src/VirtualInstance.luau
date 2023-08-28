@@ -391,48 +391,6 @@ function VirtualInstance.__index.OutInstance(
 end
 
 --[=[
-    @method Copy
-    @within VirtualInstance
-    @return VirtualInstance
-
-    Creates a shallow copy of the Virtual Instance.
-]=]
-function VirtualInstance.__index.Copy(
-    self: VirtualInstance
-): VirtualInstance
-    assertNotYetMounted(self)
-    return setmetatable({
-        _directives = table.clone(self._directives),
-        _constructorType = self._constructorType,
-        _constructorTypeArgument = self._constructorTypeArgument,
-    }, VirtualInstance :: any)
-end
-
---[=[
-    @method DeepCopy
-    @within VirtualInstance
-    @return VirtualInstance
-
-    Creates a deep copy of the VirtualInstance and all child VirtualInstances.
-]=]
-function VirtualInstance.__index.DeepCopy(
-    self: VirtualInstance
-): VirtualInstance
-    assertNotYetMounted(self)
-    local copy = self:Copy()
-    for _, directive in copy._directives do
-        if directive._type == "Children" then
-            for _, child in directive._payload do
-                if child._dectype == "VirtualInstance" then
-                    child = child:DeepCopy()
-                end
-            end
-        end
-    end
-    return copy
-end
-
---[=[
     @method AddChild
     @within VirtualInstance
     @param path string | number | {string | number}
