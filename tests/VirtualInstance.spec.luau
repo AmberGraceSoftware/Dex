@@ -282,7 +282,7 @@ return function()
         -- Note: Functions in luau are equivalent UNLESS they capture a closure
         -- value outside of their scope
         local closureVal = ""
-        local callback = function(_instance)
+        local callback = function()
             print(closureVal)
         end
         virtualInstance:OnMount(callback)
@@ -294,21 +294,12 @@ return function()
         -- Note: Functions in luau are equivalent UNLESS they capture a closure
         -- value outside of their scope
         local closureVal = 2
-        local callback = function(_instance)
+        local callback = function()
             print(closureVal)
         end
         virtualInstance:OnUnmount(callback)
     
         checkLastDirective("OnUnmount", callback)
-    end)
-    
-    it("extracts a child template via ExtractChildTemplate", function()
-        local childPath = "ChildName"
-        local childVInst =
-            virtualInstance:ExtractChildTemplate("Frame", childPath)
-    
-        checkLastDirective("Children", {[childPath] = childVInst})
-        expect(childVInst._dectype).to.be.equal("VirtualInstance")
     end)
     
     it("finds a child via FindChild", function()

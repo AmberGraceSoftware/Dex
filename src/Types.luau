@@ -265,11 +265,6 @@ export type VirtualInstance = typeof(setmetatable(
             className: string,
             childPath: ChildPath
         ) -> VirtualInstance,
-        ExtractChildTemplate: ((
-            self: VirtualInstance,
-            className: string,
-            childPath: ChildPath
-        ) -> VirtualInstance),
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
@@ -277,11 +272,11 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
         OnMount: (
             self: VirtualInstance,
-            callback: (instance: Instance) -> ()
+            callback: () -> ()
         ) -> (),
         OnUnmount: (
             self: VirtualInstance,
-            callback: (instance: Instance) -> ()
+            callback: () -> ()
         ) -> (),
     }}
 ))

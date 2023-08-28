@@ -637,13 +637,15 @@ end
 --[=[
     @method OnMount
     @within VirtualInstance
-    @param callback (instance: Instance) -> ()
+    @param callback () -> ()
 
     Adds a lifecycle callback to be called when the Virtual Instance is mounted.
+    This is useful for performing a side effect that begins/ends when a
+    component starts/stops being rendered.
 ]=]
 function VirtualInstance.__index.OnMount(
     self: VirtualInstance,
-    callback: (instance: Instance) -> ()
+    callback: () -> ()
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -656,14 +658,17 @@ end
 --[=[
     @method OnUnmount
     @within VirtualInstance
-    @param callback (instance: Instance) -> ()
+    @param callback () -> ()
 
     Adds a lifecycle callback to be called when the Virtual Instance is
     unmounted.
+
+    This is useful for performing a side effect that begins/ends when a
+    component starts/stops being rendered.
 ]=]
 function VirtualInstance.__index.OnUnmount(
     self: VirtualInstance,
-    callback: (instance: Instance) -> ()
+    callback: () -> ()
 ): ()
     assertNotYetMounted(self)
     table.insert(self._directives, {
@@ -671,65 +676,6 @@ function VirtualInstance.__index.OnUnmount(
         _payload = callback,
         _trace = getTrace("Dec.OnUnmount", 1),
     })
-end
-
---[=[
-    @method ExtractChildTemplate
-    @within VirtualInstance
-    @param nameOrPredicate string | {string}
-    @return VirtualInstance
-    Specifies that when the VirtualInstance is mounted, returns a new
-    VirtualInstance which automatically mounts on the first child matching
-    the name (or predicate) defined in the first argument to this method.
-    
-    Upon mount, all other children matching this name will be destroyed,
-    and the template will be parented to `nil` by defalt. On unmount, it will be
-    reparented to its original location if possible.
-
-    Usage example:
-
-    ```lua
-    local function CardListUI()
-        -- Define a VirtualInstance to be mounted on pre-existing UI in PlayerGui
-        local rootUI = Dec.Premade("ScreenGui")
-
-        -- Index a ScrollingFrame containing template cards
-        local cardList = rootUI:FindChild("ScrollingFrame", "CardList")
-
-        -- Extract the first template named "CardTemplate", and destroy all other
-        -- premade templates with that same name
-        local cardTemplate = cardList:ExtractChildTemplate("CardTemplate")
-
-        -- Generate 10 cards from the template
-        local cards = {}
-        for i = 1, 10 do
-            table.insert(cards, Dec.Clone(cardTemplate, {
-                LayoutOrder = i
-            }))
-        end
-
-        return rootUI
-    end
-    ```
-]=]
-function VirtualInstance.__index.ExtractChildTemplate(
-    self: VirtualInstance,
-    className: string,
-    childPath: ChildPath
-): ()
-    assertNotYetMounted(self)
-    local childVInst = self:FindChild(className, childPath)
-    local templateParent = nil
-    childVInst:OnMount(function(instance)
-        templateParent = instance.Parent
-        instance.Parent = nil
-    end)
-    childVInst:OnUnmount(function(instance)
-        pcall(function()
-            instance.Parent = templateParent
-        end)
-    end)
-    return childVInst
 end
 
 --[=[
