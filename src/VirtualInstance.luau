@@ -127,6 +127,21 @@ VirtualInstance.__index._dectype = "VirtualInstance"
 
     Multiple calls to this function will merge the provided property map with
     the existing one, prioritizing the later call.
+
+    Values in the propertyMap can have multiple possible types, which are each
+    handled differently:
+
+    - A **Static Value** (number, boolean, string, UDim2, etc.) to be assigned
+    right as the VirtualInstance is rendered
+    - An **Observablue Value** to be assigned as the VirtualInstance is
+    Rendered, as well as when the Observable value changes
+    - A **`Dec.Nil`** symbol, which assigns a property to `nil` when rendered
+    - A **function** which represents a listener to connect to an event while
+    the VirtualInstance is rendered
+    - Another **VirtualInstance**, which references an instance property to be
+    assigned. This is useful for ViewportFrames, for example, where a camera
+    must both be created underneath the ViewportFrame, and assigned as the
+    CurrentCamera property within the same frame.
 ]=]
 function VirtualInstance.__index.SetProperties(
     self: VirtualInstance,
@@ -828,7 +843,9 @@ function VirtualInstance.new(
     return setmetatable({
         _directives = directives,
         _constructorType = constructorType :: string,
-        _constructorTypeArgument = constructorPayload :: any
+        _constructorTypeArgument = constructorPayload :: any,
+        _onReconciledNodeCallbacks =
+            {} :: {[(Types.ReconciledNode) -> ()]: boolean},
     }, VirtualInstance :: any)
 end
 

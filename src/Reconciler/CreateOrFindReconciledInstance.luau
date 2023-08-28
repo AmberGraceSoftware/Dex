@@ -5,6 +5,7 @@ local IsVirtualInstance = require(ReplicatedStorage.Packages.Dec.Reflection.IsVi
 local Types = require(script.Parent.Parent.Types)
 type VirtualInstance = Types.VirtualInstance
 type VirtualInstanceTrace = Types.VirtualInstanceTrace
+type ReconciledNode = Types.ReconciledNode
 
 local WAIT_FOR_CHILD_TIMEOUT = 30
 local DEFAULT_CREATED_CHILD_NAME = "DecRoot"
@@ -120,57 +121,49 @@ end
 
 local function CloneLatentResolvedTemplate(
     childPath: string?,
-    virtualInstance: VirtualInstance,
     templateArg: VirtualInstance
 ): PseudoPromise
     local result: Instance? = nil
     local onResultCallbacks: {(Instance) -> ()} = {}
+    
     local cancelled = false
-    local stopTrackingLatentResolve: (() -> ())? = nil
-    task.defer(function()
+    local cleanups = {}
+    local function onTemplateInstance(templateInst: Instance)
         if cancelled then
             return
         end
-        local templateNode = templateArg._reconciledNode
-        if not templateNode then
-            local firstEncounteredTrace = getFirstTrace(virtualInstance)
-                or getFirstTrace(templateArg)
-            EmitTracedError(
-                "Error when mounting cloned VirtualInstance: The " .. 
-                "provided template must be an Instance, or a " .. 
-                "VirtualInstance that has already been mounted or " .. 
-                "will be mounted within the same frame. Perhaps you " ..
-                "passed an unmounted VirtualInstance as a template " .. 
-                "for Dec.Clone()?",
-                firstEncounteredTrace
-            )
+
+        local newInstance = templateInst:Clone()
+        newInstance.Name = childPath
+            or DEFAULT_CREATED_CHILD_NAME
+        result = newInstance
+        for _, cb in onResultCallbacks do
+            task.spawn(cb, newInstance)
+        end
+    end
+    local function onTemplateNode(templateNode: ReconciledNode)
+        if cancelled then
             return
         end
-
-        local instance = templateNode._instance
-        if instance then
-            local newInstance = instance:Clone()
-            newInstance.Name = childPath
-                or DEFAULT_CREATED_CHILD_NAME
-            result = newInstance
-            for _, cb in onResultCallbacks do
-                task.spawn(cb, newInstance)
-            end
+        if templateNode._instance then
+            onTemplateInstance(templateNode._instance)
         else
-            local function onResolve(template: Instance)
-                local newInstance = template:Clone()
-                newInstance.Name = childPath
-                    or DEFAULT_CREATED_CHILD_NAME
-                for _, cb in onResultCallbacks do
-                    task.spawn(cb, newInstance)
-                end
-            end
-            templateNode._instanceResolvedCallbacks[onResolve] = true
-            stopTrackingLatentResolve = function()
-                templateNode._instanceResolvedCallbacks[onResolve] = nil
-            end
+            templateNode._instanceResolvedCallbacks[onTemplateInstance] = true
+            table.insert(cleanups, function()
+                templateNode._instanceResolvedCallbacks[onTemplateInstance]
+                    = nil
+            end)
         end
-    end)
+    end
+    if templateArg._reconciledNode then
+        onTemplateNode(templateArg._reconciledNode)
+    else
+        templateArg._onReconciledNodeCallbacks[onTemplateNode] = true
+        table.insert(cleanups, function()
+            templateArg._onReconciledNodeCallbacks[onTemplateNode] = nil
+        end)
+    end
+    
     return {
         andThen = function(callback)
             if result then
@@ -181,8 +174,8 @@ local function CloneLatentResolvedTemplate(
         end,
         cancel = function()
             cancelled = true
-            if stopTrackingLatentResolve then
-                stopTrackingLatentResolve()
+            for _, cb in cleanups do
+                cb()
             end
         end,
     }
@@ -217,8 +210,7 @@ local function CloneTemplateReconciledInstance(
             -- check if the template VInstance was mounted this frame and wait
             -- for the template at least to resolve. Otherwise, raise an
             -- exception.
-            return CloneLatentResolvedTemplate(childPath, virtualInstance,
-                templateArg)
+            return CloneLatentResolvedTemplate(childPath, templateArg)
         end
     else
         -- In standard case, use template instance provided

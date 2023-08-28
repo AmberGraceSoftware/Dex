@@ -58,6 +58,10 @@ local function MountVirtualInstance(
     if not node._instance then
         table.insert(node._unsubscribes, instancePromise.cancel)
     end
+
+    for cb in virtualInstance._onReconciledNodeCallbacks do
+       task.spawn(cb, node)
+    end
     
     return node
 end
