@@ -14,10 +14,9 @@ local function ApplyReferenceToNode(
     instance: any,
     key: string,
     referencedNode: Types.ReconciledNode
-)
+): (() -> ())?
     if referencedNode._instance then
         instance[key] = referencedNode._instance
-        return function() end
     end
     local resolvedCallbacks = referencedNode._instanceResolvedCallbacks
 
@@ -35,7 +34,7 @@ local function ApplyReferenceToVInst(
     instance: any,
     key: string,
     referencedVInst: Types.VirtualInstance
-)
+): (() -> ())?
     if referencedVInst._reconciledNode then
         return ApplyReferenceToNode(
             instance,
@@ -102,11 +101,14 @@ local function ApplyPropertyMapThrows(
                 )
                 instance[key] = applyNilSymbol(value:Current())
             elseif value._dectype == "VirtualInstance" then
-                ApplyReferenceToVInst(
+                local cleanup = ApplyReferenceToVInst(
                     instance,
                     key,
                     value
                 )
+                if cleanup then
+                    table.insert(reconciledUnsubs, cleanup)
+                end
             elseif value == NilSymbol then
                 instance[key] = nil
             end
