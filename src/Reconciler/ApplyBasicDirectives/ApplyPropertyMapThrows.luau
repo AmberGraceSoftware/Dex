@@ -10,6 +10,57 @@ local function applyNilSymbol(value: any): any
     return if value == NilSymbol then nil else value
 end
 
+local function ApplyReferenceToNode(
+    instance: any,
+    key: string,
+    referencedNode: Types.ReconciledNode
+)
+    if referencedNode._instance then
+        instance[key] = referencedNode._instance
+        return function() end
+    end
+    local resolvedCallbacks = referencedNode._instanceResolvedCallbacks
+
+    local callback = function(refInstance)
+        instance[key] = refInstance
+    end
+    resolvedCallbacks[callback] = true
+
+    return function()
+        resolvedCallbacks[callback] = nil
+    end
+end
+
+local function ApplyReferenceToVInst(
+    instance: any,
+    key: string,
+    referencedVInst: Types.VirtualInstance
+)
+    if referencedVInst._reconciledNode then
+        return ApplyReferenceToNode(
+            instance,
+            key,
+            referencedVInst._reconciledNode
+        )
+    end
+
+    local innerCleanup = nil
+    local callback = function(node: Types.ReconciledNode)
+        innerCleanup = ApplyReferenceToNode(
+            instance,
+            key,
+            node
+        )
+    end
+    referencedVInst._onReconciledNodeCallbacks[callback] = true
+    return function()
+        referencedVInst._onReconciledNodeCallbacks[callback] = nil
+        if innerCleanup then
+            innerCleanup()
+        end
+    end
+end
+
 --[[
     @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
     @param propMap: {[string]: any} - The property map to apply to the VirtualInstance
@@ -41,14 +92,22 @@ local function ApplyPropertyMapThrows(
                 event = key,
                 listener = value
             })
-        elseif typeof(value) == "table" and value._dectype == "Observable" then
-            table.insert(
-                reconciledUnsubs,
-                value:Subscribe(function(current)
-                    instance[key] = applyNilSymbol(current)
-                end)
-            )
-            instance[key] = applyNilSymbol(value:Current())
+        elseif typeof(value) == "table" then
+            if value._dectype == "Observable" then
+                table.insert(
+                    reconciledUnsubs,
+                    value:Subscribe(function(current)
+                        instance[key] = applyNilSymbol(current)
+                    end)
+                )
+                instance[key] = applyNilSymbol(value:Current())
+            elseif value._dectype == "VirtualInstance" then
+                ApplyReferenceToVInst(
+                    instance,
+                    key,
+                    value
+                )
+            end
         else
             instance[key] = applyNilSymbol(value)
         end

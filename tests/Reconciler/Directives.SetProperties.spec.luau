@@ -55,5 +55,17 @@ return function()
             host.Text = "Foo"
             expect(didChange).to.equal(true)
         end)
+        it("Sets reference to another VirtualInstance", function()
+            local host = Instance.new("ViewportFrame")
+
+            local camera = Dec.New("Camera")
+            local virtualInstance = Dec.Premade("ViewportFrame", {
+                CurrentCamera = camera
+            }, {camera})
+            Dec.Root(host):Render(virtualInstance)
+
+            expect(#host:GetChildren()).to.equal(1)
+            expect(host.CurrentCamera).to.equal(host:GetChildren()[1])
+        end)
     end)
 end
