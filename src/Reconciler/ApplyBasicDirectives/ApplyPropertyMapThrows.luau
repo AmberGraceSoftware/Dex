@@ -107,6 +107,8 @@ local function ApplyPropertyMapThrows(
                     key,
                     value
                 )
+            elseif value == NilSymbol then
+                instance[key] = nil
             end
         else
             instance[key] = applyNilSymbol(value)

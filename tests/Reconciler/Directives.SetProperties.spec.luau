@@ -67,5 +67,46 @@ return function()
             expect(#host:GetChildren()).to.equal(1)
             expect(host.CurrentCamera).to.equal(host:GetChildren()[1])
         end)
+        it("Sets a static reference to Dec.Nil", function()
+            local host = Instance.new("ViewportFrame")
+            local camera = Instance.new("Camera")
+            camera.Parent = host
+            host.CurrentCamera = camera
+
+            local virtualInstance = Dec.Premade("ViewportFrame", {
+                CurrentCamera = Dec.Nil
+            })
+
+            expect(host.CurrentCamera).to.equal(camera)
+
+            Dec.Root(host):Render(virtualInstance)
+
+            expect(host.CurrentCamera).to.equal(nil)
+        end)
+        it("Sets an observable reference to Dec.Nil", function()
+            local host = Instance.new("ViewportFrame")
+            local camera = Instance.new("Camera")
+            camera.Parent = host
+            host.CurrentCamera = camera
+
+            local observableReference = Dec.State(Dec.Nil :: any)
+            local virtualInstance = Dec.Premade("ViewportFrame", {
+                CurrentCamera = observableReference
+            })
+
+            expect(host.CurrentCamera).to.equal(camera)
+
+            Dec.Root(host):Render(virtualInstance)
+
+            expect(host.CurrentCamera).to.equal(nil)
+
+            observableReference:Set(camera)
+
+            expect(host.CurrentCamera).to.equal(camera)
+
+            observableReference:Set(Dec.Nil)
+
+            expect(host.CurrentCamera).to.equal(nil)
+        end)
     end)
 end
