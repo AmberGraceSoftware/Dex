@@ -7,6 +7,8 @@ on:
       - moonwave.toml
       - .moonwave/**
       - .github/workflows/DeployDocs.yml
+      - src/**
+      - blog/**
     types:
       - opened
       - reopened
@@ -15,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-docs:
+  build-docs:
     if: '! github.event.pull_request.draft'
     runs-on: ubuntu-latest
     steps:
