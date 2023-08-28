@@ -263,6 +263,41 @@ local function ApplyMapChildrenDirective(
         end
     end, true))
 end
+
+local function ApplyDestroyPremadeChildren(
+    node: ReconciledNode,
+    directive: VirtualInstanceDirective
+)
+    local instance = node._instance
+    if not instance then
+        return
+    end
+    local filter = directive._payload :: string | ((Instance) -> boolean)?
+
+    if filter == nil then
+        instance:ClearAllChildren()
+    elseif typeof(filter) == "string" then
+        for _, object in instance:GetChildren() do
+            if object.Name == filter then
+                object:Destroy()
+            end
+        end
+    elseif typeof(filter) == "function" then
+        for _, object in instance:GetChildren() do
+            if filter(object) then
+                object:Destroy()
+            end
+        end
+    else
+        EmitTracedError(
+            "Error when mounting VirtualInstance: Filter argument for" ..
+            "VirtualInstance:DestroyPremadeChildren() must be a string or " .. 
+            "predicate function!",
+            directive._trace
+        )
+    end
+end
+
 --[[
     @param node: ReconciledNode - The reconciled node to apply child directives on
     @param vInst: VirtualInstance - The virtual instances to read directives from
@@ -281,6 +316,8 @@ local function ApplyChildDirectives(
             ApplyMapChildrenDirective(node, directive, false)
         elseif directive._type == "MapChildrenByKey" then
             ApplyMapChildrenDirective(node, directive, true)
+        elseif directive._type == "DestroyPremadeChildren" then
+            ApplyDestroyPremadeChildren(node, directive)
         end
     end
 end

@@ -265,23 +265,22 @@ export type VirtualInstance = typeof(setmetatable(
             className: string,
             childPath: ChildPath
         ) -> VirtualInstance,
-        ExtractChildTemplate: ((
-            self: VirtualInstance,
-            className: string,
-            childPath: ChildPath
-        ) -> VirtualInstance),
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
             child: CanBeObservable<Instance | VirtualInstance | nil>
         ) -> (),
+        DestroyPremadeChildren: (
+            self: VirtualInstance,
+            filter: nil | string | ((child: Instance) -> boolean)
+        ) -> (),
         OnMount: (
             self: VirtualInstance,
-            callback: (instance: Instance) -> ()
+            callback: () -> ()
         ) -> (),
         OnUnmount: (
             self: VirtualInstance,
-            callback: (instance: Instance) -> ()
+            callback: () -> ()
         ) -> (),
     }}
 ))
