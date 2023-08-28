@@ -204,7 +204,7 @@ local function CloneTemplateReconciledInstance(
         then
             -- In the case that the template is an already-mounted node,
             -- immediately clone it.
-            local newInstance = templateArg:Clone()
+            local newInstance = templateArg._reconciledNode._instance:Clone()
             newInstance.Name = childPath or DEFAULT_CREATED_CHILD_NAME
             return {
                 andThen = function(callback)

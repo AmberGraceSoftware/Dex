@@ -36,7 +36,7 @@ end
 --[=[
     @function Clone
     @within Dec
-    @param template Instance
+    @param template Instance | VirtualInstance
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance

@@ -100,4 +100,36 @@ return function()
         expect(#hostInstance:GetChildren()).to.equal(0)
         hostInstance:Destroy()
     end)
+
+    it("should render a cloned virtual instance from another virtual template", function()
+        local host = Instance.new("Frame")
+        local templateChild = Instance.new("TextLabel")
+        templateChild.Name = "Template"
+        templateChild.BackgroundTransparency = 0.5
+        templateChild.Parent = host
+
+        local parent = Dec.Premade("Frame")
+        local child = parent:FindChild("TextLabel", "Template")
+        parent:AddChild("Copy", Dec.Clone(child, {
+            BackgroundTransparency = 1
+        }))
+
+        local root = Dec.Root(host)
+        root:Render(parent)
+
+        expect(#host:GetChildren()).to.equal(2)
+
+        local renderedTemplate = host:FindFirstChild("Template") :: any
+        expect(renderedTemplate).to.be.ok()
+        expect(renderedTemplate.BackgroundTransparency).to.equal(0.5)
+
+        local renderedCopy = host:FindFirstChild("Copy") :: any
+        expect(renderedCopy).to.be.ok()
+        expect(renderedCopy.BackgroundTransparency).to.equal(1)
+        
+        root:Unmount()
+        
+        expect(#host:GetChildren()).to.equal(1)
+        expect(host:GetChildren()[1].Name).to.equal("Template")
+    end)
 end

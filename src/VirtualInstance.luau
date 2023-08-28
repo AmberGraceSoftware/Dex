@@ -89,7 +89,7 @@ end
     ### Dec.Clone
     ```lua
     Dec.Clone(
-        template: Instance,
+        template: Instance | VirtualInstance,
         props: {[string]: any}?,
         children: {[any]: CanBeObservable<VirtualInstance?>}
     ) -> VirtualInstance
@@ -371,9 +371,10 @@ end
     template VirtualInstance is mounted to instantiate the cloned instance.
 
     ### OnMount/OnUnmount
-    These methods allow side effects to be performed during the
-    VirtualInstance's rendering lifecycle. If your use case does not require a
-    direct reference to the rendered instance, this may be the best option.
+    The methods [VirtualInstance:OnMount] and [VirtualInstance.OnUnmont] allow
+    side effects to be performed during the VirtualInstance's rendering
+    lifecycle. If your use case does not require a direct reference to the
+    rendered instance, this may be the best option.
     :::
 ]=]
 function VirtualInstance.__index.OutInstance(
