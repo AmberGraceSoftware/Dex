@@ -2,6 +2,7 @@
 
 local ApplyBasicDirectives = require(script.Parent.ApplyBasicDirectives)
 local ApplyChildDirectives = require(script.Parent.ApplyChildDirectives)
+local ApplyCombinedIsAChecks = require(script.Parent.ApplyCombinedIsAChecks)
 local CreateReconciledNode = require(script.Parent.CreateReconciledNode)
 local CreateOrFindReconciledInstance = require(script.Parent.CreateOrFindReconciledInstance)
 local Types = require(script.Parent.Parent.Types)
@@ -35,13 +36,16 @@ local function MountVirtualInstance(
         error("VirtualInstance cannot be mounted more than once")
     end
     virtualInstance._reconciledNode = node
-    table.freeze(virtualInstance)
+    if not table.isfrozen(virtualInstance._directives) then
+        table.freeze(virtualInstance._directives)
+    end
     instancePromise.andThen(function(instance)
         node._instance = instance
         if (virtualInstance._constructorType == "New")
         or (virtualInstance._constructorType == "Clone") then
             table.insert(node._instancesToCleanup, instance)
         end 
+        ApplyCombinedIsAChecks(node, virtualInstance)
         ApplyBasicDirectives(node, virtualInstance)
         ApplyChildDirectives(node, virtualInstance)
         for callback in node._instanceResolvedCallbacks do

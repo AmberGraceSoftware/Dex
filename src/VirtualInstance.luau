@@ -733,6 +733,55 @@ function VirtualInstance.__index.FindChild(
 end
 
 --[[
+    @method Combine
+    @within VirtualInstance
+    @param ... VirtualInstance
+    
+    Combines one or more directives from another VirtualInstance. The
+    VirtualInstances passed in must meet the following requirements:
+
+    - They must have a "Premade" constructor type with an equivalent or related
+    ClassName
+    - They must not already be rendered, combined, or otherwise frozen.
+]]
+function VirtualInstance.__index.Combine(
+    self: VirtualInstance,
+    ...: VirtualInstance
+)
+    local args: {VirtualInstance} = {...}
+    local _combinedIsAChecks = self._combinedIsAChecks :: {{
+        className: string,
+        trace: VirtualInstanceTrace?,
+    }}
+    if not _combinedIsAChecks then
+        _combinedIsAChecks = {}
+        self._combinedIsAChecks = _combinedIsAChecks
+    end
+    for _, arg: any in args do
+        if arg._constructorType ~= "Premade" then
+            error("Combined VirtualInstances must have a 'Premade' type!")
+        end
+        if table.isfrozen(arg._directives) then
+            error("Attempt to pass a frozen VirtualInstance as an argument to "
+                .. "VirtualInstance:Combine(). A VirtualInstance can only be "
+                .. "combined if it has not already been mounted or combined "
+                .. "before.")
+        end
+        table.freeze(arg._directives)
+
+        table.insert(_combinedIsAChecks, {
+            className = arg._constructorTypeArgument,
+            trace = if #arg._directives == 0
+                then nil
+                else arg._directives[1]._trace
+        })
+        for _, directive in arg._directives do
+            table.insert(self._directives, directive)
+        end
+    end
+end
+
+--[[
     @function new
     @within VirtualInstance
     @private

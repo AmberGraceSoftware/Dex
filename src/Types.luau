@@ -182,6 +182,10 @@ export type VirtualInstance = typeof(setmetatable(
         _current: Instance?,
         _constructorType: string,
         _constructorTypeArgument: any,
+        _combinedIsAChecks: {{
+            className: string,
+            trace: VirtualInstanceTrace?,
+        }}?,
         _directives: {VirtualInstanceDirective},
         _reconciledNode: ReconciledNode?
     },
@@ -281,6 +285,10 @@ export type VirtualInstance = typeof(setmetatable(
         OnUnmount: (
             self: VirtualInstance,
             callback: () -> ()
+        ) -> (),
+        Combine: (
+            self: VirtualInstance,
+            ...VirtualInstance
         ) -> (),
     }}
 ))
