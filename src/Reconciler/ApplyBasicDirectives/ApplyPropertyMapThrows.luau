@@ -116,6 +116,11 @@ local function ApplyPropertyMapThrows(
                         end
                     end, true)
                 )
+                table.insert(reconciledUnsubs, function()
+                    if instanceRefCleanup then
+                        instanceRefCleanup()
+                    end
+                end)
             elseif value._dectype == "VirtualInstance" then
                 local cleanup = ApplyReferenceToVInst(
                     instance,
