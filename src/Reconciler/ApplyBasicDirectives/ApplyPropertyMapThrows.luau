@@ -93,13 +93,29 @@ local function ApplyPropertyMapThrows(
             })
         elseif typeof(value) == "table" then
             if value._dectype == "Observable" then
+                local instanceRefCleanup: (() -> ())? = nil
                 table.insert(
                     reconciledUnsubs,
-                    value:Subscribe(function(current)
-                        instance[key] = applyNilSymbol(current)
-                    end)
+                    value:Subscribe(function(current: any)
+                        if instanceRefCleanup then
+                            instanceRefCleanup()
+                            instanceRefCleanup = nil
+                        end
+
+                        if current == NilSymbol then
+                            instance[key] = nil
+                        elseif typeof(current) == "table"
+                        and current._dectype == "VirtualInstance" then
+                            instanceRefCleanup = ApplyReferenceToVInst(
+                                instance,
+                                key,
+                                current
+                            )
+                        else
+                            instance[key] = applyNilSymbol(current)
+                        end
+                    end, true)
                 )
-                instance[key] = applyNilSymbol(value:Current())
             elseif value._dectype == "VirtualInstance" then
                 local cleanup = ApplyReferenceToVInst(
                     instance,
