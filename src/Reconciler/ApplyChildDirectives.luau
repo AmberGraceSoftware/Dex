@@ -13,23 +13,6 @@ type ChildMap = Types.ChildMap
 type Observable<T> = Types.Observable<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 
-local function parsePath(path: ChildPath): {string}
-    if typeof(path) == "table" then
-        local parsed = table.create(#path)
-        for _, pathKey in path do
-            if typeof(pathKey) == "string" then
-                table.insert(parsed, pathKey)
-            else
-                table.insert(parsed, tostring(pathKey))
-            end
-        end
-        return parsed
-    elseif typeof(path) == "number" then
-        return {tostring(path)}
-    else
-        return {path}
-    end
-end
 local RenderVirtualInstance: any = nil
 local function RenderChild(
     parentNode: ReconciledNode,
@@ -90,42 +73,17 @@ local function ApplyChildrenDirective(
         for childPath: ChildPath,
         virtualInstance: CanBeObservable<VirtualInstance> in childMap do
             local chainedVirtualInstance: any = virtualInstance
-            local finalChildKey: string
-
-            -- De-Sugar/Flaten list of multiple names to a chain of Premade
-            -- VirtualInstances with each nested child as a VirtualInstance.
-            local nameList = parsePath(childPath)
-            for i = #nameList, 1, -1 do
-                local name = nameList[i]
-                if i == 1 then
-                    finalChildKey = name
-                else
-                    local child = chainedVirtualInstance
-                    local parent = VirtualInstanceCreators.Premade("Instance")
-                    parent:AddChild(name, child)
-                    chainedVirtualInstance = parent
-                    for _, parentDirective in parent._directives do
-                        parentDirective._trace = directive._trace
-                    end
-                end
-            end
-            if not finalChildKey then
-                EmitTracedError(
-                    "Error when mounting Child virtual instances: Child " .. 
-                    "name path is empty! At least one name expected.",
-                    directive._trace
-                )
-            end
+            local childKey = tostring(childPath)
             if IsObservable(chainedVirtualInstance) then
                 RenderChildObservable(
                     node,
-                    finalChildKey,
+                    childKey,
                     chainedVirtualInstance
                 )
             else
                 RenderChild(
                     node,
-                    finalChildKey,
+                    childKey,
                     chainedVirtualInstance
                 )
             end

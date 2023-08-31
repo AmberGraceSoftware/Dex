@@ -408,7 +408,7 @@ end
 --[=[
     @method AddChild
     @within VirtualInstance
-    @param path string | number | {string | number}
+    @param path string | number
     @param child CanBeObservable<VirtualInstance?>
 
     Adds a child VirtualInstance node to this VirtualInstance.

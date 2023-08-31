@@ -14,5 +14,15 @@ return function()
             expect(#host:GetChildren()).to.equal(1)
             expect(host:GetChildren()[1].Name).to.equal("Foo")
         end)
+        it("Adds a VirtualInstance child with numeric key", function()
+            local host = Instance.new("Frame")
+            local vInst = Dec.Premade("Frame")
+            vInst:AddChild(1, Dec.New("Frame"))
+
+            Dec.Root(host):Render(vInst)
+
+            expect(#host:GetChildren()).to.equal(1)
+            expect(host:GetChildren()[1].Name).to.equal("1")
+        end)
     end)
 end

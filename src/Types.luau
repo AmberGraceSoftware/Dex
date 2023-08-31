@@ -158,7 +158,7 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 export type Stopwatch = BaseTimer
 export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
-export type ChildPath = string | number | {string | number}
+export type ChildPath = string | number
 export type ChildMap = CanBeObservable<{
     [any]: any--[[[ChildPath]: CanBeObservable<
         VirtualInstance | nil
