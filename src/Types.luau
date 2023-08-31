@@ -273,7 +273,7 @@ export type VirtualInstance = typeof(setmetatable(
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
-            child: CanBeObservable<VirtualInstance | nil>
+            child: CanBeObservable<any>
         ) -> (),
         DestroyPremadeChildren: (
             self: VirtualInstance,
