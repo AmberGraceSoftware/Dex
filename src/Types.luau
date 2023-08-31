@@ -161,7 +161,7 @@ export type CanBeObservable<T = any> = T | Observable<T>
 export type ChildPath = string | number | {string | number}
 export type ChildMap = CanBeObservable<{
     [any]: any--[[[ChildPath]: CanBeObservable<
-        Instance | VirtualInstance | nil
+        VirtualInstance | nil
     >]]
 }>
 export type VirtualInstanceTrace = {
@@ -273,7 +273,7 @@ export type VirtualInstance = typeof(setmetatable(
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
-            child: CanBeObservable<Instance | VirtualInstance | nil>
+            child: CanBeObservable<VirtualInstance | nil>
         ) -> (),
         DestroyPremadeChildren: (
             self: VirtualInstance,

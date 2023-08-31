@@ -409,15 +409,11 @@ end
     @method AddChild
     @within VirtualInstance
     @param path string | number | {string | number}
-    @param child CanBeObservable<Instance | VirtualInstance?>
+    @param child CanBeObservable<VirtualInstance?>
 
     Adds a child VirtualInstance node to this VirtualInstance.
 
     The path can be a dot-separated string, or an array of raw string names.
-
-    If the child is an actual Instance, that instance will be reparanted to the
-    virtual instance when reconciled, and destroyed when the VirtualInstances is
-    unmounted.
     
     If the child is a VirtualInstance, it will be created or found depending on
     the type of VirtualInstance passed in.
