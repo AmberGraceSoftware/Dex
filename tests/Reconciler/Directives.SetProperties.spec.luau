@@ -108,5 +108,33 @@ return function()
 
             expect(host.CurrentCamera).to.equal(nil)
         end)
+        it("Sets an observable reference to VirtualInstance", function()
+            local host = Instance.new("ViewportFrame")
+            local camera = Instance.new("Camera")
+            camera.Parent = host
+            host.CurrentCamera = camera
+
+            local observableReference = Dec.State(Dec.Nil :: any)
+            local cameraVInst = Dec.Premade("Camera")
+            local virtualInstance = Dec.Premade("ViewportFrame", {
+                CurrentCamera = observableReference
+            }, {
+                Camera = cameraVInst
+            })
+
+            expect(host.CurrentCamera).to.equal(camera)
+
+            Dec.Root(host):Render(virtualInstance)
+
+            expect(host.CurrentCamera).to.equal(nil)
+
+            observableReference:Set(cameraVInst)
+
+            expect(host.CurrentCamera).to.equal(camera)
+
+            observableReference:Set(Dec.Nil)
+
+            expect(host.CurrentCamera).to.equal(nil)
+        end)
     end)
 end
