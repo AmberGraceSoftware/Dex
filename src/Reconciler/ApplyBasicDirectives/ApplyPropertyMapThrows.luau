@@ -1,5 +1,6 @@
 --!strict
 
+local ChainedSubscribe = require(script.Parent.Parent.Parent.Reconciler.ChainedSubscribe)
 local Symbols = require(script.Parent.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Parent.Types)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
@@ -96,7 +97,7 @@ local function ApplyPropertyMapThrows(
                 local instanceRefCleanup: (() -> ())? = nil
                 table.insert(
                     reconciledUnsubs,
-                    value:Subscribe(function(current: any)
+                    ChainedSubscribe(value, function(current: any)
                         if instanceRefCleanup then
                             instanceRefCleanup()
                             instanceRefCleanup = nil
@@ -114,7 +115,7 @@ local function ApplyPropertyMapThrows(
                         else
                             instance[key] = applyNilSymbol(current)
                         end
-                    end, true)
+                    end)
                 )
                 table.insert(reconciledUnsubs, function()
                     if instanceRefCleanup then

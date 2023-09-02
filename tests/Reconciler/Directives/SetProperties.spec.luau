@@ -136,5 +136,27 @@ return function()
 
             expect(host.CurrentCamera).to.equal(nil)
         end)
+        it("Resolves nested observable properties", function()
+            local host = Instance.new("TextLabel")
+            local layoutOrderState = Dec.State(123)
+            local nestingState = Dec.State(layoutOrderState :: any)
+
+            local virtualInstance = Dec.Premade("TextLabel", {})
+            virtualInstance:SetProperties({
+                LayoutOrder = nestingState,
+            })
+            Dec.Root(host):Render(virtualInstance)
+            expect(host.LayoutOrder).to.equal(123)
+
+            layoutOrderState:Set(456)
+            expect(host.LayoutOrder).to.equal(456)
+
+            nestingState:Set(789)
+            layoutOrderState:Set(10_11_12)
+            expect(host.LayoutOrder).to.equal(789)
+
+            nestingState:Set(layoutOrderState)
+            expect(host.LayoutOrder).to.equal(10_11_12)
+        end)
     end)
 end
