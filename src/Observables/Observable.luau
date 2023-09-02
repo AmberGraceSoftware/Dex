@@ -1,6 +1,5 @@
 --!strict
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local IsObservable = require(ReplicatedStorage.Packages.Dec.Reflection.IsObservable)
+local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
 local Types = require(script.Parent.Parent.Types)
 
 export type Observable<T> = Types.Observable<T>

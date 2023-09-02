@@ -1,7 +1,6 @@
 --!strict
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local EmitTracedError = require(script.Parent.EmitTracedError)
-local IsVirtualInstance = require(ReplicatedStorage.Packages.Dec.Reflection.IsVirtualInstance)
+local IsVirtualInstance = require(script.Parent.Parent.Reflection.IsVirtualInstance)
 local Types = require(script.Parent.Parent.Types)
 type VirtualInstance = Types.VirtualInstance
 type VirtualInstanceTrace = Types.VirtualInstanceTrace

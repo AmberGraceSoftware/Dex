@@ -1,10 +1,12 @@
 --!strict
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Observable = require(ReplicatedStorage.Packages.Dec.Observables.Observable)
+local IsVirtualInstance = require(script.Parent.Parent.Reflection.IsVirtualInstance)
+local ChainedSubscribe = require(script.Parent.ChainedSubscribe)
+local Observable = require(script.Parent.Parent.Observables.Observable)
 local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
 local Types = require(script.Parent.Parent.Types)
 local EmitTracedError = require(script.Parent.EmitTracedError)
-local VirtualInstanceCreators = require(script.Parent.Parent.VirtualInstanceCreators)
+local Symbols = require(script.Parent.Parent.Symbols)
+local NilSymbol = Symbols.Nil
 type VirtualInstance = Types.VirtualInstance
 type VirtualInstanceDirective = Types.VirtualInstanceDirective
 type ReconciledNode = Types.ReconciledNode
@@ -17,35 +19,57 @@ local RenderVirtualInstance: any = nil
 local function RenderChild(
     parentNode: ReconciledNode,
     childKey: string,
-    childVirtualInstance: VirtualInstance?
+    childVirtualInstance: CanBeObservable<any?>
 )
     if not RenderVirtualInstance then
         RenderVirtualInstance = (require :: any)(script.Parent.RenderVirtualInstance)
     end
-    local existingChildNode = parentNode._childMap[childKey]
-    parentNode._childMap[childKey] = RenderVirtualInstance(
-        parentNode._instance :: Instance,
-        childKey,
-        childVirtualInstance,
-        existingChildNode
-    )
+    local existingCleanup = parentNode._childCleanups[childKey]
+    if existingCleanup then
+        existingCleanup()
+    end
+    if IsObservable(childVirtualInstance) then
+        parentNode._childCleanups[childKey] = ChainedSubscribe(
+            childVirtualInstance :: any,
+            function(terminalVInst)
+                local existingChildNode = parentNode._childMap[childKey]
+                parentNode._childMap[childKey] = RenderVirtualInstance(
+                    parentNode._instance :: Instance,
+                    childKey,
+                    if IsVirtualInstance(terminalVInst)
+                        then terminalVInst
+                        else nil,
+                    existingChildNode
+                )
+            end,
+            true
+        )
+    else
+        parentNode._childCleanups[childKey] = nil
+        local existingChildNode = parentNode._childMap[childKey]
+        parentNode._childMap[childKey] = RenderVirtualInstance(
+            parentNode._instance :: Instance,
+            childKey,
+            if IsVirtualInstance(childVirtualInstance)
+                then childVirtualInstance
+                else nil,
+            existingChildNode
+        )
+    end
 end
-local function RenderChildObservable(
-    parentNode: ReconciledNode,
-    childKey: string,
-    childVirtualInstance: Observable<VirtualInstance?>
+
+local function ApplyStaticChildMap(
+    node: ReconciledNode,
+    childMap: {[ChildPath]: CanBeObservable<any>}
 )
-    table.insert(
-        parentNode._unsubscribes,
-        childVirtualInstance:Subscribe(function(currentChild)
-            RenderChild(parentNode, childKey, currentChild)
-        end)
-    )
-    RenderChild(
-        parentNode,
-        childKey,
-        childVirtualInstance:Current()
-    )
+    for childPath, virtualInstance in childMap do
+        local childKey = tostring(childPath)
+        RenderChild(
+            node,
+            childKey,
+            virtualInstance
+        )
+    end
 end
 
 local function ApplyChildrenDirective(
@@ -54,40 +78,29 @@ local function ApplyChildrenDirective(
 )
     local childMap = directive._payload
     if IsObservable(childMap) then
+        local lastKeySet: {[any]: any} = {}
+        local function applyDiff(newStaticChildMap: {[any]: any})
+            if (typeof(newStaticChildMap) ~= "table")
+            or (newStaticChildMap :: any == NilSymbol) then
+                newStaticChildMap = {}
+            end
+            local diff = table.clone(newStaticChildMap)
+            local nextKeySet = table.clone(diff)
+            for k in lastKeySet do
+                if nextKeySet[k] ~= nil then
+                    continue
+                end
+                diff[k] = NilSymbol
+            end
+            lastKeySet = nextKeySet
+            ApplyStaticChildMap(node, diff)
+        end
         table.insert(
             node._unsubscribes,
-            (childMap :: Observable<any>):Subscribe(function(currentChildMap)
-                ApplyChildrenDirective(node, {
-                    _type = directive._type,
-                    _trace = directive._trace,
-                    _payload = currentChildMap,
-                })
-            end)
+            ChainedSubscribe(childMap, applyDiff, true)
         )
-        ApplyChildrenDirective(node, {
-            _type = directive._type,
-            _trace = directive._trace,
-            _payload = childMap:Current(),
-        })
     else
-        for childPath: ChildPath,
-        virtualInstance: CanBeObservable<VirtualInstance> in childMap do
-            local chainedVirtualInstance: any = virtualInstance
-            local childKey = tostring(childPath)
-            if IsObservable(chainedVirtualInstance) then
-                RenderChildObservable(
-                    node,
-                    childKey,
-                    chainedVirtualInstance
-                )
-            else
-                RenderChild(
-                    node,
-                    childKey,
-                    chainedVirtualInstance
-                )
-            end
-        end
+        ApplyStaticChildMap(node, childMap)
     end
 end
 
