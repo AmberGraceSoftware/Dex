@@ -41,8 +41,7 @@ local function RenderChild(
                         else nil,
                     existingChildNode
                 )
-            end,
-            true
+            end
         )
     else
         parentNode._childCleanups[childKey] = nil
@@ -97,7 +96,7 @@ local function ApplyChildrenDirective(
         end
         table.insert(
             node._unsubscribes,
-            ChainedSubscribe(childMap, applyDiff, true)
+            ChainedSubscribe(childMap, applyDiff)
         )
     else
         ApplyStaticChildMap(node, childMap)
