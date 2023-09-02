@@ -202,7 +202,7 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
         AddTags: (
             self: VirtualInstance,
-            tags: CanBeObservable<{string}>
+            tags: any
         ) -> (),
         Connect: (
             self: VirtualInstance,

@@ -1,6 +1,6 @@
 --!strict
 
-local ChainedSubscribe = require(script.Parent.Parent.Parent.Reconciler.ChainedSubscribe)
+local ChainedSubscribe = require(script.Parent.Parent.ChainedSubscribe)
 local Symbols = require(script.Parent.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Parent.Types)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
