@@ -132,7 +132,7 @@ return function()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
             end)
-            expect(#host:GetChildren()).to.equal(1)
+            expect(#children).to.equal(1)
             expect(children[1].Name).to.equal("b")
             expect(children[1].ClassName).to.equal("ImageLabel")
         end)
@@ -184,9 +184,55 @@ return function()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
             end)
-            expect(#host:GetChildren()).to.equal(1)
+            expect(#children).to.equal(1)
             expect(children[1].Name).to.equal("b")
             expect(children[1].ClassName).to.equal("ImageLabel")
+        end)
+        it("Adds observable list of observable children", function()
+            local host = Instance.new("Frame")
+            local vInst = Dec.Premade("Frame")
+
+            local childAState = Dec.State(Dec.New("Frame") :: any)
+            local childMap = Dec.State({
+                a = childAState,
+                b = Dec.New("ImageLabel")
+            } :: {[string]: any})
+            vInst:AddChildren(childMap)
+
+            Dec.Root(host):Render(vInst)
+
+            local children = host:GetChildren()
+            table.sort(children, function(a, b)
+                return a.Name < b.Name
+            end)
+            expect(#children).to.equal(2)
+            expect(children[1].Name).to.equal("a")
+            expect(children[1].ClassName).to.equal("Frame")
+            expect(children[2].Name).to.equal("b")
+            expect(children[2].ClassName).to.equal("ImageLabel")
+
+            childAState:Set(nil)
+            children = host:GetChildren()
+            table.sort(children, function(a, b)
+                return a.Name < b.Name
+            end)
+            expect(#children).to.equal(1)
+            expect(children[1].Name).to.equal("b")
+            expect(children[1].ClassName).to.equal("ImageLabel")
+
+            childAState:Set(Dec.New("TextLabel", {Name = "Bar"}))
+            children = host:GetChildren()
+            table.sort(children, function(a, b)
+                return a.Name < b.Name
+            end)
+            expect(#children).to.equal(2)
+            expect(children[1].Name).to.equal("Bar")
+            expect(children[1].ClassName).to.equal("TextLabel")
+            expect(children[2].Name).to.equal("b")
+            expect(children[2].ClassName).to.equal("ImageLabel")
+
+            childMap:Set({})
+            expect(#host:GetChildren()).to.equal(0)
         end)
     end)
 end
