@@ -253,17 +253,17 @@ export type VirtualInstance = typeof(setmetatable(
         MapChildren: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (key: K, value: V) -> VirtualInstance?
+            map: (key: K, value: V) -> any?
         ) -> (),
         MapChildrenByKey: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (key: K, value: Observable<V>) -> VirtualInstance?
+            map: (key: K, value: Observable<V>) -> any?
         ) -> (),
         MapChildrenByValue: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (value: V, key: Observable<K>) -> VirtualInstance?
+            map: (value: V, key: Observable<K>) -> any?
         ) -> (),
         FindChild: (
             self: VirtualInstance,

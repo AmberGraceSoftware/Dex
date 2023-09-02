@@ -456,7 +456,7 @@ end
     @method MapChildren
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (key: K, value: V) -> VirtualInstance?
+    @param map (key: K, value: V) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each key/value pair of the input
     observable. When a Key/Value pair changes, the existing
@@ -511,7 +511,7 @@ end
     @method MapChildrenByKey
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (key: K, value: Observable<V>) -> VirtualInstance?
+    @param map (key: K, value: Observable<V>) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each key of the input
     observable. VirtualInstances will only be created/destroyed according to the
@@ -525,7 +525,7 @@ end
     
     This is useful for instances where the input observable is a "Map", "Set",
     or "Dictionary" type, and may perform better than
-    [VirtualInstance:MapObservable] in that case by minimizing
+    [VirtualInstance:MapChildren] in that case by minimizing
     creation/destruction of virtual instances.
 
     Example:
@@ -569,7 +569,7 @@ end
     @method MapChildrenByValue
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (value: V, key: Observable<K>) -> VirtualInstance?
+    @param map (value: V, key: Observable<K>) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each value of the input
     observable. VirtualInstances will only be created/destroyed according to the
@@ -587,7 +587,7 @@ end
     
     This is useful for instances where the input observable is an "Array" "Map",
     or "Dictionary" type, and may perform better than
-    [VirtualInstance:MapObservable] in that case by minimizing
+    [VirtualInstance:MapChildren] in that case by minimizing
     creation/destruction of virtual instances.
 
     Example:

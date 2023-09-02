@@ -109,7 +109,7 @@ local function ApplyMapChildrenDirective(
     useObservableValue: boolean
 )
     local input: Observable<any> = directive._payload.input
-    local map: (any, any) -> VirtualInstance? = directive._payload.map
+    local map: (any, any) -> any? = directive._payload.map
 
     local nextUniqueId = 1
     local keyToUniqueId: {[any]: string} = {}
