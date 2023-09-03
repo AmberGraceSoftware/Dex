@@ -1,9 +1,11 @@
 --!strict
 
 local Symbols = require(script.Parent.Parent.Parent.Symbols)
+local ChainedSubscribe = require(script.Parent.Parent.ChainedSubscribe)
 local Types = require(script.Parent.Parent.Parent.Types)
 local IsObservable = require(script.Parent.Parent.Parent.Reflection.IsObservable)
 type Set<T> = Types.Set<T>
+type ReconciledNode = Types.ReconciledNode
 local NilSymbol = Symbols.Nil
 
 local function applyNilSymbol(value: any): any
@@ -19,7 +21,7 @@ end
     the line of code where VirtualInstance:SetAttributes was called.
 ]]
 local function ApplyAttributeMapThrows(
-    reconciledNode: Types.ReconciledNode,
+    reconciledNode: ReconciledNode,
     attributeMap: {[string]: any}
 )
     local instance = reconciledNode._instance :: Instance
@@ -28,15 +30,29 @@ local function ApplyAttributeMapThrows(
         if IsObservable(value) then
             table.insert(
                 reconciledUnsubs,
-                value:Subscribe(function(current)
+                ChainedSubscribe(value, function(current)
                     instance:SetAttribute(key, applyNilSymbol(current))
                 end)
             )
-            instance:SetAttribute(key, applyNilSymbol(value:Current()))
         else
             instance:SetAttribute(key, applyNilSymbol(value))
         end
     end
 end
 
-return ApplyAttributeMapThrows
+local function ApplyAttributeMapCollated(
+    reconciledNode: ReconciledNode,
+    directives: {_payload: {[string]: any}, _trace: any?}
+)
+    if #directives == 1 then
+        ApplyAttributeMapThrows(reconciledNode, directives[1]._payload)
+    end
+    local unifiedPropertyMap = table.clone(directives[1]._payload)
+    for i = 2, #directives do
+        for k, v in directives[i]._payload do
+            unifiedPropertyMap[k] = v
+        end
+    end
+    ApplyAttributeMapThrows(reconciledNode, unifiedPropertyMap)
+end
+return ApplyAttributeMapCollated

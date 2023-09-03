@@ -44,6 +44,7 @@ handleDirective.DestroyPremadeChildren = function() end
 local directivesToCollate: {[string]: true} = {}
 directivesToCollate.TagList = true
 directivesToCollate.Properties = true
+directivesToCollate.Attributes = true
 
 -- Priority of directives to process (In range [1, 4], higher processed last)
 local typeToPriority: {[string]: (payload: any) -> number} = {
