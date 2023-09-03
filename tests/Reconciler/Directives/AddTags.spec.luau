@@ -104,6 +104,46 @@ return function()
             expect(#host:GetTags()).to.equal(2)
             expect(host:HasTag("Foo")).to.equal(true)
             expect(host:HasTag("Baz")).to.equal(true)
+
+            nestingTags:Set({})
+            expect(#host:GetTags()).to.equal(0)
+        end)
+        it("Adds handles duplicate observable tags", function()
+            local host = Instance.new("Frame")
+            local vInst = Dec.Premade("Frame")
+            local tags = {
+                Dec.State("Foo" :: any),
+                Dec.State("Fighters" :: any),
+                Dec.State("Baz" :: any)
+            }
+            vInst:AddTags(tags)
+
+            Dec.Root(host):Render(vInst)
+            expect(#host:GetTags()).to.equal(3)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Fighters")).to.equal(true)
+            expect(host:HasTag("Baz")).to.equal(true)
+
+            tags[2]:Set("Foo")
+            expect(#host:GetTags()).to.equal(2)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Baz")).to.equal(true)
+
+            tags[2]:Set(nil)
+            expect(#host:GetTags()).to.equal(2)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Baz")).to.equal(true)
+
+            tags[2]:Set("Fighters")
+            expect(#host:GetTags()).to.equal(3)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Fighters")).to.equal(true)
+            expect(host:HasTag("Baz")).to.equal(true)
+
+            tags[2]:Set(Dec.Nil)
+            expect(#host:GetTags()).to.equal(2)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Baz")).to.equal(true)
         end)
     end)
 end

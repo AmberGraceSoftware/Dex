@@ -7,47 +7,84 @@ type Set<T> = Types.Set<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type Observable<T> = Types.Observable<T>
 
-local function applyPossiblyObservableTag(
+--[[
+    Helper function which mounts a list of possibly observable tags.
+]]
+local function applyPossiblyObservableTagList(
     instance: Instance,
-    tag: CanBeObservable<string?>
-): (() -> ())?
-    if IsObservable(tag) then
-        local lastResolvedTag: string? = nil
-        local unsubscribe = ChainedSubscribe(tag :: any, function(resolvedTag)
-            if lastResolvedTag then
-                if instance:HasTag(lastResolvedTag) then
-                    instance:RemoveTag(lastResolvedTag)
+    tagList: {CanBeObservable<string?>}
+): {
+    getLastAppliedTagSet: () -> {[string]: any},
+    cleanup: () -> (),
+}
+    if typeof(tagList) ~= "table" then
+        return {
+            getLastAppliedTagSet = function()
+                return {}
+            end,
+            cleanup = function() end
+        }
+    end
+    local unsubscribes = {}
+    local tagToReferenceCount: {[string]: number} = {}
+    for _, tag in tagList do
+        if typeof(tag) == "string" then
+            if not tagToReferenceCount[tag] then
+                tagToReferenceCount[tag] = 1
+                if not instance:HasTag(tag) then
+                    instance:AddTag(tag)
                 end
+            else
+                tagToReferenceCount[tag] += 1
             end
-            lastResolvedTag = if typeof(resolvedTag) == "string"
-                then resolvedTag
-                else nil
-            if lastResolvedTag then
-                if not instance:HasTag(lastResolvedTag) then
-                    instance:AddTag(lastResolvedTag)
+        elseif IsObservable(tag) then
+            local lastTag = nil :: string?
+            table.insert(unsubscribes, ChainedSubscribe(
+                tag :: any,
+                function(resolvedValue)
+                    local nextTag = if typeof(resolvedValue) == "string"
+                        then resolvedValue
+                        else nil
+                    if nextTag ~= lastTag then
+                        if lastTag then
+                            if tagToReferenceCount[lastTag] then
+                                tagToReferenceCount[lastTag] -= 1
+                                if tagToReferenceCount[lastTag] <= 0 then
+                                    tagToReferenceCount[lastTag] = nil
+                                    if instance:HasTag(lastTag) then
+                                    instance:RemoveTag(lastTag) 
+                                    end
+                                end
+                            end
+                        end
+
+                        if nextTag then
+                            if not tagToReferenceCount[nextTag] then
+                                tagToReferenceCount[nextTag] = 1
+                                if not instance:HasTag(nextTag) then
+                                    instance:AddTag(nextTag)
+                                end
+                            else
+                                tagToReferenceCount[nextTag] += 1
+                            end
+                        end
+                    end
+                    lastTag = nextTag
                 end
-            end
-        end)
-        return function()
-            unsubscribe()
-            if lastResolvedTag then
-                if instance:HasTag(lastResolvedTag) then
-                    instance:RemoveTag(lastResolvedTag)
-                end
-            end
-        end
-    elseif typeof(tag) == "string" then
-        if not instance:HasTag(tag) then
-            instance:AddTag(tag)
-        end
-        return function()
-            if instance:HasTag(tag) then
-                instance:RemoveTag(tag)
-            end
+            ))
         end
     end
 
-    return nil
+    return {
+        cleanup = function()
+            for _, unsub in unsubscribes do
+                unsub()
+            end
+        end,
+        getLastAppliedTagSet = function()
+            return tagToReferenceCount
+        end,
+    }
 end
 
 --[[
@@ -65,57 +102,59 @@ local function ApplyTagListThrows(
     local instance = reconciledNode._instance :: Instance
     local reconciledUnsubs = reconciledNode._unsubscribes
     if IsObservable(tagList) then
-        local lastTagList: {string} = {}
-        local lastTagSet: {[string]: true} = {}
-        local lastTagCleanups: {[string]: () -> ()} = {}
-        local function updateTagsThrows(currentTagList: {string})
-            local currentTagSet: {[string]: true} = {}
-            for _, tag in currentTagList do
-                currentTagSet[tag] = true
-            end
-
-            local cleanupsToCall = {}
-            for _, tag in lastTagList do
-                if not currentTagSet[tag] then
-                    cleanupsToCall[tag] = true
+        local lastApplyListReturn: {
+            getLastAppliedTagSet: () -> ({[string]: any}),
+            cleanup: () -> (),
+        }? = nil
+        local unsubscribe = ChainedSubscribe(
+            tagList :: any,
+            function(resolvedTagList)
+                local lastTagSet: {[string]: any} = {}
+                if lastApplyListReturn then
+                    lastTagSet = lastApplyListReturn.getLastAppliedTagSet()
+                    lastApplyListReturn.cleanup()
                 end
-            end
-            for _, tag in currentTagList do
-                if not lastTagSet[tag] then
-                    cleanupsToCall[tag] = true
-                end
-            end
-            for tag in cleanupsToCall do
-                local cleanup = lastTagCleanups[tag]
-                if cleanup then
-                    cleanup()
-                end
-                lastTagCleanups[tag] = nil
-            end
-            for _, tag in currentTagList do
-                lastTagCleanups[tag] = applyPossiblyObservableTag(
+                local nextApplyListReturn = applyPossiblyObservableTagList(
                     instance,
-                    tag
-                ) :: any
+                    resolvedTagList
+                )
+                local nextTagSet = nextApplyListReturn.getLastAppliedTagSet()
+                for tag in lastTagSet do
+                    if nextTagSet[tag] then
+                        continue
+                    end
+                    if instance:HasTag(tag) then
+                        instance:RemoveTag(tag)
+                    end
+                end
+                lastApplyListReturn = nextApplyListReturn
             end
-            lastTagList = currentTagList
-        end
-        local unsubscribe = ChainedSubscribe(tagList :: any, updateTagsThrows)
+        )
         table.insert(
             reconciledUnsubs,
             function()
                 unsubscribe()
-                for _, cleanup in lastTagCleanups do
-                    cleanup()
+                if lastApplyListReturn then
+                    lastApplyListReturn.cleanup()
                 end
             end
         )
     else
-        for _, tag in tagList :: {string} do
-            if not instance:HasTag(tag) then
-                instance:AddTag(tag)
+        local applyListReturnValue = applyPossiblyObservableTagList(
+            instance,
+            tagList :: any
+        )
+        table.insert(
+            reconciledUnsubs,
+            applyListReturnValue.cleanup
+        )
+        table.insert(reconciledUnsubs, function()
+            for tag in applyListReturnValue.getLastAppliedTagSet() do
+                if instance:HasTag(tag) then
+                    instance:RemoveTag(tag)
+                end
             end
-        end
+        end)
     end
 end
 
