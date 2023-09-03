@@ -158,10 +158,10 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 export type Stopwatch = BaseTimer
 export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
-export type ChildPath = string | number | {string | number}
+export type ChildPath = string | number
 export type ChildMap = CanBeObservable<{
     [any]: any--[[[ChildPath]: CanBeObservable<
-        Instance | VirtualInstance | nil
+        VirtualInstance | nil
     >]]
 }>
 export type VirtualInstanceTrace = {
@@ -202,7 +202,7 @@ export type VirtualInstance = typeof(setmetatable(
         ) -> (),
         AddTags: (
             self: VirtualInstance,
-            tags: CanBeObservable<{string}>
+            tags: any
         ) -> (),
         Connect: (
             self: VirtualInstance,
@@ -253,17 +253,17 @@ export type VirtualInstance = typeof(setmetatable(
         MapChildren: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (key: K, value: V) -> VirtualInstance?
+            map: (key: K, value: V) -> any?
         ) -> (),
         MapChildrenByKey: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (key: K, value: Observable<V>) -> VirtualInstance?
+            map: (key: K, value: Observable<V>) -> any?
         ) -> (),
         MapChildrenByValue: <K, V>(
             self: VirtualInstance,
             input: Observable<{[K]: V}>,
-            map: (value: V, key: Observable<K>) -> VirtualInstance?
+            map: (value: V, key: Observable<K>) -> any?
         ) -> (),
         FindChild: (
             self: VirtualInstance,
@@ -273,7 +273,7 @@ export type VirtualInstance = typeof(setmetatable(
         AddChild: (
             self: VirtualInstance,
             path: ChildPath,
-            child: CanBeObservable<Instance | VirtualInstance | nil>
+            child: CanBeObservable<any>
         ) -> (),
         DestroyPremadeChildren: (
             self: VirtualInstance,
@@ -303,6 +303,7 @@ export type ReconciledNode = {
     _childPath: string?,
     _dectype: string,
     _childMap: {[string]: ReconciledNode},
+    _childCleanups: {[string]: () -> ()},
 }
 export type Symbol<Name> = typeof(setmetatable(
     {} :: {

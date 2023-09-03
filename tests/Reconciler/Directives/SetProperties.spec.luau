@@ -136,5 +136,68 @@ return function()
 
             expect(host.CurrentCamera).to.equal(nil)
         end)
+        it("Resolves nested observable properties", function()
+            local host = Instance.new("TextLabel")
+            local layoutOrderState = Dec.State(123)
+            local nestingState = Dec.State(layoutOrderState :: any)
+
+            local virtualInstance = Dec.Premade("TextLabel", {})
+            virtualInstance:SetProperties({
+                LayoutOrder = nestingState,
+            })
+            Dec.Root(host):Render(virtualInstance)
+            expect(host.LayoutOrder).to.equal(123)
+
+            layoutOrderState:Set(456)
+            expect(host.LayoutOrder).to.equal(456)
+
+            nestingState:Set(789)
+            layoutOrderState:Set(10_11_12)
+            expect(host.LayoutOrder).to.equal(789)
+
+            nestingState:Set(layoutOrderState)
+            expect(host.LayoutOrder).to.equal(10_11_12)
+        end)
+        it("Uses the last defined key when multiple directives are used", function()
+            local host = Instance.new("TextLabel")
+            local layoutOrderState1 = Dec.State(123)
+            local layoutOrderState2 = Dec.State(456)
+
+            local virtualInstance = Dec.Premade("TextLabel")
+            virtualInstance:SetProperties({LayoutOrder = layoutOrderState1})
+            virtualInstance:SetProperties({LayoutOrder = layoutOrderState2})
+            Dec.Root(host):Render(virtualInstance)
+            expect(host.LayoutOrder).to.equal(456)
+
+            layoutOrderState1:Set(789)
+            expect(host.LayoutOrder).to.equal(456)
+
+            layoutOrderState2:Set(10_11_12)
+            expect(host.LayoutOrder).to.equal(10_11_12)
+        end)
+        it("Connects both listeners when two directives defining a function are used", function()
+            local host = Instance.new("TextLabel")
+            
+            local changedCount1 = 0
+            local changedCount2 = 0
+            local virtualInstance = Dec.Premade("TextLabel")
+            virtualInstance:SetProperties({
+                Changed = function()
+                    changedCount1 += 1
+                end
+            })
+            virtualInstance:SetProperties({
+                Changed = function()
+                    changedCount2 += 1
+                end
+            })
+            Dec.Root(host):Render(virtualInstance)
+            expect(changedCount1).to.equal(0)
+            expect(changedCount2).to.equal(0)
+
+            host.Name = "Foo"
+            expect(changedCount1).to.equal(1)
+            expect(changedCount2).to.equal(1)
+        end)
     end)
 end

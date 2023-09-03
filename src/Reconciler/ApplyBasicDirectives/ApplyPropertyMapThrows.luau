@@ -1,5 +1,6 @@
 --!strict
 
+local ChainedSubscribe = require(script.Parent.Parent.ChainedSubscribe)
 local Symbols = require(script.Parent.Parent.Parent.Symbols)
 local Types = require(script.Parent.Parent.Parent.Types)
 local ConnectEventThrows = require(script.Parent.ConnectEventThrows)
@@ -75,7 +76,8 @@ local KEYS_TO_DEFER: Set<string> = {
 }
 local function ApplyPropertyMapThrows(
     reconciledNode: Types.ReconciledNode,
-    propMap: {[string]: any}
+    propMap: {[string]: any},
+    listenersByKey: {[string]: {(...any) -> ()}}
 )
     local instance = reconciledNode._instance :: any
     local reconciledUnsubs = reconciledNode._unsubscribes
@@ -86,17 +88,12 @@ local function ApplyPropertyMapThrows(
             continue
         end
 
-        if typeof(value) == "function" then
-            ConnectEventThrows(reconciledNode, {
-                event = key,
-                listener = value
-            })
-        elseif typeof(value) == "table" then
+        if typeof(value) == "table" then
             if value._dectype == "Observable" then
                 local instanceRefCleanup: (() -> ())? = nil
                 table.insert(
                     reconciledUnsubs,
-                    value:Subscribe(function(current: any)
+                    ChainedSubscribe(value, function(current: any)
                         if instanceRefCleanup then
                             instanceRefCleanup()
                             instanceRefCleanup = nil
@@ -114,7 +111,7 @@ local function ApplyPropertyMapThrows(
                         else
                             instance[key] = applyNilSymbol(current)
                         end
-                    end, true)
+                    end)
                 )
                 table.insert(reconciledUnsubs, function()
                     if instanceRefCleanup then
@@ -141,6 +138,41 @@ local function ApplyPropertyMapThrows(
     for _, key in deferredKeys do
         instance[key] = propMap[key]
     end
+    for key, listeners in listenersByKey do
+        for _, listener in listeners do
+            ConnectEventThrows(reconciledNode, {
+                event = key,
+                listener = listener
+            })
+        end
+    end
 end
 
-return ApplyPropertyMapThrows
+function ApplyPropertyMapCollated(
+    reconciledNode: Types.ReconciledNode,
+    directives: {{_payload: {[string]: any}, _trace: any?}}
+)
+    local unifiedPropertyMap = table.clone(directives[1]._payload)
+    for i = 2, #directives do
+        for k, v in directives[i]._payload do
+            unifiedPropertyMap[k] = v
+        end
+    end
+    local listenersByKey: {[string]: {(...any) -> ()}} = {}
+    for _, directive in directives do
+        for k, v in directive._payload do
+            if typeof(v) == "function" then
+                unifiedPropertyMap[k] = nil
+                local listeners = listenersByKey[k]
+                if not listeners then
+                    listeners = {}
+                    listenersByKey[k] = listeners
+                end
+                table.insert(listeners, v :: any)
+            end
+        end
+    end
+    ApplyPropertyMapThrows(reconciledNode, unifiedPropertyMap, listenersByKey)
+end
+
+return ApplyPropertyMapCollated

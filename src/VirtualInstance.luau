@@ -408,16 +408,12 @@ end
 --[=[
     @method AddChild
     @within VirtualInstance
-    @param path string | number | {string | number}
-    @param child CanBeObservable<Instance | VirtualInstance?>
+    @param path string | number
+    @param child CanBeObservable<VirtualInstance?>
 
     Adds a child VirtualInstance node to this VirtualInstance.
 
     The path can be a dot-separated string, or an array of raw string names.
-
-    If the child is an actual Instance, that instance will be reparanted to the
-    virtual instance when reconciled, and destroyed when the VirtualInstances is
-    unmounted.
     
     If the child is a VirtualInstance, it will be created or found depending on
     the type of VirtualInstance passed in.
@@ -460,7 +456,7 @@ end
     @method MapChildren
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (key: K, value: V) -> VirtualInstance?
+    @param map (key: K, value: V) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each key/value pair of the input
     observable. When a Key/Value pair changes, the existing
@@ -515,7 +511,7 @@ end
     @method MapChildrenByKey
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (key: K, value: Observable<V>) -> VirtualInstance?
+    @param map (key: K, value: Observable<V>) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each key of the input
     observable. VirtualInstances will only be created/destroyed according to the
@@ -529,7 +525,7 @@ end
     
     This is useful for instances where the input observable is a "Map", "Set",
     or "Dictionary" type, and may perform better than
-    [VirtualInstance:MapObservable] in that case by minimizing
+    [VirtualInstance:MapChildren] in that case by minimizing
     creation/destruction of virtual instances.
 
     Example:
@@ -573,7 +569,7 @@ end
     @method MapChildrenByValue
     @within VirtualInstance
     @param input Observable<{[K]: V}>
-    @param map (value: V, key: Observable<K>) -> VirtualInstance?
+    @param map (value: V, key: Observable<K>) -> CanBeObservable<VirtualInstance>?
 
     Creates a child VirtualInstance for each value of the input
     observable. VirtualInstances will only be created/destroyed according to the
@@ -591,7 +587,7 @@ end
     
     This is useful for instances where the input observable is an "Array" "Map",
     or "Dictionary" type, and may perform better than
-    [VirtualInstance:MapObservable] in that case by minimizing
+    [VirtualInstance:MapChildren] in that case by minimizing
     creation/destruction of virtual instances.
 
     Example:
@@ -747,18 +743,68 @@ function VirtualInstance.__index.FindChild(
     return childVInst
 end
 
---[[
+--[=[
     @method Combine
     @within VirtualInstance
     @param ... VirtualInstance
     
-    Combines one or more directives from another VirtualInstance. The
-    VirtualInstances passed in must meet the following requirements:
+    Combines the directives from another, or multiple other VirtualInstances.
+    The VirtualInstances passed in must meet the following requirements:
 
-    - They must have a "Premade" constructor type with an equivalent or related
-    ClassName
-    - They must not already be rendered, combined, or otherwise frozen.
-]]
+    - They must be of "Premade" type, with an equivalent or related ClassName to
+    the target VirtualInstance.
+    - They must not already be rendered by Dec and/or combined with another
+    VirtualInstance.
+
+    Combine can be used to compose different effects or input handlers within a
+    VirtualInstance tree:
+
+    ```lua
+    local function RecolorWithMouseInput()
+        local isHovering = Dec.State(false)
+        local isPressing = Dec.State(false)
+        return Dec.Premade("GuiButton", {
+            MouseEnter = function()
+                isHovering:Set(true)
+            end,
+            MouseLeave = function()
+                isHovering:Set(false)
+            end,
+            MouseButton1Down = function()
+                isPressing:Set(true)
+            end,
+            MouseButton1Up = function()
+                isPressing:Set(false)
+            end,
+            BackgroundColor3 = Dec.Map(isHovering, isPressing)(function(
+                currentHovering,
+                currentPressing
+            )
+                if currentPressing then
+                    return Color3.fromHex("aaa")
+                elseif currentHovering then
+                    return Color3.fromHex("ddd")
+                else
+                    return Color3.fromHex("fff")
+                end,
+            end),
+        })
+    end
+
+    -- . . .
+    
+    local function Button()
+        local button = Dec.New("Button", {
+            Activated = function()
+                print("Button was clicked!")
+            end,
+            AutoButtonColor = false,
+        })
+        button:Combine(RecolorWithMouseInput())
+        return button
+    end
+    ```
+]=]
 function VirtualInstance.__index.Combine(
     self: VirtualInstance,
     ...: VirtualInstance

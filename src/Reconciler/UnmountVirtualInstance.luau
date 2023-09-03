@@ -15,6 +15,9 @@ type ReconciledNode = Types.ReconciledNode
 local function UnmountVirtualInstance(
     node: ReconciledNode
 )   
+    for _, cleanup in node._childCleanups do
+        task.spawn(cleanup)
+    end
     for _, childNode in node._childMap do
         UnmountVirtualInstance(childNode)
     end

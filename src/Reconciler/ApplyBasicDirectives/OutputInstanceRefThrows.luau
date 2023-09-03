@@ -12,9 +12,9 @@ type State<T> = Types.State<T>
 ]]
 local function OutputInstanceRefThrows(
     reconciledNode: ReconciledNode,
-    payload: {attribute: string, state: State<any>, once: boolean}
+    payload: State<any>
 )
-    payload.state:Set(reconciledNode._instance :: Instance)
+    payload:Set(reconciledNode._instance :: Instance)
 end
 
 return OutputInstanceRefThrows
