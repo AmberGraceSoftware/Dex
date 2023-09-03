@@ -144,4 +144,20 @@ local function ApplyPropertyMapThrows(
     end
 end
 
-return ApplyPropertyMapThrows
+function ApplyPropertyMapCollated(
+    reconciledNode: Types.ReconciledNode,
+    directives: {{_payload: {[string]: any}, _trace: any?}}
+)
+    if #directives == 1 then
+        ApplyPropertyMapThrows(reconciledNode, directives[1]._payload)
+    end
+    local unifiedPropertyMap = table.clone(directives[1]._payload)
+    for i = 2, #directives do
+        for k, v in directives[i]._payload do
+            unifiedPropertyMap[k] = v
+        end
+    end
+    ApplyPropertyMapThrows(reconciledNode, unifiedPropertyMap)
+end
+
+return ApplyPropertyMapCollated

@@ -158,5 +158,22 @@ return function()
             nestingState:Set(layoutOrderState)
             expect(host.LayoutOrder).to.equal(10_11_12)
         end)
+        it("Uses the last defined key when multiple directives are used", function()
+            local host = Instance.new("TextLabel")
+            local layoutOrderState1 = Dec.State(123)
+            local layoutOrderState2 = Dec.State(456)
+
+            local virtualInstance = Dec.Premade("TextLabel")
+            virtualInstance:SetProperties({LayoutOrder = layoutOrderState1})
+            virtualInstance:SetProperties({LayoutOrder = layoutOrderState2})
+            Dec.Root(host):Render(virtualInstance)
+            expect(host.LayoutOrder).to.equal(456)
+
+            layoutOrderState1:Set(789)
+            expect(host.LayoutOrder).to.equal(456)
+
+            layoutOrderState2:Set(10_11_12)
+            expect(host.LayoutOrder).to.equal(10_11_12)
+        end)
     end)
 end
