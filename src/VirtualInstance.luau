@@ -743,18 +743,68 @@ function VirtualInstance.__index.FindChild(
     return childVInst
 end
 
---[[
+--[=[
     @method Combine
     @within VirtualInstance
     @param ... VirtualInstance
     
-    Combines one or more directives from another VirtualInstance. The
-    VirtualInstances passed in must meet the following requirements:
+    Combines the directives from another, or multiple other VirtualInstances.
+    The VirtualInstances passed in must meet the following requirements:
 
-    - They must have a "Premade" constructor type with an equivalent or related
-    ClassName
-    - They must not already be rendered, combined, or otherwise frozen.
-]]
+    - They must be of "Premade" type, with an equivalent or related ClassName to
+    the target VirtualInstance.
+    - They must not already be rendered by Dec and/or combined with another
+    VirtualInstance.
+
+    Combine can be used to compose different effects or input handlers within a
+    VirtualInstance tree:
+
+    ```lua
+    local function RecolorWithMouseInput()
+        local isHovering = Dec.State(false)
+        local isPressing = Dec.State(false)
+        return Dec.Premade("GuiButton", {
+            MouseEnter = function()
+                isHovering:Set(true)
+            end,
+            MouseLeave = function()
+                isHovering:Set(false)
+            end,
+            MouseButton1Down = function()
+                isPressing:Set(true)
+            end,
+            MouseButton1Up = function()
+                isPressing:Set(false)
+            end,
+            BackgroundColor3 = Dec.Map(isHovering, isPressing)(function(
+                currentHovering,
+                currentPressing
+            )
+                if currentPressing then
+                    return Color3.fromHex("aaa")
+                elseif currentHovering then
+                    return Color3.fromHex("ddd")
+                else
+                    return Color3.fromHex("fff")
+                end,
+            end),
+        })
+    end
+
+    -- . . .
+    
+    local function Button()
+        local button = Dec.New("Button", {
+            Activated = function()
+                print("Button was clicked!")
+            end,
+            AutoButtonColor = false,
+        })
+        button:Combine(RecolorWithMouseInput())
+        return button
+    end
+    ```
+]=]
 function VirtualInstance.__index.Combine(
     self: VirtualInstance,
     ...: VirtualInstance
