@@ -175,5 +175,29 @@ return function()
             layoutOrderState2:Set(10_11_12)
             expect(host.LayoutOrder).to.equal(10_11_12)
         end)
+        it("Connects both listeners when two directives defining a function are used", function()
+            local host = Instance.new("TextLabel")
+            
+            local changedCount1 = 0
+            local changedCount2 = 0
+            local virtualInstance = Dec.Premade("TextLabel")
+            virtualInstance:SetProperties({
+                Changed = function()
+                    changedCount1 += 1
+                end
+            })
+            virtualInstance:SetProperties({
+                Changed = function()
+                    changedCount2 += 1
+                end
+            })
+            Dec.Root(host):Render(virtualInstance)
+            expect(changedCount1).to.equal(0)
+            expect(changedCount2).to.equal(0)
+
+            host.Name = "Foo"
+            expect(changedCount1).to.equal(1)
+            expect(changedCount2).to.equal(1)
+        end)
     end)
 end
