@@ -145,5 +145,46 @@ return function()
             expect(host:HasTag("Foo")).to.equal(true)
             expect(host:HasTag("Baz")).to.equal(true)
         end)
+        it("Dedupes multiple tag directives", function()
+            local host = Instance.new("Frame")
+            local vInst = Dec.Premade("Frame")
+            local tags1 = {
+                Dec.State("Foo" :: any),
+                Dec.State("Fighters" :: any),
+            }
+            vInst:AddTags(tags1)
+
+            local tags2 = Dec.State({
+                "Foo",
+                "Bar"
+            })
+            vInst:AddTags(tags2)
+
+            Dec.Root(host):Render(vInst)
+            expect(#host:GetTags()).to.equal(3)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Fighters")).to.equal(true)
+            expect(host:HasTag("Bar")).to.equal(true)
+
+            tags1[2]:Set("Bar")
+            expect(#host:GetTags()).to.equal(2)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Bar")).to.equal(true)
+
+            tags2:Set({})
+            expect(#host:GetTags()).to.equal(2)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Bar")).to.equal(true)
+
+            tags1[1]:Set(Dec.Nil)
+            expect(#host:GetTags()).to.equal(1)
+            expect(host:HasTag("Bar")).to.equal(true)
+
+            tags2:Set({"Foo", "Fighters"})
+            expect(#host:GetTags()).to.equal(3)
+            expect(host:HasTag("Foo")).to.equal(true)
+            expect(host:HasTag("Fighters")).to.equal(true)
+            expect(host:HasTag("Bar")).to.equal(true)
+        end)
     end)
 end

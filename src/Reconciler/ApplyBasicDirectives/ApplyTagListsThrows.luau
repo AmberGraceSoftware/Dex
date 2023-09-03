@@ -1,34 +1,29 @@
 --!strict
-
 local ChainedSubscribe = require(script.Parent.Parent.ChainedSubscribe)
 local Types = require(script.Parent.Parent.Parent.Types)
 local IsObservable = require(script.Parent.Parent.Parent.Reflection.IsObservable)
 type Set<T> = Types.Set<T>
 type CanBeObservable<T> = Types.CanBeObservable<T>
 type Observable<T> = Types.Observable<T>
+type ReconciledNode = Types.ReconciledNode
 
 --[[
     Helper function which mounts a list of possibly observable tags.
 ]]
-local function applyPossiblyObservableTagList(
+local function applyListOfPossiblyObservableTags(
     instance: Instance,
-    tagList: {CanBeObservable<string?>}
-): {
-    getLastAppliedTagSet: () -> {[string]: any},
-    cleanup: () -> (),
-}
+    tagList: {CanBeObservable<string?>},
+    tagToReferenceCount: {[string]: number}
+): (() -> (), {[string]: number})
     if typeof(tagList) ~= "table" then
-        return {
-            getLastAppliedTagSet = function()
-                return {}
-            end,
-            cleanup = function() end
-        }
+        return function() end, {}
     end
     local unsubscribes = {}
-    local tagToReferenceCount: {[string]: number} = {}
+    local innerStringToReferenceCount = {}
     for _, tag in tagList do
         if typeof(tag) == "string" then
+            innerStringToReferenceCount[tag] =
+                (innerStringToReferenceCount[tag] or 0) + 1
             if not tagToReferenceCount[tag] then
                 tagToReferenceCount[tag] = 1
                 if not instance:HasTag(tag) then
@@ -47,6 +42,10 @@ local function applyPossiblyObservableTagList(
                         else nil
                     if nextTag ~= lastTag then
                         if lastTag then
+                            innerStringToReferenceCount[lastTag] -= 1
+                            if innerStringToReferenceCount[lastTag] <= 0 then
+                                innerStringToReferenceCount[lastTag] = nil
+                            end
                             if tagToReferenceCount[lastTag] then
                                 tagToReferenceCount[lastTag] -= 1
                                 if tagToReferenceCount[lastTag] <= 0 then
@@ -59,6 +58,8 @@ local function applyPossiblyObservableTagList(
                         end
 
                         if nextTag then
+                            innerStringToReferenceCount[nextTag] =
+                                (innerStringToReferenceCount[nextTag] or 0) + 1
                             if not tagToReferenceCount[nextTag] then
                                 tagToReferenceCount[nextTag] = 1
                                 if not instance:HasTag(nextTag) then
@@ -74,17 +75,11 @@ local function applyPossiblyObservableTagList(
             ))
         end
     end
-
-    return {
-        cleanup = function()
-            for _, unsub in unsubscribes do
-                unsub()
-            end
-        end,
-        getLastAppliedTagSet = function()
-            return tagToReferenceCount
-        end,
-    }
+    return function()
+        for _, unsub in unsubscribes do
+            unsub()
+        end
+    end, innerStringToReferenceCount
 end
 
 --[[
@@ -95,67 +90,81 @@ end
     errors encountered. If an error occurs, it should be logged to the console
     traced to the line of code where VirtualInstance:AddTags was called.
 ]]
-local function ApplyTagListThrows(
-    reconciledNode: Types.ReconciledNode,
-    tagList: CanBeObservable<{string}>
-)
-    local instance = reconciledNode._instance :: Instance
-    local reconciledUnsubs = reconciledNode._unsubscribes
+local function applyPossiblyObservableList(
+    instance: Instance,
+    tagList: CanBeObservable<{string}>,
+    tagToReferenceCount: {[string]: number}
+): () -> ()
     if IsObservable(tagList) then
-        local lastApplyListReturn: {
-            getLastAppliedTagSet: () -> ({[string]: any}),
-            cleanup: () -> (),
-        }? = nil
+        local lastCleanup: (() -> ())? = nil
+        local lastInnerTagToReferenceCount: {[string]: number}? = nil
         local unsubscribe = ChainedSubscribe(
             tagList :: any,
             function(resolvedTagList)
-                local lastTagSet: {[string]: any} = {}
-                if lastApplyListReturn then
-                    lastTagSet = lastApplyListReturn.getLastAppliedTagSet()
-                    lastApplyListReturn.cleanup()
+                if lastCleanup then
+                    lastCleanup()
                 end
-                local nextApplyListReturn = applyPossiblyObservableTagList(
-                    instance,
-                    resolvedTagList
-                )
-                local nextTagSet = nextApplyListReturn.getLastAppliedTagSet()
-                for tag in lastTagSet do
-                    if nextTagSet[tag] then
-                        continue
-                    end
-                    if instance:HasTag(tag) then
-                        instance:RemoveTag(tag)
+
+                -- Add new tag references for this list
+                local nextCleanup, nextInnerTagToReferenceCount
+                    = applyListOfPossiblyObservableTags(
+                        instance,
+                        resolvedTagList,
+                        tagToReferenceCount
+                    )
+                
+                -- Remove tag references for the old list
+                if lastInnerTagToReferenceCount then
+                    for tag, refCount in lastInnerTagToReferenceCount do
+                        tagToReferenceCount[tag] -= refCount
+                        if tagToReferenceCount[tag] <= 0 then
+                            tagToReferenceCount[tag] = nil
+                            if instance:HasTag(tag) then
+                                instance:RemoveTag(tag)
+                            end
+                        end
                     end
                 end
-                lastApplyListReturn = nextApplyListReturn
+
+                lastCleanup = nextCleanup
+                lastInnerTagToReferenceCount = nextInnerTagToReferenceCount
             end
         )
-        table.insert(
-            reconciledUnsubs,
-            function()
-                unsubscribe()
-                if lastApplyListReturn then
-                    lastApplyListReturn.cleanup()
-                end
+        return function()
+            unsubscribe()
+            if lastCleanup then
+                lastCleanup()
             end
-        )
+        end
     else
-        local applyListReturnValue = applyPossiblyObservableTagList(
+        return (applyListOfPossiblyObservableTags(
             instance,
-            tagList :: any
-        )
-        table.insert(
-            reconciledUnsubs,
-            applyListReturnValue.cleanup
-        )
-        table.insert(reconciledUnsubs, function()
-            for tag in applyListReturnValue.getLastAppliedTagSet() do
-                if instance:HasTag(tag) then
-                    instance:RemoveTag(tag)
-                end
-            end
-        end)
+            tagList :: any,
+            tagToReferenceCount
+        ))
     end
 end
 
-return ApplyTagListThrows
+local function ApplyTagListsThrows(
+    node: ReconciledNode,
+    directives: {{_payload: CanBeObservable<{string}>}}
+)
+    local tagToReferenceCount: {[string]: number} = {}
+    local instance = node._instance :: Instance
+    for _, directive in directives do
+        table.insert(node._unsubscribes, applyPossiblyObservableList(
+            instance,
+            directive._payload,
+            tagToReferenceCount
+        ))
+    end
+    table.insert(node._unsubscribes, function()
+        for tag in tagToReferenceCount do
+            if instance:HasTag(tag) then
+                instance:RemoveTag(tag)
+            end
+        end
+    end)
+end
+
+return ApplyTagListsThrows
