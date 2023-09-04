@@ -244,8 +244,6 @@ export type VirtualInstance = typeof(setmetatable(
         OutInstance: (
             self: VirtualInstance
         ) -> Observable<any?>,
-        Copy: (self: VirtualInstance) -> VirtualInstance,
-        DeepCopy: (self: VirtualInstance) -> VirtualInstance,
         AddChildren: (
             self: VirtualInstance,
             childMap: ChildMap
