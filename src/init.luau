@@ -27,7 +27,6 @@ export type Spring<T = any> = Types.Spring<T>
 export type AngleSpring<T = any> = Types.AngleSpring<T>
 export type IntSpring<T = any> = Types.IntSpring<T>
 export type EasedValue<T = any> = Types.EasedValue<T>
-export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
@@ -64,7 +63,6 @@ Dec.State = require(script.Observables.State).new
 Dec.Record = require(script.Observables.StateRecord).new
 Dec.Dict = require(script.Observables.StateRecord).newDict
 Dec.Map = require(script.Util.MapObservable)
-Dec.Alpha = require(script.Observables.Alpha).new
 Dec.CustomObservable = Observable.new
 
 -- Realtime simulation observable utilities

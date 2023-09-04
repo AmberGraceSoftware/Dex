@@ -3,13 +3,11 @@ local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 local BaseTimer = require(script.Parent.BaseTimer)
-local Alpha = require(script.Parent.Alpha)
 local State = require(script.Parent.State)
 local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
 type Stopwatch = Types.Stopwatch
-type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 --[=[
@@ -57,18 +55,6 @@ for k, v in BaseTimer :: any do
     (Stopwatch.__index :: any)[k] = v
 end
 Stopwatch.__index._decobservabletype = "Stopwatch"
-
---[=[
-    @method Alpha
-    @within Stopwatch
-    @return Alpha
-
-    Derives an Alpha observable object that maps the elasped time from 0 (start)
-    to 1 (finish)
-]=]
-function Stopwatch.__index.Alpha(self: Stopwatch): Alpha
-    return Alpha.new(self, 0, self._duration)
-end
 
 --[=[
     @method Lerp

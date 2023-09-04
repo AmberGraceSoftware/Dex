@@ -103,23 +103,6 @@ export type EasedValue<T> = EasedObject<T> & typeof(setmetatable(
     },
     {} :: {__index: { }}
 ))
-export type Alpha = Observable<number> & typeof(setmetatable(
-    {} :: {},
-    {} :: {__index: {
-        Slice: (self: Alpha, startAlpha: number, endAlpha: number) -> Alpha,
-        Curve: (
-            self: Alpha,
-            easingStyle: Enum.EasingStyle,
-            easingDirection: Enum.EasingDirection?
-        ) -> Alpha,
-        Lerp: <T>(
-            self: Alpha,
-            startValue: T,
-            goalValue: T
-        ) -> Observable<T>,
-        Invert: (self: Alpha) -> Alpha,
-    }}
-))
 export type BaseTimer = Observable<number> & typeof(setmetatable(
     {} :: {
         -- Public
@@ -137,22 +120,11 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
         Stop: (self: BaseTimer) -> (),
         Pause: (self: BaseTimer) -> (),
         SetTimePosition: (self: BaseTimer, position: number) -> (),
-        CurvedAlpha: (
-            self: BaseTimer,
-            easingStyle: Enum.EasingStyle,
-            easingDirection: Enum.EasingDirection?
-        ) -> Alpha,
-        SliceAlpha: (
-            self: BaseTimer,
-            startTime: number,
-            endTime: number
-        ) -> Alpha,
         Lerp: <T>(
             self: BaseTimer,
             startValue: T,
             goalValue: T
         ) -> Observable<T>,
-        Alpha: (self: BaseTimer) -> Alpha,
     }}
 ))
 export type Stopwatch = BaseTimer

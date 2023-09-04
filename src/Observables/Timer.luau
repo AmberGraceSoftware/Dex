@@ -2,14 +2,12 @@
 local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local BaseTimer = require(script.Parent.BaseTimer)
-local Alpha = require(script.Parent.Alpha)
 local State = require(script.Parent.State)
 local Observable = require(script.Parent.Observable)
 local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
 type Timer = Types.Timer
-type Alpha = Types.Alpha
 type Observable<T> = Types.Observable<T>
 
 --[=[
@@ -57,18 +55,6 @@ for k, v in BaseTimer :: any do
     (Timer.__index :: any)[k] = v
 end
 Timer.__index._decobservabletype = "Timer"
-
---[=[
-    @method Alpha
-    @within Timer
-    @return Alpha
-
-    Derives an Alpha observable object that maps the current remaining time from
-    0 (start) to 1 (finish)
-]=]
-function Timer.__index.Alpha(self: Timer): Alpha
-    return Alpha.new(self, self._duration, 0)
-end
 
 --[=[
     @method SetDuration
