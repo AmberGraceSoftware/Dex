@@ -24,12 +24,6 @@ export type Observable<T> = typeof(setmetatable(
             _decobservabletype: string,
             Subscribe: (self: Observable<T>, listener: (T) -> (),
                 immediatelyCallListener: boolean?) -> Unsubscribe,
-            SubscribeWhileMounted: (
-                self: Observable<T>,
-                virtualInstance: any,
-                listener: (T) -> (),
-                immediatelyCallListener: boolean?
-            ) -> (),
             Current: (self: Observable<T>) -> T,
             Destroy: (self: Observable<T>) -> (),
             Map: (self: Observable<T>, mappingFunction: (T) -> any) -> any,
@@ -288,6 +282,12 @@ export type VirtualInstance = typeof(setmetatable(
         Combine: (
             self: VirtualInstance,
             ...VirtualInstance
+        ) -> (),
+        SubscribeWhileMounted: <T>(
+            self: VirtualInstance,
+            input: Observable<T>,
+            listener: (T) -> (),
+            immediatelyCallListener: boolean?
         ) -> (),
     }}
 ))
