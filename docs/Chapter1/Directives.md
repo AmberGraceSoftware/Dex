@@ -162,7 +162,7 @@ end
 Dec will automatically clean up the connection/disconnection of these event
 listeners while a VirtualInstance is being rendered.
 
-## Listening to Property/Attribute change events
+## Listening to Property & Attribute Changed events
 
 The [:OutProperty()](https://dec.ambergracesoftware.com/api/VirtualInstance#OutProperty)
 and [:OutAttribute()](https://dec.ambergracesoftware.com/api/VirtualInstance#OutProperty)
