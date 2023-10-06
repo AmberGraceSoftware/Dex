@@ -8,7 +8,9 @@ Dec also exposes a type called `TweenParams<T>` with the following structure:
 export type TweenParams<T> = {
     info: TweenInfo,
     goal: T
-    start: tT?
+    start: T?
+    completed: (() -> ())?,
+    cancelled: (() -> ())?,
 }
 ```
 
