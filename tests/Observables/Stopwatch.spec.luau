@@ -9,7 +9,7 @@ return function()
     end
 
     it("should start the stopwatch and update with new values", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         expect(stopwatch:Current()).to.equal(0)
 
         stopwatch:Play()
@@ -18,7 +18,7 @@ return function()
     end)
 
     it("should stop the stopwatch and not update with new values", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         expect(stopwatch:Current()).to.equal(0)
 
         stopwatch:Play()
@@ -32,7 +32,7 @@ return function()
     end)
 
     it("should pause the stopwatch and not update with new values", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         expect(stopwatch:Current()).to.equal(0)
 
         stopwatch:Play()
@@ -46,7 +46,7 @@ return function()
     end)
 
     it("should set the current time position of the stopwatch", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         expect(stopwatch:Current()).to.equal(0)
 
         stopwatch:Play()
@@ -59,7 +59,7 @@ return function()
     end)
     
     it("should create a sliced Alpha observable at [2, 4]", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         local alphaObservable = stopwatch:Alpha(2, 4)
         expect(alphaObservable).to.be.ok()
         expect(alphaObservable:Current()).to.equal(0)
@@ -69,7 +69,7 @@ return function()
     end)
     
     it("should create a sliced Alpha observable at [0, 4]", function()
-        local stopwatch = Stopwatch.new(5)
+        local stopwatch = Stopwatch.new({duration = 5})
         local alphaObservable = stopwatch:Alpha(0, 4)
         expect(alphaObservable).to.be.ok()
         stopwatch:Play()

@@ -8,6 +8,7 @@ local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
 type Timer = Types.Timer
+type TimerProps = Types.TimerProps
 type Observable<T> = Types.Observable<T>
 
 --[=[
@@ -28,11 +29,28 @@ type Observable<T> = Types.Observable<T>
     
     ### Dec.Timer
     ```lua
-    Dec.Timer(duration number) -> Tmier
+    Dec.Timer({
+        duration: number,
+        isPlaying: CanBeObservable<boolean>?,
+        playOnChange: Observable<any>?,
+    }) -> Timer
     ```
 
     Creates a new [Timer] Observable, the value of which decreases in realtime
     after [Timer:Play] is called.
+
+    #### Props:
+
+    `duration` is a required prop that specifies the initial time of the timer.
+
+    `isPlaying` specifies that timer should play and stop depending on an
+    observable boolean value. If set to `true`, the timer will immediately start
+    playing.
+
+    `playOnChange` specifies that the timer should restart whenever an input
+    observable changes.
+
+    ----
 
     Timers can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.
@@ -43,6 +61,18 @@ type Observable<T> = Types.Observable<T>
     observables which enables safe garbage collection when writing Dec
     components.
     :::
+
+    Usage Example:
+    ```lua
+    local timer = Dec.Timer({
+        duration = 10,
+        isPlaying = true,
+    })
+    local frame = Dec.New("Frame")({
+        -- Opaque for 5 seconds, then fades to Transparent over 5 seconds:
+        BackgroundTransparency = timer:Alpha(5, 0),
+    })
+    ```
 ]=]
 local Timer = {}
 -- Inherits Timer metamethods
@@ -129,17 +159,47 @@ function Timer.__index.SetTimePosition(self: Timer, pos: number)
         math.clamp(self._duration - pos, 0, self._duration))
 end
 
+--[=[
+    @interface TimerProps
+    @within Timer
+    @field duration number
+    @field isPlaying CanBeObservable<boolean>?,
+    @field playOnChange Observable<any>?,
+
+    Type that specifies the props for constructing a [Timer] observable (via
+    [Dec.Timer])
+
+    `duration` is a required prop that specifies the initial time of the timer.
+
+    `isPlaying` specifies that timer should play and stop depending on an
+    observable boolean value. If set to `true`, the timer will immediately start
+    playing.
+
+    `playOnChange` specifies that the timer should restart whenever an input
+    observable changes.
+]=]
 
 --[=[
     @function Timer
     @within Dec
-    @param duration number
+    @param props TimerProps
     @return Timer
 
     Creates a new Timer Observable, which simulates in realtime while
     subscribed.
+
+    #### Props:
+
+    `duration` is a required prop that specifies the initial time of the timer.
+
+    `isPlaying` specifies that timer should play and stop depending on an
+    observable boolean value. If set to `true`, the timer will immediately start
+    playing.
+
+    `playOnChange` specifies that the timer should restart whenever an input
+    observable changes.
 ]=]
-function Timer.new(duration: number): Timer
+function Timer.new(props: TimerProps): Timer
     local playState = State.new({
         playing = false,
         startClockTime = 0,
@@ -149,12 +209,13 @@ function Timer.new(duration: number): Timer
         local current = _current or playState:Current()
         if current.playing then
             return math.clamp(
-                duration - (os.clock() - current.startClockTime),
+                props.duration - (os.clock() - current.startClockTime),
                 0,
-                duration
+                props.duration
             )
         end
-        return math.clamp(duration - current.resumeAtTime, 0, duration)
+        return math.clamp(props.duration - current.resumeAtTime, 0,
+            props.duration)
     end
     local function createUpdateStream(notifyUpdate: () -> ())
         local heartbeatConn = nil
@@ -184,7 +245,7 @@ function Timer.new(duration: number): Timer
         getCurrent,
         createUpdateStream
     ) :: any
-    self._duration = duration
+    self._duration = props.duration
     self._playState = playState
     setmetatable(self, Timer)
     return self

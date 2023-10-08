@@ -113,7 +113,8 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
             playing: boolean,
             startClockTime: number,
             resumeAtTime: number,
-        }>
+        }>,
+        _startReactiveControlStream: (notifyUpdate: () -> ()) -> (() -> ())
     },
     {} :: {__index: {
         Play: (self: BaseTimer) -> (),
@@ -135,6 +136,16 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
 export type Stopwatch = BaseTimer
 export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
+export type StopwatchProps = {
+    duration: number?,
+    isPlaying: CanBeObservable<boolean>?,
+    playOnChange: Observable<any>?,
+}
+export type TimerProps = {
+    duration: number,
+    isPlaying: CanBeObservable<boolean>?,
+    playOnChange: Observable<any>?,
+}
 export type ChildPath = string | number
 export type ChildMap = CanBeObservable<{
     [any]: any--[[[ChildPath]: CanBeObservable<

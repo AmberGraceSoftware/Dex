@@ -9,7 +9,7 @@ return function()
     end
 
     it("should start the timer and update with new values", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         expect(timer:Current()).to.equal(5)
 
         timer:Play()
@@ -18,7 +18,7 @@ return function()
     end)
 
     it("should stop the timer and not update with new values", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         expect(timer:Current()).to.equal(5)
 
         timer:Play()
@@ -32,7 +32,7 @@ return function()
     end)
 
     it("should pause the timer and not update with new values", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         expect(timer:Current()).to.equal(5)
 
         timer:Play()
@@ -47,7 +47,7 @@ return function()
     end)
 
     it("should set the current time position of the timer", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         expect(timer:Current()).to.equal(5)
 
         timer:Play()
@@ -61,7 +61,7 @@ return function()
     end)
     
     it("should create a sliced Alpha observable at [4, 2]", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         local alphaObservable = timer:Alpha(4, 2)
         expect(alphaObservable).to.be.ok()
         timer:Play()
@@ -70,7 +70,7 @@ return function()
     end)
     
     it("should create a sliced Alpha observable at [5, 1]", function()
-        local timer = Timer.new(5)
+        local timer = Timer.new({duration = 5})
         local alphaObservable = timer:Alpha(5, 1)
         expect(alphaObservable).to.be.ok()
         expect(alphaObservable:Current()).to.equal(0)

@@ -8,6 +8,7 @@ local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 
 type Stopwatch = Types.Stopwatch
+type StopwatchProps = Types.StopwatchProps
 type Observable<T> = Types.Observable<T>
 
 --[=[
@@ -22,18 +23,38 @@ type Observable<T> = Types.Observable<T>
     Includes utility methods for mapping this "elapsed time" value into more
     complex animationed sequences.
 
+    Includes utility methods for mapping this "remaining time" value into more
+    complex animationed sequences.
+
     ## Constructor
     
     ---
     
     ### Dec.Stopwatch
     ```lua
-    Dec.Stopwatch(maxDuration number?) -> Stopwatch
+    Dec.Stopwatch({
+        duration: number?,
+        isPlaying: CanBeObservable<boolean>?,
+        playOnChange: Observable<any>?,
+    }?) -> Stopwatch
     ```
 
-    Creates a new [Stopwatch] Observable, the value of which increases in
+    Creates a new [Stopwatch] Observable, the value of which decreases in
     realtime after [Stopwatch:Play] is called.
 
+    #### Props:
+
+    `duration` is an optional prop that specifies the end time of the stopwatch.
+    Defaults to `math.huge`.
+
+    `isPlaying` specifies that stopwatch should play and stop depending on an
+    observable boolean value. If set to `true`, the stopwatch will immediately
+    start playing.
+
+    `playOnChange` specifies that the stopwatch should restart whenever an input
+    observable changes.
+
+    ----
     Stopwatches can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.
 
@@ -43,6 +64,18 @@ type Observable<T> = Types.Observable<T>
     observables which enables safe garbage collection when writing Dec
     components.
     :::
+
+    Usage Example:
+    ```lua
+    local stopwatch = Dec.Stopwatch({
+        duration = 10,
+        isPlaying = true,
+    })
+    local frame = Dec.New("Frame")({
+        -- Opaque for 5 seconds, then fades to Transparent over 5 seconds:
+        BackgroundTransparency = stopwatch:Alpha(5, 10),
+    })
+    ```
 ]=]
 local Stopwatch = {}
 -- Inherits Observable metamethods
@@ -113,28 +146,63 @@ function Stopwatch.__index.Alpha(
     end)
 end
 
+
+--[=[
+    @interface StopwatchProps
+    @within Stopwatch
+    @field duration number
+    @field isPlaying CanBeObservable<boolean>?,
+    @field playOnChange Observable<any>?,
+
+    Type that specifies the props for constructing a [Stopwatch] observable (via
+    [Dec.Stopwatch])
+
+    `duration` is an optional prop that specifies the end time of the stopwatch.
+    Defaults to `math.huge`.
+
+    `isPlaying` specifies that stopwatch should play and stop depending on an
+    observable boolean value. If set to `true`, the stopwatch will immediately
+    start playing.
+
+    `playOnChange` specifies that the stopwatch should restart whenever an input
+    observable changes.
+]=]
+
 --[=[
     @function Stopwatch
     @within Dec
-    @param maxDuration number?
+    @param props StopwatchProps?
     @return Stopwatch
 
     Creates a new Stopwatch Observable, which simulates in realtime while
     subscribed.
+
+    #### Props:
+
+    `duration` is an optional prop that specifies the end time of the stopwatch.
+    Defaults to `math.huge`.
+
+    `isPlaying` specifies that stopwatch should play and stop depending on an
+    observable boolean value. If set to `true`, the stopwatch will immediately
+    start playing.
+
+    `playOnChange` specifies that the stopwatch should restart whenever an input
+    observable changes.
 ]=]
-function Stopwatch.new(maxDuration: number?): Stopwatch
+function Stopwatch.new(props: StopwatchProps?): Stopwatch
     local playState = State.new({
         playing = false,
         startClockTime = 0,
         resumeAtTime = 0,
     })
+    local duration = (if props then props.duration else nil) or math.huge
     local function getCurrent(_current: typeof(playState:Current())?)
         local current = _current or playState:Current()
         if current.playing then
             return math.clamp(
                 os.clock() - current.startClockTime,
                 0,
-                maxDuration or math.huge
+                duration
             )
         end
         return current.resumeAtTime
@@ -167,7 +235,7 @@ function Stopwatch.new(maxDuration: number?): Stopwatch
         getCurrent,
         createUpdateStream
     ) :: any
-    self._duration = maxDuration or math.huge
+    self._duration = duration
     self._playState = playState
     setmetatable(self, Stopwatch)
     return self
