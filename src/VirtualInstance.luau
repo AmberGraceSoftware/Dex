@@ -866,7 +866,7 @@ end
     local function PulseAnimation(valueToWatch: Dec.Observable<any>)
         -- Create a UIScale object that plays a 1-second "pulse" animation
         -- whenever a stopwatch is played.
-        local stopwatch = Dec.Stopwatch(1)
+        local stopwatch = Dec.Stopwatch({duration = 1})
         local uiScale = Dec.New("UIScale", {
             Scale = stopwatch:Map(function(currentTime)
                 return 1 + (0.5 - currentTime) * 0.1
@@ -875,7 +875,7 @@ end
 
         -- Play the stopwatch whenever the valueToWatch observable changes.
         uiScale:SubscribeWhileMounted(valueToWatch, function()
-            stopwatch:Start()
+            stopwatch:Play()
         end)
 
         return uiScale
