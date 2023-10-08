@@ -289,11 +289,9 @@ function StateRecord.__index.Index(
                 self._notifyRecord[key] = listenersAtKey
             end
             listenersAtKey[notifyUpdate] = true
-            self._notifyUpdate = notifyUpdate
 
             return function()
                 listenersAtKey[notifyUpdate] = nil
-                self._notifyUpdate = nil
                 if not next(listenersAtKey) then
                     self._notifyRecord[key] = nil
                 end
