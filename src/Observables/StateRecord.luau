@@ -312,7 +312,7 @@ end
     @param initialValue T
     @return Record<T>
 
-    Creates a new Record observable with the given initial value.
+    Creates a new [Record] observable with the given initial value.
 ]]
 function StateRecord.new<T>(initialValue: T): StateRecord<T>
     local self: StateRecord<T>

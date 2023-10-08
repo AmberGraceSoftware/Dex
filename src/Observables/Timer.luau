@@ -58,7 +58,7 @@ type Observable<T> = Types.Observable<T>
     :::info
     Timers must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dec
     components.
     :::
 
@@ -185,7 +185,7 @@ end
     @param props TimerProps
     @return Timer
 
-    Creates a new Timer Observable, which simulates in realtime while
+    Creates a new [Timer] Observable, which simulates in realtime while
     subscribed.
 
     #### Props:

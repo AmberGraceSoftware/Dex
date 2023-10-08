@@ -9,7 +9,7 @@ classes = ["Dec", "VirtualInstance", "Root"]
 section = "Observables"
 collapsed = false
 classes = ["Observable", "State", "Record", "Dict", "Stopwatch", "Timer",
-    "Eased", "Spring", "AngleSpring", "IntSpring"]
+    "Tween", "Eased", "Spring", "AngleSpring", "IntSpring"]
 
 gitSourceBranch = "main"
 

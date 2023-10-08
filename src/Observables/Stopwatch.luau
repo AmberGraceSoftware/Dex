@@ -61,7 +61,7 @@ type Observable<T> = Types.Observable<T>
     :::info
     Stopwatches must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dec
     components.
     :::
 
@@ -174,7 +174,7 @@ end
     @param props StopwatchProps?
     @return Stopwatch
 
-    Creates a new Stopwatch Observable, which simulates in realtime while
+    Creates a new [Stopwatch] Observable, which simulates in realtime while
     subscribed.
 
     #### Props:

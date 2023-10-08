@@ -87,7 +87,7 @@ local typeToSpringStepMethod = {
     :::info
     AngleSprings must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dec
     components.
     :::
 ]=]

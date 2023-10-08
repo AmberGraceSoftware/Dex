@@ -133,6 +133,26 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
         ) -> Observable<number>
     }}
 ))
+export type TweenParams<T> = {
+    info: TweenInfo,
+    goal: T,
+    start: T?,
+    completed: (() -> ())?,
+    cancelled: (() -> ())?,
+}
+export type Tween<T> = Observable<T> & typeof(setmetatable(
+    {} :: {
+        _lastDispatch: State<{
+            params: TweenParams<T>,
+            startClockTime: number,
+            duration: number,
+            completed: boolean,
+        }>
+    },
+    {} :: {_index: {
+        Play: (self: Tween<T>, props: TweenParams<T>) -> (),
+    }}
+))
 export type Stopwatch = BaseTimer
 export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>

@@ -30,10 +30,6 @@ export type EasedValue<T = any> = Types.EasedValue<T>
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
---- @type CanBeObservable<T> Observable<T> | T
---- @within Dec
---- Utility type that denotes a value can be an observable. Dec provides the
---- utility function [Dec.CoerceAsObservable] for unwrapping these objects.
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type ChildMap = Types.ChildMap
 export type VirtualInstance = Types.VirtualInstance
