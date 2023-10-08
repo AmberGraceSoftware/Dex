@@ -64,6 +64,7 @@ Dec.Record = require(script.Observables.StateRecord).new
 Dec.Dict = require(script.Observables.StateRecord).newDict
 Dec.Map = require(script.Util.MapObservable)
 Dec.CustomObservable = Observable.new
+Dec.Clock = require(script.Observables.Clock)
 
 -- Realtime simulation observable utilities
 Dec.Spring = require(script.Observables.Spring).new
