@@ -27,14 +27,9 @@ export type Spring<T = any> = Types.Spring<T>
 export type AngleSpring<T = any> = Types.AngleSpring<T>
 export type IntSpring<T = any> = Types.IntSpring<T>
 export type EasedValue<T = any> = Types.EasedValue<T>
-export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Stopwatch = Types.Stopwatch
 export type Timer = Types.Timer
---- @type CanBeObservable<T> Observable<T> | T
---- @within Dec
---- Utility type that denotes a value can be an observable. Dec provides the
---- utility function [Dec.CoerceAsObservable] for unwrapping these objects.
 export type CanBeObservable<T> = Types.CanBeObservable<T>
 export type ChildMap = Types.ChildMap
 export type VirtualInstance = Types.VirtualInstance
@@ -64,8 +59,8 @@ Dec.State = require(script.Observables.State).new
 Dec.Record = require(script.Observables.StateRecord).new
 Dec.Dict = require(script.Observables.StateRecord).newDict
 Dec.Map = require(script.Util.MapObservable)
-Dec.Alpha = require(script.Observables.Alpha).new
 Dec.CustomObservable = Observable.new
+Dec.Clock = require(script.Observables.Clock)
 
 -- Realtime simulation observable utilities
 Dec.Spring = require(script.Observables.Spring).new

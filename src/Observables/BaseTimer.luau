@@ -1,26 +1,24 @@
 --!strict
 local Types = require(script.Parent.Parent.Types)
-local Alpha = require(script.Parent.Alpha)
 
-export type Alpha = Types.Alpha
 export type BaseTimer = Types.BaseTimer
 export type Observable<T> = Types.Observable<T>
 
 local BaseTimer = {}
 
 --[=[
-    @method Start
+    @method Play
     @within Stopwatch
     Starts the Stopwatch Observable. The observable will update with new
     values every heartbeat in real-time until it is stopped.
 ]=]
 --[=[
-    @method Start
+    @method Play
     @within Timer
     Starts the Timer Observable. The observable will update with new
     values every heartbeat in real-time until it is stopped.
 ]=]
-function BaseTimer.Start(self: BaseTimer): ()
+function BaseTimer.Play(self: BaseTimer): ()
     local elapsed = self._playState:Current().resumeAtTime
     self._playState:Set({
         playing = true,
@@ -102,68 +100,6 @@ function BaseTimer.SetTimePosition(self: BaseTimer, position: number): ()
         startClockTime = os.clock() - elapsed,
         resumeAtTime = current.resumeAtTime,
     })
-end
-
---[=[
-    @method CurvedAlpha
-    @within Stopwatch
-    @return Alpha
-
-    Creates a new Alpha Observable that interpolates between 0 and one using
-    the given easing style and direction. Useful for creating non-linear
-    animations.
-]=]
---[=[
-    @method CurvedAlpha
-    @within Timer
-    @return Alpha
-
-    Creates a new Alpha Observable that interpolates between 0 and one using
-    the given easing style and direction. Useful for creating non-linear
-    animations.
-]=]
-function BaseTimer.CurvedAlpha(
-    self: BaseTimer,
-    easingStyle: Enum.EasingStyle,
-    easingDirection: Enum.EasingDirection?
-): Alpha
-
-    -- Create Alpha observable for the current Timer/Stopwatch
-    local alpha = self:Alpha()
-    -- Apply easing
-    return alpha:Curve(easingStyle, easingDirection)
-end
-
---[=[
-    @method SliceAlpha
-    @within Stopwatch
-    @return Alpha
-
-    Creates a new Alpha Observable that starts at startTime
-    (maps to 0) and ends at endTime (maps to 1).
-
-    Useful for slicing up animation sequences into smaller slices.
-]=]
---[=[
-    @method SliceAlpha
-    @within Timer
-    @return Alpha
-
-    Creates a new Alpha Observable that starts at startTime
-    (maps to 0) and ends at endTime (maps to 1).
-
-    Useful for slicing up animation sequences into smaller slices.
-]=]
-function BaseTimer.SliceAlpha(
-    self: BaseTimer,
-    startTime: number,
-    endTime: number
-): Alpha
-    return Alpha.new(
-        self,
-        startTime,
-        endTime
-    )
 end
 
 return BaseTimer

@@ -1,8 +1,8 @@
 --!strict
-local TweenService = game:GetService("TweenService")
 local Types = require(script.Parent.Parent.Types)
 local EasedObject = require(script.Parent.EasedObject)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
+local Tween = require(script.Parent.Tween)
 
 type EasingFrame<T> = EasedObject.EasingFrame<T>
 type Observable<T> = Types.Observable<T>
@@ -13,42 +13,13 @@ local function easingFunction<T>(
     lerp: (T, T, number) -> T,
     easingFrame: EasingFrame<any>
 )
-    local cycleLength
-    if info.Reverses then
-        cycleLength = info.DelayTime + info.Time * 2
-    else
-        cycleLength = info.DelayTime + info.Time
-    end
-    local totalCycles = info.RepeatCount + 1
-    local cycleElapsed = easingFrame.startElapsed % cycleLength
-    local cycleNumber = math.floor(easingFrame.startElapsed / cycleLength)
-
-    -- if we're past the total cycles, snap to the final value and return
-    if cycleNumber >= totalCycles then
-        return easingFrame.goalValue, 0
-    end
-
-    local inReverse = info.Reverses
-        and (cycleElapsed >= info.DelayTime + info.Time)
-
-    local alpha
-    if cycleElapsed < info.DelayTime and not inReverse then
-        alpha = 0
-    else
-        local timePosition
-        if inReverse then
-            timePosition = 2 * info.Time - cycleElapsed - info.DelayTime
-        else
-            timePosition = cycleElapsed - info.DelayTime
-        end
-        alpha = TweenService:GetValue(
-            math.clamp(timePosition, 0, info.Time) / info.Time,
-            info.EasingStyle,
-            info.EasingDirection
-        )
-    end
-
-    return lerp(easingFrame.startValue, easingFrame.goalValue, alpha), 0
+    return Tween._Interpolate(
+        info,
+        easingFrame.startValue,
+        easingFrame.goalValue,
+        easingFrame.startElapsed,
+        lerp
+    ), 0
 end
 
 --[=[
@@ -77,10 +48,12 @@ end
 
     Creates an Observable that eases in realtime every time the input Observable
     changes its value, based on the TweenInfo provided.
-    
-    :::caution
-    Eased must have at least one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate in realtime!
+
+    :::info
+    Eased must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables, which enables safe garbage collection when writing Dec
+    components.
     :::
 ]=]
 local Eased = {}
@@ -104,8 +77,9 @@ Eased.__index._decobservabletype = "Eased"
     @param target Observable<T>
     @param info TweenInfo
     @return Observable<T>
-    Creates an Observable that eases in realtime every time the input Observable
-    changes its value, based on the TweenInfo provided.
+
+    Creates an eased Observable that tweens its value in realtime every time
+    the input Observable changes its value, based on the TweenInfo provided.
     
     :::caution
     Eased must have at least one Subscriber (or be mounted on at least one

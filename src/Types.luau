@@ -103,23 +103,6 @@ export type EasedValue<T> = EasedObject<T> & typeof(setmetatable(
     },
     {} :: {__index: { }}
 ))
-export type Alpha = Observable<number> & typeof(setmetatable(
-    {} :: {},
-    {} :: {__index: {
-        Slice: (self: Alpha, startAlpha: number, endAlpha: number) -> Alpha,
-        Curve: (
-            self: Alpha,
-            easingStyle: Enum.EasingStyle,
-            easingDirection: Enum.EasingDirection?
-        ) -> Alpha,
-        Lerp: <T>(
-            self: Alpha,
-            startValue: T,
-            goalValue: T
-        ) -> Observable<T>,
-        Invert: (self: Alpha) -> Alpha,
-    }}
-))
 export type BaseTimer = Observable<number> & typeof(setmetatable(
     {} :: {
         -- Public
@@ -130,34 +113,59 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
             playing: boolean,
             startClockTime: number,
             resumeAtTime: number,
-        }>
+        }>,
+        _startReactiveControlStream: (notifyUpdate: () -> ()) -> (() -> ())
     },
     {} :: {__index: {
-        Start: (self: BaseTimer) -> (),
+        Play: (self: BaseTimer) -> (),
         Stop: (self: BaseTimer) -> (),
         Pause: (self: BaseTimer) -> (),
         SetTimePosition: (self: BaseTimer, position: number) -> (),
-        CurvedAlpha: (
-            self: BaseTimer,
-            easingStyle: Enum.EasingStyle,
-            easingDirection: Enum.EasingDirection?
-        ) -> Alpha,
-        SliceAlpha: (
-            self: BaseTimer,
-            startTime: number,
-            endTime: number
-        ) -> Alpha,
         Lerp: <T>(
             self: BaseTimer,
             startValue: T,
             goalValue: T
         ) -> Observable<T>,
-        Alpha: (self: BaseTimer) -> Alpha,
+        Alpha: (
+            self: BaseTimer,
+            startTime: number,
+            endTime: number
+        ) -> Observable<number>
+    }}
+))
+export type TweenParams<T> = {
+    info: TweenInfo,
+    goal: T,
+    start: T?,
+    completed: (() -> ())?,
+    cancelled: (() -> ())?,
+}
+export type Tween<T> = Observable<T> & typeof(setmetatable(
+    {} :: {
+        _lastDispatch: State<{
+            params: TweenParams<T>,
+            startClockTime: number,
+            duration: number,
+            completed: boolean,
+        }>
+    },
+    {} :: {__index: {
+        Play: (self: Tween<T>, props: TweenParams<T>) -> (),
     }}
 ))
 export type Stopwatch = BaseTimer
 export type Timer = BaseTimer
 export type CanBeObservable<T = any> = T | Observable<T>
+export type StopwatchProps = {
+    duration: number?,
+    isPlaying: CanBeObservable<boolean>?,
+    playOnChange: Observable<any>?,
+}
+export type TimerProps = {
+    duration: number,
+    isPlaying: CanBeObservable<boolean>?,
+    playOnChange: Observable<any>?,
+}
 export type ChildPath = string | number
 export type ChildMap = CanBeObservable<{
     [any]: any--[[[ChildPath]: CanBeObservable<
