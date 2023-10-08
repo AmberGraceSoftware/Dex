@@ -29,7 +29,7 @@ local function OpenAnimation()
 end
 ```
 
-No manual :Start() / :Stop() calls required, or unsafe/hacky `Subscribe` calls!
+No manual :Play() / :Stop() calls required, or unsafe/hacky `Subscribe` calls!
 
 This will also simplify the hello world:
 

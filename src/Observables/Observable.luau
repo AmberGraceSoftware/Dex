@@ -232,7 +232,7 @@ end
 
         -- Play the stopwatch whenever the valueToWatch observable changes.
         valueToWatch:SubscribeWhileMounted(uiScale, function()
-            stopwatch:Start()
+            stopwatch:Play()
         end)
 
         return uiScale

@@ -7,18 +7,18 @@ export type Observable<T> = Types.Observable<T>
 local BaseTimer = {}
 
 --[=[
-    @method Start
+    @method Play
     @within Stopwatch
     Starts the Stopwatch Observable. The observable will update with new
     values every heartbeat in real-time until it is stopped.
 ]=]
 --[=[
-    @method Start
+    @method Play
     @within Timer
     Starts the Timer Observable. The observable will update with new
     values every heartbeat in real-time until it is stopped.
 ]=]
-function BaseTimer.Start(self: BaseTimer): ()
+function BaseTimer.Play(self: BaseTimer): ()
     local elapsed = self._playState:Current().resumeAtTime
     self._playState:Set({
         playing = true,

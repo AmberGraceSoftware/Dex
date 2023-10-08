@@ -17,7 +17,7 @@ type Observable<T> = Types.Observable<T>
     #### Inherits [Observable]
 
     Observable which counts down from a max value in realtime whenever played
-    via [Timer:Start].
+    via [Timer:Play].
 
     Includes utility methods for mapping this "remaining time" value into more
     complex animationed sequences.
@@ -32,7 +32,7 @@ type Observable<T> = Types.Observable<T>
     ```
 
     Creates a new [Timer] Observable, the value of which decreases in realtime
-    after [Timer:Start] is called.
+    after [Timer:Play] is called.
 
     Timers can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.

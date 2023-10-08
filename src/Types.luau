@@ -116,7 +116,7 @@ export type BaseTimer = Observable<number> & typeof(setmetatable(
         }>
     },
     {} :: {__index: {
-        Start: (self: BaseTimer) -> (),
+        Play: (self: BaseTimer) -> (),
         Stop: (self: BaseTimer) -> (),
         Pause: (self: BaseTimer) -> (),
         SetTimePosition: (self: BaseTimer, position: number) -> (),

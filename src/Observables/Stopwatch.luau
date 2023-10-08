@@ -17,7 +17,7 @@ type Observable<T> = Types.Observable<T>
     #### Inherits [Observable]
 
     Observable which counts up to a max value in realtime whenever played
-    via [Timer:Start].
+    via [Stopwatch:Play].
 
     Includes utility methods for mapping this "elapsed time" value into more
     complex animationed sequences.
@@ -32,7 +32,7 @@ type Observable<T> = Types.Observable<T>
     ```
 
     Creates a new [Stopwatch] Observable, the value of which increases in
-    realtime after [Stopwatch:Start] is called.
+    realtime after [Stopwatch:Play] is called.
 
     Stopwatches can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.
