@@ -66,11 +66,13 @@ type IntSpring<T> = Types.IntSpring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, constrained to the Integer range. Rounds the current position
     towards the target value, which is useful for UI components like currency or
-    ammo counters. 
+    ammo counters.
 
-    :::caution
-    IntSpring must have at least one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate in realtime!
+    :::info
+    IntSprings must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables, which enables safe garbage collection when writing Dec
+    components.
     :::
 ]=]
 local IntSpring = {}

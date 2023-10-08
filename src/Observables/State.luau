@@ -83,7 +83,7 @@ end
     @param initialValue T
     @return State<T>
 
-    Creates a new State Observable object with the given initial value.
+    Creates a new [State] Observable object with the given initial value.
 ]=]
 function State.new<T>(initialValue: T): State<T>
     local self: State<T>

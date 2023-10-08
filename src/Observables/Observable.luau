@@ -6,6 +6,14 @@ export type Observable<T> = Types.Observable<T>
 export type Unsubscribe = Types.Unsubscribe
 
 --[=[
+    @type CanBeObservable<T> Observable<T> | T
+    @within Observable
+
+    Utility type that denotes a value can be an observable. Dec also provides
+    the utility function [Dec.CoerceAsObservable] for unwrapping these objects.
+]=]
+
+--[=[
     @class Observable
 
     Observables are objects that resolve to some value, and can be subscribed to

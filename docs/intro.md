@@ -63,9 +63,7 @@ Roblox experience.
 local Dec = require(game.ReplicatedStorage.Packages.Dec)
 
 local function App()
-    local stopwatch = Dec.Stopwatch()
-    stopwatch:Start()
-
+    local stopwatch = Dec.Stopwatch({playing = true})
     return Dec.New("ScreenGui", {}, {
         Label = Dec.New("TextLabel", {
             Size = UDim2.fromScale(1, 1),
