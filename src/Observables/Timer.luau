@@ -36,6 +36,13 @@ type Observable<T> = Types.Observable<T>
 
     Timers can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.
+
+    :::info
+    Timers must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables which enables safe garbage collection when writing Dec
+    components.
+    :::
 ]=]
 local Timer = {}
 -- Inherits Timer metamethods

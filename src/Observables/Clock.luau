@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local Observable = require(script.Parent.Observable)
 
 --[=[
-    @prop Clock
+    @prop Clock Observable<number>
     @within Dec
 
     Observable number that derives its value from the current time in seconds

@@ -31,11 +31,18 @@ type Observable<T> = Types.Observable<T>
     Dec.Stopwatch(maxDuration number?) -> Stopwatch
     ```
 
-    Creates a new [Stopwatch] Observable, the value of which increases in realtime
-    after [Stopwatch:Start] is called.
+    Creates a new [Stopwatch] Observable, the value of which increases in
+    realtime after [Stopwatch:Start] is called.
 
     Stopwatches can safely be garbage collected while dereferenced, unsubscribed,
     and unused by a VirtualInstance.
+
+    :::info
+    Stopwatches must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables which enables safe garbage collection when writing Dec
+    components.
+    :::
 ]=]
 local Stopwatch = {}
 -- Inherits Observable metamethods

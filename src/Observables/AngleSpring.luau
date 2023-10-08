@@ -84,9 +84,11 @@ local typeToSpringStepMethod = {
     damped spring, wrapped around the range [-pi, pi]. The spring simulates in
     realtime until the target value is reached.
 
-    :::caution
-    AngleSpring must have at least one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate in realtime!
+    :::info
+    AngleSprings must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables which enables safe garbage collection when writing Dec
+    components.
     :::
 ]=]
 local AngleSpring = {}

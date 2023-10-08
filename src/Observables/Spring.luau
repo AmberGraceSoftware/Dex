@@ -142,9 +142,11 @@ local typeToSpringStepMethod = {
     damped spring. The spring simulates in realtime until the target value is
     reached.
 
-    :::caution
-    Spring must have at least one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate in realtime!
+    :::info
+    Springs must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables which enables safe garbage collection when writing Dec
+    components.
     :::
 ]=]
 local Spring = {}

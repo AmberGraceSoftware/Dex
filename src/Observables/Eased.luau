@@ -77,10 +77,12 @@ end
 
     Creates an Observable that eases in realtime every time the input Observable
     changes its value, based on the TweenInfo provided.
-    
-    :::caution
-    Eased must have at least one Subscriber (or be mounted on at least one
-    VirtualInstance) to simulate in realtime!
+
+    :::info
+    Eased must currently be ***Subscribed*** or ***Mounted*** to exhibit
+    expected behavior. This is a requirement for all realtime-simulated
+    observables which enables safe garbage collection when writing Dec
+    components.
     :::
 ]=]
 local Eased = {}
