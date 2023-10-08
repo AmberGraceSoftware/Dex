@@ -289,7 +289,7 @@ down once the Observable is *unsubscribed* by all listeners.
 ### A Safer Alternative to `:Subscribe()`
 
 A safe alternative to calling `Observable:Subscribe()` is the function
-`Observable:SubscribeWhileMounted()`, which takes in a VirtualInstance as a
+`VirtualInstance:SubscribeWhileMounted()`, which takes in the Observable as a
 first parameter, and automatically unsubscribes to the observable's value once
 the VirtualInstance is ***Unmounted*** (i.e. is no longer being rendered by
 Dec).
@@ -304,7 +304,7 @@ local function ComponentWithSideEffects(value: Dec.Observable<number>)
 
     -- This will keep printing changes to the value until the frame is no longer
     -- rendered
-    value:SubscribeWhileMounted(frame, function(currentValue)
+    frame:SubscribeWhileMounted(value, function(currentValue)
         print("The current value is", currentValue)
     end)
 

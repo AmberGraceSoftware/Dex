@@ -842,6 +842,64 @@ function VirtualInstance.__index.Combine(
     end
 end
 
+
+
+--[=[
+    @method SubscribeWhileMounted
+    @within VirtualInstance
+    @param input: Observable<T>
+    @param listener (value: T) -> ()
+    @param immediatelyCallListenerOnMount boolean?
+
+    Subscribes a custom listener to an observable's value while the
+    VirtualInstance is mounted, and automatically unsubscribes the listener when
+    the VirtualInstance unmounts.
+
+    :::tip
+    SubscribeWhileMounted is much safer than calling [Observable:Subscribe]
+    directly, as you do not need to handle an unsubscribe function manually to
+    prevent memory leaks.
+
+    You can use this function to trigger side effects such as animations
+    whenever an observable value changes:
+    ```lua
+    local function PulseAnimation(valueToWatch: Dec.Observable<any>)
+        -- Create a UIScale object that plays a 1-second "pulse" animation
+        -- whenever a stopwatch is played.
+        local stopwatch = Dec.Stopwatch({duration = 1})
+        local uiScale = Dec.New("UIScale", {
+            Scale = stopwatch:Map(function(currentTime)
+                return 1 + (0.5 - currentTime) * 0.1
+            end)
+        })
+
+        -- Play the stopwatch whenever the valueToWatch observable changes.
+        uiScale:SubscribeWhileMounted(valueToWatch, function()
+            stopwatch:Play()
+        end)
+
+        return uiScale
+    end
+    ```
+    :::
+]=]
+function VirtualInstance.__index.SubscribeWhileMounted(
+    self: VirtualInstance,
+    input: Observable<any>,
+    listener: (value: any) -> (),
+    immediatelyCallListenerOnMount: boolean?
+): ()
+    local unsubscribe: (() -> ())? = nil
+    self:OnMount(function()
+        unsubscribe = input:Subscribe(listener, immediatelyCallListenerOnMount)
+    end)
+    self:OnUnmount(function()
+        if unsubscribe then
+            unsubscribe()
+        end
+    end)
+end
+
 --[[
     @function new
     @within VirtualInstance
