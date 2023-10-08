@@ -1,11 +1,11 @@
 --!strict
-local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 local BaseTimer = require(script.Parent.BaseTimer)
 local State = require(script.Parent.State)
 local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
+local CreateBaseTimerUpdateStream = require(script.Parent.CreateBaseTimerUpdateStream)
 
 type Stopwatch = Types.Stopwatch
 type StopwatchProps = Types.StopwatchProps
@@ -207,33 +207,9 @@ function Stopwatch.new(props: StopwatchProps?): Stopwatch
         end
         return current.resumeAtTime
     end
-    local function createUpdateStream(notifyUpdate: () -> ())
-        local heartbeatConn = nil
-        local function playStateChanged(current: typeof(playState:Current()))
-            if current.playing then
-                if not heartbeatConn then
-                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
-                end
-            else
-                if heartbeatConn then
-                    heartbeatConn:Disconnect()
-                end
-            end
-            notifyUpdate()
-        end
-        local unsubscribe = playState:Subscribe(playStateChanged)
-        playStateChanged(playState:Current())
-
-        return function()
-            unsubscribe()
-            if heartbeatConn then
-                heartbeatConn:Disconnect()
-            end
-        end
-    end
     local self: Stopwatch = Observable.new(
         getCurrent,
-        createUpdateStream
+        CreateBaseTimerUpdateStream(playState, props)
     ) :: any
     self._duration = duration
     self._playState = playState

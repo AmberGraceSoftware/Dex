@@ -1,11 +1,11 @@
 --!strict
-local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local BaseTimer = require(script.Parent.BaseTimer)
 local State = require(script.Parent.State)
 local Observable = require(script.Parent.Observable)
 local MapObservable = require(script.Parent.Parent.Util.MapObservable)
 local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
+local CreateBaseTimerUpdateStream = require(script.Parent.CreateBaseTimerUpdateStream)
 
 type Timer = Types.Timer
 type TimerProps = Types.TimerProps
@@ -217,33 +217,9 @@ function Timer.new(props: TimerProps): Timer
         return math.clamp(props.duration - current.resumeAtTime, 0,
             props.duration)
     end
-    local function createUpdateStream(notifyUpdate: () -> ())
-        local heartbeatConn = nil
-        local function playStateChanged(current: typeof(playState:Current()))
-            if current.playing then
-                if not heartbeatConn then
-                    heartbeatConn = RunService.Heartbeat:Connect(notifyUpdate)
-                end
-            else
-                if heartbeatConn then
-                    heartbeatConn:Disconnect()
-                end
-            end
-            notifyUpdate()
-        end
-        local unsubscribe = playState:Subscribe(playStateChanged)
-        playStateChanged(playState:Current())
-
-        return function()
-            unsubscribe()
-            if heartbeatConn then
-                heartbeatConn:Disconnect()
-            end
-        end
-    end
-    local self: Timer = Observable.new(
+    local self = Observable.new(
         getCurrent,
-        createUpdateStream
+        CreateBaseTimerUpdateStream(playState, props)
     ) :: any
     self._duration = props.duration
     self._playState = playState
