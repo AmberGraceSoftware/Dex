@@ -9,6 +9,7 @@ local Observable = require(script.Parent.Observable)
 local State = require(script.Parent.State)
 
 export type Tween<T> = Types.Tween<T>
+export type Observable<T> = Types.Observable<T>
 export type TweenParams<T> = Types.TweenParams<T>
 
 --[=[
@@ -64,7 +65,7 @@ export type TweenParams<T> = Types.TweenParams<T>
     …or automatically play when an input state holding a params table changes:
     ```lua
     local input = Dec.State(0)
-    local tween = Dec.Tween(input:Map(currentInput)
+    local tween = Dec.Tween(Dec.Map(input)(function(currentInput)
         return {
             goal = input,
             info = TweenInfo.new(0.1)
@@ -154,6 +155,23 @@ function Tween._Interpolate<T>(
     return lerp(start, goal, alpha)
 end
 
+local function createDispatch<T>(
+    params: TweenParams<T>, 
+    currentValue: T
+): any
+    local startValue = params.start or currentValue
+    return {
+        params = {
+            start = startValue,
+            goal = params.goal,
+            info = params.info,
+        },
+        startClockTime = os.clock(),
+        duration = Tween._GetDuration(params.info),
+        completed = startValue == params.goal,
+    }
+end
+
 --[=[
     @method Play
     @within Tween
@@ -165,36 +183,28 @@ function Tween.__index.Play(
     self: Tween<any>,
     params: TweenParams<any>
 ): ()
-    local startValue = params.start or self:Current()
-    self._lastDispatch:Set({
-        params = {
-            start = startValue,
-            goal = params.goal,
-            info = params.info,
-        },
-        startClockTime = os.clock(),
-        duration = Tween._GetDuration(params.info),
-        completed = startValue == params.goal,
-    })
+    self._lastDispatch:Set(createDispatch(params, self:Current()))
 end
 
 --[=[
     @function Tween
     @within Dec
-    @param initialValue T
+    @param initialValue T | Observable<TweenParams<T>>
     @return Tween<T>
 
     Creates a new [Tween] Observable object with the given initial value.
 ]=]
-function Tween.new<T>(initialValue: T): Tween<T>
+function Tween.new<T>(initialValue: T | Observable<TweenParams<T>>): Tween<T>
     local initParams: TweenParams<T>
+    local dispatchInput: Observable<TweenParams<T>>? = nil
     if IsObservable(initialValue) then
         initParams = table.clone((initialValue :: any):Current())
         initParams.start = initParams.start or initParams.goal
+        dispatchInput = initialValue :: any
     else
         initParams = {
-            start = initialValue,
-            goal = initialValue,
+            start = initialValue :: T,
+            goal = initialValue :: T,
             info = TweenInfo.new(0)
         }
     end
@@ -206,31 +216,32 @@ function Tween.new<T>(initialValue: T): Tween<T>
         completed = initParams.start == initParams.goal,
     })
     local self: Tween<T>
-    self = Observable.new(
-        function(): T
-            local currentDispatch = lastDispatch:Current()
-            local tweenParams = currentDispatch.params
-            if currentDispatch.completed then
-                return tweenParams.goal
-            end
+    local function getCurrent(): T
+        local currentDispatch = lastDispatch:Current()
+        local tweenParams = currentDispatch.params
+        if currentDispatch.completed then
+            return tweenParams.goal
+        end
 
-            local elapsed = os.clock() - currentDispatch.startClockTime
-            local alpha = math.clamp(
-                elapsed / currentDispatch.duration,
-                0, 1
+        local elapsed = os.clock() - currentDispatch.startClockTime
+        local alpha = math.clamp(
+            elapsed / currentDispatch.duration,
+            0, 1
+        )
+        if alpha == 1 then
+            return tweenParams.goal
+        else
+            return Tween._Interpolate(
+                tweenParams.info,
+                tweenParams.start :: T,
+                tweenParams.goal,
+                elapsed,
+                lerp
             )
-            if alpha == 1 then
-                return tweenParams.goal
-            else
-                return Tween._Interpolate(
-                    tweenParams.info,
-                    tweenParams.start :: T,
-                    tweenParams.goal,
-                    elapsed,
-                    lerp
-                )
-            end
-        end,
+        end
+    end
+    self = Observable.new(
+        getCurrent,
         function(notifyUpdate)
             local dispatchToCancel: typeof(lastDispatch:Current())? = nil
             local heartbeatConn: RBXScriptConnection? = nil
@@ -273,11 +284,19 @@ function Tween.new<T>(initialValue: T): Tween<T>
                 end
                 notifyUpdate()
             end
-            onDispatchUpdate()
-            local unsub = lastDispatch:Subscribe(onDispatchUpdate)
+            local unsubInput
+            if dispatchInput then
+                unsubInput = dispatchInput:Subscribe(function(params)
+                    lastDispatch:Set(createDispatch(params, getCurrent()))
+                end, true)
+            end
+            local unsub = lastDispatch:Subscribe(onDispatchUpdate, true)
 
             return function()
                 unsub()
+                if unsubInput then
+                    unsubInput()
+                end
                 stopSimulating()
             end
         end

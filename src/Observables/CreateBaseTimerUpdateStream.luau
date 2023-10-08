@@ -91,9 +91,7 @@ local function CreateBaseTimerUpdateStream(playState: State<{
                 )
             end
         end
-
-        table.insert(unsubscribes, playState:Subscribe(playStateChanged))
-        playStateChanged(playState:Current())
+        table.insert(unsubscribes, playState:Subscribe(playStateChanged, true))
 
         return function()
             for _, unsubscribe in unsubscribes do

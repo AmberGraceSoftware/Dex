@@ -149,7 +149,7 @@ export type Tween<T> = Observable<T> & typeof(setmetatable(
             completed: boolean,
         }>
     },
-    {} :: {_index: {
+    {} :: {__index: {
         Play: (self: Tween<T>, props: TweenParams<T>) -> (),
     }}
 ))
