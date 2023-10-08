@@ -80,6 +80,33 @@ function Stopwatch.__index.Lerp<T>(
 end
 
 --[=[
+    @method Alpha
+    @within Stopwatch
+    @param startTime number
+    @param endTime number
+    @return Alpha
+
+    Derives an observable number that maps the elasped time from 0 at the
+    provided start time, and 1 at the provided end time.
+]=]
+function Stopwatch.__index.Alpha(
+    self: Stopwatch,
+    startTime: number,
+    endTime: number
+): Observable<number>
+    local duration = endTime - startTime
+    if duration == 0 then
+       return State.new(0)
+    end
+    return  MapObservable(self)(function(current)
+        return math.clamp(
+            (current - startTime) / duration,
+            0, 1
+        )
+    end)
+end
+
+--[=[
     @function Stopwatch
     @within Dec
     @param maxDuration number?

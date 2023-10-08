@@ -90,6 +90,33 @@ function Timer.__index.Lerp<T>(
     end) :: any
 end
 
+--[=[
+    @method Alpha
+    @within Timer
+    @param startTime number
+    @param endTime number
+    @return Alpha
+
+    Derives an observble number that maps the remaining time from from 0 at the
+    provided start time, and 1 at the provided end time.
+]=]
+function Timer.__index.Alpha(
+    self: Timer,
+    startTime: number,
+    endTime: number
+): Observable<number>
+    local duration = endTime - startTime
+    if duration == 0 then
+       return State.new(0)
+    end
+    return  MapObservable(self)(function(current)
+        return math.clamp(
+            (current - startTime) / duration,
+            0, 1
+        )
+    end)
+end
+
 function Timer.__index.SetTimePosition(self: Timer, pos: number)
     BaseTimer.SetTimePosition(self,
         math.clamp(self._duration - pos, 0, self._duration))
