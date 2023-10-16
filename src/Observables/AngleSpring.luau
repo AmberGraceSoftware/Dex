@@ -119,7 +119,7 @@ end
     @within Dex
     @param target Observable<T>
     @param angularFrequency number?
-    @return Observable<T>
+    @return AngleSpring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, wrapped around the range [-pi, pi]. The spring simulates in
     realtime until the target value is reached.

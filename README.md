@@ -4,7 +4,7 @@
     <img src="logo/Logo256.png" />
     <br/>
     <br/>
-    Dex is a library for building Roblox User Interfaces.
+    Dex is a library for building reactive User Interfaces on Roblox.
     <br/>
     <br/>
 </p>

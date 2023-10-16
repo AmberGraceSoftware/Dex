@@ -103,7 +103,7 @@ end
     @within Dex
     @param target Observable<T>
     @param angularFrequency number
-    @return Observable<T>
+    @return IntSpring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, constrained to the Integer range. Rounds the current position
     towards the target value, which is useful for UI components like currency or

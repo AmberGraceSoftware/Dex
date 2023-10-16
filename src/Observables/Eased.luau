@@ -76,7 +76,7 @@ Eased.__index._decobservabletype = "Eased"
     @within Dex
     @param target Observable<T>
     @param info TweenInfo
-    @return Observable<T>
+    @return Eased<T>
 
     Creates an eased Observable that tweens its value in realtime every time
     the input Observable changes its value, based on the TweenInfo provided.

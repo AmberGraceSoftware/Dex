@@ -173,7 +173,7 @@ Spring.StepMethods = typeToSpringStepMethod
     @within Dex
     @param target Observable<T>
     @param angularFrequency number?
-    @return Observable<T>
+    @return Spring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring. The spring simulates in realtime until the target value is
     reached.
