@@ -39,8 +39,8 @@ type Observable<T> = Types.Observable<T>
     }?) -> Stopwatch
     ```
 
-    Creates a new [Stopwatch] Observable, the value of which decreases in
-    realtime after [Stopwatch:Play] is called.
+    Creates a new [Stopwatch] Observable, which simulates in realtime while
+    subscribed.
 
     #### Props:
 
