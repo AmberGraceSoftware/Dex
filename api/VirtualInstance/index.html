@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="plugin-moonwave plugin-id-moonwave">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v2.3.1">
+<title data-rh="true">VirtualInstance | Dex</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dex.ambergracesoftware.com/api/VirtualInstance"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="VirtualInstance | Dex"><meta data-rh="true" name="description" content="VirtualInstances are the basic building blocks for Dex applications.
+
+VirtualInstances are &quot;Mounted&quot; by Dex&#x27;s reconciler engine,
+creating/destoying/modifying these real instances automatically as needed.
+
+## Constructors
+---
+
+### Dex.New
+```lua
+Dex.New(
+    className: string,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+
+Creates a new [VirtualInstance] that represents a newly-created Roblox
+Instance (via `Instance.new(className)`).
+
+---
+
+### Dex.Clone
+```lua
+Dex.Clone(
+    template: Instance | VirtualInstance,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+Creates a new [VirtualInstance] that represents a cloned Roblox Instance
+from a given template instance (via `template:Clone()`).
+
+---
+
+### Dex.Premade
+```lua
+Dex.Premade(
+    className: stirng,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+
+Creates a new VirtualInstance that represents a pre-existing Roblox Instance
+to be modified by Dex.
+
+If passed into the the Render function for a [Dex.Root] component, the root
+instance will be used used."><meta data-rh="true" property="og:description" content="VirtualInstances are the basic building blocks for Dex applications.
+
+VirtualInstances are &quot;Mounted&quot; by Dex&#x27;s reconciler engine,
+creating/destoying/modifying these real instances automatically as needed.
+
+## Constructors
+---
+
+### Dex.New
+```lua
+Dex.New(
+    className: string,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+
+Creates a new [VirtualInstance] that represents a newly-created Roblox
+Instance (via `Instance.new(className)`).
+
+---
+
+### Dex.Clone
+```lua
+Dex.Clone(
+    template: Instance | VirtualInstance,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+Creates a new [VirtualInstance] that represents a cloned Roblox Instance
+from a given template instance (via `template:Clone()`).
+
+---
+
+### Dex.Premade
+```lua
+Dex.Premade(
+    className: stirng,
+    props: {[string]: any}?,
+    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}
+) -&gt; VirtualInstance
+```
+
+Creates a new VirtualInstance that represents a pre-existing Roblox Instance
+to be modified by Dex.
+
+If passed into the the Render function for a [Dex.Root] component, the root
+instance will be used used."><link data-rh="true" rel="canonical" href="https://dex.ambergracesoftware.com/api/VirtualInstance"><link data-rh="true" rel="alternate" href="https://dex.ambergracesoftware.com/api/VirtualInstance" hreflang="en"><link data-rh="true" rel="alternate" href="https://dex.ambergracesoftware.com/api/VirtualInstance" hreflang="x-default"><link rel="stylesheet" href="/assets/css/styles.ec425e8c.css">
+<link rel="preload" href="/assets/js/runtime~main.0eec535d.js" as="script">
+<link rel="preload" href="/assets/js/main.a096a266.js" as="script">
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
+<div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/logo.svg" alt="Dex" class="themedImage_ToTc themedImage--light_HNdA"><img src="/logo.svg" alt="Dex" class="themedImage_ToTc themedImage--dark_i4oU"></div><b class="navbar__title text--truncate"></b></a><a class="navbar__item navbar__link" href="/docs/intro">Docs</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/AmberGraceSoftware/Dex" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="searchBox_ZlJk"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input type="search" id="search_input_react" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0 docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/api/Dex">​Dex</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/api/VirtualInstance">​Virtual​Instance</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/api/Root">​Root</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="true" href="/api/Observable">Observables</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Observable">​Observable</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/State">​State</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Record">​Record</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Dict">​Dict</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Stopwatch">​Stopwatch</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Timer">​Timer</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Tween">​Tween</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Eased">​Eased</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/Spring">​Spring</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/AngleSpring">​Angle​Spring</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/api/IntSpring">​Int​Spring</a></li></ul></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Virtual</span><span style="display:inline-block">Instance</span></h1><div class="luaClassTags_EipM"></div><div>
+<p>VirtualInstances are the basic building blocks for Dex applications.</p>
+<p>
+  VirtualInstances are "Mounted" by Dex's reconciler engine,
+  creating/destoying/modifying these real instances automatically as needed.
+</p>
+<h2>Constructors</h2>
+<hr>
+<h3>Dex.New</h3>
+<pre class="language-lua"><code class="language-lua">Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span>
+    className<span class="token punctuation">:</span> string<span class="token punctuation">,</span>
+    props<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>string<span class="token punctuation">]</span><span class="token punctuation">:</span> any<span class="token punctuation">}</span>?<span class="token punctuation">,</span>
+    children<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>any<span class="token punctuation">]</span><span class="token punctuation">:</span> CanBeObservable<span class="token operator">&#x3C;</span>VirtualInstance?<span class="token operator">></span><span class="token punctuation">}</span>
+<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> VirtualInstance
+</code></pre>
+<p>
+  Creates a new <a href="/api/VirtualInstance">VirtualInstance</a> that represents a newly-created Roblox
+  Instance (via <code>Instance.new(className)</code>).
+</p>
+<hr>
+<h3>Dex.Clone</h3>
+<pre class="language-lua"><code class="language-lua">Dex<span class="token punctuation">.</span><span class="token function">Clone</span><span class="token punctuation">(</span>
+    template<span class="token punctuation">:</span> Instance <span class="token operator">|</span> VirtualInstance<span class="token punctuation">,</span>
+    props<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>string<span class="token punctuation">]</span><span class="token punctuation">:</span> any<span class="token punctuation">}</span>?<span class="token punctuation">,</span>
+    children<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>any<span class="token punctuation">]</span><span class="token punctuation">:</span> CanBeObservable<span class="token operator">&#x3C;</span>VirtualInstance?<span class="token operator">></span><span class="token punctuation">}</span>
+<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> VirtualInstance
+</code></pre>
+<p>
+  Creates a new <a href="/api/VirtualInstance">VirtualInstance</a> that represents a cloned Roblox Instance
+  from a given template instance (via <code>template:Clone()</code>).
+</p>
+<hr>
+<h3>Dex.Premade</h3>
+<pre class="language-lua"><code class="language-lua">Dex<span class="token punctuation">.</span><span class="token function">Premade</span><span class="token punctuation">(</span>
+    className<span class="token punctuation">:</span> stirng<span class="token punctuation">,</span>
+    props<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>string<span class="token punctuation">]</span><span class="token punctuation">:</span> any<span class="token punctuation">}</span>?<span class="token punctuation">,</span>
+    children<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">[</span>any<span class="token punctuation">]</span><span class="token punctuation">:</span> CanBeObservable<span class="token operator">&#x3C;</span>VirtualInstance?<span class="token operator">></span><span class="token punctuation">}</span>
+<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> VirtualInstance
+</code></pre>
+<p>
+  Creates a new VirtualInstance that represents a pre-existing Roblox Instance
+  to be modified by Dex.
+</p>
+<p>
+  If passed into the the Render function for a <a href="/api/Dex#Root">Dex.Root</a> component, the root
+  instance will be used used.
+</p>
+</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="SetProperties"><code style="text-decoration:none">SetProperties</code><a href="#SetProperties" class="hash-link" aria-label="Direct link to SetProperties" title="Direct link to SetProperties">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L146"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">SetProperties</code><code>(</code><code>propertyMap<!-- -->: </code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">string</code><code>]</code></span><code>: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">any</code><code class="op_lSLc">&gt;</code><code class="purple_ieR2">}</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Adds properties to be rendered on the instance when it is reconciled.</p>
+<p>
+  Multiple calls to this function will merge the provided property map with
+  the existing one, prioritizing the later call.
+</p>
+<p>
+  Values in the propertyMap can have multiple possible types, which are each
+  handled differently:
+</p>
+<ul>
+  <li>
+    A <strong>Static Value</strong> (number, boolean, string, UDim2, etc.) to be assigned
+    right as the VirtualInstance is rendered
+  </li>
+  <li>
+    An <strong>Observablue Value</strong> to be assigned as the VirtualInstance is
+    Rendered, as well as when the Observable value changes
+  </li>
+  <li>A <strong><code>Dex.Nil</code></strong> symbol, which assigns a property to <code>nil</code> when rendered</li>
+  <li>
+    A <strong>function</strong> which represents a listener to connect to an event while
+    the VirtualInstance is rendered
+  </li>
+  <li>
+    Another <strong>VirtualInstance</strong>, which references an instance property to be
+    assigned. This is useful for ViewportFrames, for example, where a camera
+    must both be created underneath the ViewportFrame, and assigned as the
+    CurrentCamera property within the same frame.
+  </li>
+</ul>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="SetAttributes"><code style="text-decoration:none">SetAttributes</code><a href="#SetAttributes" class="hash-link" aria-label="Direct link to SetAttributes" title="Direct link to SetAttributes">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L168"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">SetAttributes</code><code>(</code><code>attributeMap<!-- -->: </code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">string</code><code>]</code></span><code>: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">any</code><code class="op_lSLc">&gt;</code><code class="purple_ieR2">}</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Adds attributes to be rendered on the instance when it is reconciled.</p>
+<p>
+  Multiple calls to this function will merge the provided attribute map with
+  the existing one, prioritizing the latest calls.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="AddTags"><code style="text-decoration:none">AddTags</code><a href="#AddTags" class="hash-link" aria-label="Direct link to AddTags" title="Direct link to AddTags">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L189"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">AddTags</code><code>(</code><code>tags<!-- -->: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="purple_ieR2">{</code><code class="blue_P4bS">string</code><code class="purple_ieR2">}</code><code class="op_lSLc">&gt;</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds tags to the Virtual Instance when it is reconciled. Multiple calls to
+  this function will add extra tags to the VirtualInstance if they do not
+  exist.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Connect"><code style="text-decoration:none">Connect</code><a href="#Connect" class="hash-link" aria-label="Direct link to Connect" title="Direct link to Connect">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L210"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">Connect</code><code>(</code><div class="inset_uKQm"><div><code>eventName<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code></div><div><code>listener<!-- -->: </code><code class="purple_ieR2">(</code><code class="blue_P4bS">...any</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds an event listener to the Virtual Instance, which will automatically
+  be connected and disconnected as the VirtualInstance is reconciled.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OutProperty"><code style="text-decoration:none">OutProperty</code><a href="#OutProperty" class="hash-link" aria-label="Direct link to OutProperty" title="Direct link to OutProperty">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L240"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OutProperty</code><code>(</code><div class="inset_uKQm"><div><code>propName<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code></div><div><code>initialValue<!-- -->: </code><code class="blue_P4bS">T</code></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">T</code><code class="op_lSLc">&gt;</code></div><div>
+<p>
+  Creates an Observable object that updates to the current value of an
+  property on the virtual instance once when it is mounted, and listens to
+  updates on this property.
+</p>
+<p>
+  Give initialValue a type annotation if initializing to nil
+  (e.g. vInst:OutProperty("Adornee", nil :: Instance?)()
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OutInitialProperty"><code style="text-decoration:none">OutInitialProperty</code><a href="#OutInitialProperty" class="hash-link" aria-label="Direct link to OutInitialProperty" title="Direct link to OutInitialProperty">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L274"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OutInitialProperty</code><code>(</code><div class="inset_uKQm"><div><code>propName<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code></div><div><code>initialValue<!-- -->: </code><code class="blue_P4bS">T</code></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">T</code><code class="op_lSLc">&gt;</code><code class="op_lSLc">-</code><code class="blue_P4bS">An</code><code class="blue_P4bS">observable</code><code class="blue_P4bS">with</code><code class="blue_P4bS">the</code><code class="blue_P4bS">same</code><code class="blue_P4bS">output</code><code class="blue_P4bS">type</code><code class="blue_P4bS">as</code><code class="blue_P4bS">initialValue.</code></div><div>
+<p>
+  Creates an Observable object that updates to the original value of an
+  property on the virtual instance once when it is mounted. This is useful
+  for referencing properties on a premade instance without hardcoding them in
+  a Dex component.
+</p>
+<p>
+  Give initialValue a type annotation if initializing to nil
+  (e.g. vInst:OutInitialProperty("Adornee", nil :: Instance?))
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OutAttribute"><code style="text-decoration:none">OutAttribute</code><a href="#OutAttribute" class="hash-link" aria-label="Direct link to OutAttribute" title="Direct link to OutAttribute">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L307"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OutAttribute</code><code>(</code><div class="inset_uKQm"><div><code>attributeName<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code></div><div><code>initialValue<!-- -->: </code><code class="blue_P4bS">T</code></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">T</code><code class="op_lSLc">&gt;</code></div><div>
+<p>
+  Creates an Observable object that updates to the current value of an
+  attribute on the virtual instance once when it is mounted, and listens to
+  updates on this attribute.
+</p>
+<p>
+  Give initialValue a type annotation if initializing to nil
+  (e.g. vInstance:OutAttribute("Foo", nil :: string?))
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OutInitialAttribute"><code style="text-decoration:none">OutInitialAttribute</code><a href="#OutInitialAttribute" class="hash-link" aria-label="Direct link to OutInitialAttribute" title="Direct link to OutInitialAttribute">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L341"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OutInitialAttribute</code><code>(</code><div class="inset_uKQm"><div><code>attributeName<!-- -->: </code><code class="blue_P4bS">string</code><code>,</code></div><div><code>initialValue<!-- -->: </code><code class="blue_P4bS">T</code></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">T</code><code class="op_lSLc">&gt;</code></div><div>
+<p>
+  Creates an Observable object that updates to the original value of an
+  attribute on the virtual instance once when it is mounted. This is useful
+  for referencing attributes on a premade instance without hardcoding them in
+  a Dex component.
+</p>
+<p>
+  Give initialValue a type annotation if initializing to nil
+  (e.g. vInst:OutInitialAttribute("Foo", nil :: string?))
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OutInstance"><code style="text-decoration:none">OutInstance</code><a href="#OutInstance" class="hash-link" aria-label="Direct link to OutInstance" title="Direct link to OutInstance">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L395"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OutInstance</code><code>(</code><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="https://developer.roblox.com/en-us/api-reference/datatype/Instance" target="_blank" rel="noopener noreferrer">Instance?<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound" style="color:gray;vertical-align:middle;margin-left:2px"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></code><code class="op_lSLc">&gt;</code></div><div>
+<p>Outputs a reference to the reconciled instance to a Dex State object.</p>
+<div class="admonition admonition-danger alert alert--danger">
+  <div class="admonition-heading">
+    <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
+          <path d="M5.05.31c.81 2.17.41 3.38-.52 4.31C3.55 5.67 1.98 6.45.9 7.98c-1.45 2.05-1.7 6.53 3.53 7.7-2.2-1.16-2.67-4.52-.3-6.61-.61 2.03.53 3.33 1.94 2.86 1.39-.47 2.3.53 2.27 1.67-.02.78-.31 1.44-1.13 1.81 3.42-.59 4.78-3.42 4.78-5.56 0-2.84-2.53-3.22-1.25-5.61-1.52.13-2.03 1.13-1.89 2.75.09 1.08-1.02 1.8-1.86 1.33-.67-.41-.66-1.19-.06-1.78C8.18 5.31 8.68 2.45 5.05.32L5.03.3l.02.01z"></path>
+        </svg></span>danger</h5>
+  </div>
+  <div class="admonition-content">
+    <p>
+      Using OutInstance to directly edit the rendered instance's properties may
+      lead to unexpected behavior. It is recommended to only use OutInstance where
+      no alternatives are available within the Dex API for your use case.
+    </p>
+    <h2>Use Case Alternatives</h2>
+    <h3>Preformating an instance</h3>
+    <p>
+      If an instance requires some amount of preformatting (e.g. deleting children
+      of a premade template), you can use the directive
+      <a href="/api/VirtualInstance#DestroyPremadeChildren">VirtualInstance:DestroyPremadeChildren</a> to destroy template UI elements
+      within a design.
+    </p>
+    <p>
+      Most other use cases for preformatting can usually be handled through the
+      :SetProperties directive.
+    </p>
+    <h3>Using a nested template for <a href="/api/Dex#Clone">Dex.Clone</a></h3>
+    <p>
+      Dex.Clone supports passing in another <em>VirtualInstance</em> as an argument, as
+      long as there are no circular dependencies. This will wait until the
+      template VirtualInstance is mounted to instantiate the cloned instance.
+    </p>
+    <h3>OnMount/OnUnmount</h3>
+    <p>
+      The methods <a href="/api/VirtualInstance#OnMount">VirtualInstance:OnMount</a> and <a href="/api/VirtualInstance#OnUnmont">VirtualInstance.OnUnmont</a> allow
+      side effects to be performed during the VirtualInstance's rendering
+      lifecycle. If your use case does not require a direct reference to the
+      rendered instance, this may be the best option.
+    </p>
+  </div>
+</div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="AddChild"><code style="text-decoration:none">AddChild</code><a href="#AddChild" class="hash-link" aria-label="Direct link to AddChild" title="Direct link to AddChild">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L421"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">AddChild</code><code>(</code><div class="inset_uKQm"><div><code>path<!-- -->: </code><code class="blue_P4bS">string</code><code class="op_lSLc"> | </code><code class="blue_P4bS">number</code><code>,</code></div><div><code>child<!-- -->: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance?</a></code><code class="op_lSLc">&gt;</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Adds a child VirtualInstance node to this VirtualInstance.</p>
+<p>The path can be a dot-separated string, or an array of raw string names.</p>
+<p>
+  If the child is a VirtualInstance, it will be created or found depending on
+  the type of VirtualInstance passed in.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="AddChildren"><code style="text-decoration:none">AddChildren</code><a href="#AddChildren" class="hash-link" aria-label="Direct link to AddChildren" title="Direct link to AddChildren">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L443"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">AddChildren</code><code>(</code><code>childMap<!-- -->: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">any</code><code>]</code></span><code>: </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance?</a></code><code class="op_lSLc">&gt;</code><code class="purple_ieR2">}</code><code class="op_lSLc">&gt;</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds multiple children to the VirtualInstance given a child map. See
+  VirtualInstance:Child() for API reference
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="MapChildren"><code style="text-decoration:none">MapChildren</code><a href="#MapChildren" class="hash-link" aria-label="Direct link to MapChildren" title="Direct link to MapChildren">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L493"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">MapChildren</code><code>(</code><div class="inset_uKQm"><div><code>input<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">K</code><code>]</code></span><code>: </code><code class="blue_P4bS">V</code><code class="purple_ieR2">}</code><code class="op_lSLc">&gt;</code><code>,</code></div><div><code>map<!-- -->: </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code>value<!-- -->: </code><code class="blue_P4bS">V</code></div><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance</a></code><code class="op_lSLc">&gt;</code><code class="blue_P4bS">?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Creates a child VirtualInstance for each key/value pair of the input
+  observable. When a Key/Value pair changes, the existing
+  VirtualInstance at that key is destroyed (if it exists), and a new one is
+  created (if the value is not <code>nil</code>).
+</p>
+<p>
+  The mapping function should create a single VirtualInstance based on the
+  current key and value.
+</p>
+<p>
+  This performs better than directly calling <a href="/api/VirtualInstance#AddChildren">VirtualInstance:AddChildren</a>
+  with an Observable input, as this only creates/destroys virtual instances on
+  the specific key/value pairs that have changed whenever the input observable
+  updates.
+</p>
+<p>Example:</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">ItemList</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> visibleItemIds <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"Sword"</span><span class="token punctuation">,</span> <span class="token string">"Gun"</span><span class="token punctuation">,</span> <span class="token string">"MagicStaff"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> scrollingFrame <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"ScrollingFrame"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        Size <span class="token operator">=</span> UDim2<span class="token punctuation">.</span><span class="token function">fromScale</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    scrollingFrame<span class="token punctuation">:</span><span class="token function">MapChildren</span><span class="token punctuation">(</span>visibleItemIds<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> id<span class="token punctuation">)</span>
+        <span class="token comment">-- Instantiate a child ItemCard component for this given item ID,</span>
+        <span class="token comment">-- and destroy/re-create a new item card when this ID changes.</span>
+        <span class="token keyword">return</span> <span class="token function">ItemCard</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            id <span class="token operator">=</span> id<span class="token punctuation">,</span>
+            layoutOrder <span class="token operator">=</span> i<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> scollingFrame
+<span class="token keyword">end</span>
+</code></pre>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="MapChildrenByKey"><code style="text-decoration:none">MapChildrenByKey</code><a href="#MapChildrenByKey" class="hash-link" aria-label="Direct link to MapChildrenByKey" title="Direct link to MapChildrenByKey">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L551"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">MapChildrenByKey</code><code>(</code><div class="inset_uKQm"><div><code>input<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">K</code><code>]</code></span><code>: </code><code class="blue_P4bS">V</code><code class="purple_ieR2">}</code><code class="op_lSLc">&gt;</code><code>,</code></div><div><code>map<!-- -->: </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code>value<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance</a></code><code class="op_lSLc">&gt;</code><code class="blue_P4bS">?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Creates a child VirtualInstance for each key of the input
+  observable. VirtualInstances will only be created/destroyed according to the
+  provided mapping function when a new key is added or removed from the table.
+</p>
+<p>
+  The value is wrapped in an observable, and will forward updates to the
+  mapping function when the value at a particlar key changes.
+</p>
+<p>
+  The mapping function should create a single VirtualInstance based on the
+  current key and observable value at that key.
+</p>
+<p>
+  This is useful for instances where the input observable is a "Map", "Set",
+  or "Dictionary" type, and may perform better than
+  <a href="/api/VirtualInstance#MapChildren">VirtualInstance:MapChildren</a> in that case by minimizing
+  creation/destruction of virtual instances.
+</p>
+<p>Example:</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">ItemList</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> visibleItemIdSet <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        <span class="token punctuation">[</span><span class="token string">"Sword"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token string">"Gun"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token string">"MagicStaff"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">}</span>
+    <span class="token punctuation">)</span>
+    <span class="token keyword">local</span> scrollingFrame <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"ScrollingFrame"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        Size <span class="token operator">=</span> UDim2<span class="token punctuation">.</span><span class="token function">fromScale</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    scrollingFrame<span class="token punctuation">:</span><span class="token function">MapChildrenByKey</span><span class="token punctuation">(</span>visibleItemIds<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token function">ItemCard</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            id <span class="token operator">=</span> id<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> scollingFrame
+<span class="token keyword">end</span>
+</code></pre>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="MapChildrenByValue"><code style="text-decoration:none">MapChildrenByValue</code><a href="#MapChildrenByValue" class="hash-link" aria-label="Direct link to MapChildrenByValue" title="Direct link to MapChildrenByValue">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L610"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">MapChildrenByValue</code><code>(</code><div class="inset_uKQm"><div><code>input<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">K</code><code>]</code></span><code>: </code><code class="blue_P4bS">V</code><code class="purple_ieR2">}</code><code class="op_lSLc">&gt;</code><code>,</code></div><div><code>map<!-- -->: </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code>value<!-- -->: </code><code class="blue_P4bS">V</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code>key<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">CanBeObservable</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance</a></code><code class="op_lSLc">&gt;</code><code class="blue_P4bS">?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Creates a child VirtualInstance for each value of the input
+  observable. VirtualInstances will only be created/destroyed according to the
+  provided mapping function when a new value is added or removed from the
+  table.
+</p>
+<p>
+  In the case of duplicate values, the last key/value pair defined in the
+  input table will be considered.
+</p>
+<p>
+  The key is wrapped in an observable, and will forward updates to the
+  mapping function if the value is moved to another key.
+</p>
+<p>
+  The mapping function should create a single VirtualInstance based on the
+  current value and observable key for each value.
+</p>
+<p>
+  This is useful for instances where the input observable is an "Array" "Map",
+  or "Dictionary" type, and may perform better than
+  <a href="/api/VirtualInstance#MapChildren">VirtualInstance:MapChildren</a> in that case by minimizing
+  creation/destruction of virtual instances.
+</p>
+<p>Example:</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">ItemList</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> visibleItemIdSet <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"Sword"</span><span class="token punctuation">,</span> <span class="token string">"Gun"</span><span class="token punctuation">,</span> <span class="token string">"MagicStaff"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> scrollingFrame <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"ScrollingFrame"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        Size <span class="token operator">=</span> UDim2<span class="token punctuation">.</span><span class="token function">fromScale</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    scrollingFrame<span class="token punctuation">:</span><span class="token function">MapChildrenByValue</span><span class="token punctuation">(</span>visibleItemIds<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> i<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token function">ItemCard</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            id <span class="token operator">=</span> id<span class="token punctuation">,</span>
+            layoutOrder <span class="token operator">=</span> i<span class="token punctuation">,</span> <span class="token comment">-- Observable&#x3C;number></span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> scollingFrame
+<span class="token keyword">end</span>
+</code></pre>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="DestroyPremadeChildren"><code style="text-decoration:none">DestroyPremadeChildren</code><a href="#DestroyPremadeChildren" class="hash-link" aria-label="Direct link to DestroyPremadeChildren" title="Direct link to DestroyPremadeChildren">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L651"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">DestroyPremadeChildren</code><code>(</code><code>filter<!-- -->: </code><code class="blue_P4bS">string</code><code class="op_lSLc"> | </code><code class="purple_ieR2">(</code><code class="green_DgR4">(</code><code>child<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="https://developer.roblox.com/en-us/api-reference/datatype/Instance" target="_blank" rel="noopener noreferrer">Instance<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound" style="color:gray;vertical-align:middle;margin-left:2px"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></code><code class="green_DgR4">)</code><code class="green_DgR4"> → </code><code class="blue_P4bS">boolean</code><code class="purple_ieR2">)</code><code class="op_lSLc"> | </code><code class="blue_P4bS">nil</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds a directive to destroy children of the VirtualInstance once it is
+  mounted.
+</p>
+<p>
+  This is useful for scenarios where the design of a premade template contains
+  objects that should be destroyed before rendering the actual UI.
+</p>
+<p>
+  The "filter" argument can be a name or predicate describing which children
+  to destroy. If a name is defined, all children found with this name will be
+  destroyed. If a predicate is defined, all children for which this function
+  returns true will be destroyed.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnMount"><code style="text-decoration:none">OnMount</code><a href="#OnMount" class="hash-link" aria-label="Direct link to OnMount" title="Direct link to OnMount">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L672"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OnMount</code><code>(</code><code>callback<!-- -->: </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds a lifecycle callback to be called when the Virtual Instance is mounted.
+  This is useful for performing a side effect that begins/ends when a
+  component starts/stops being rendered.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnUnmount"><code style="text-decoration:none">OnUnmount</code><a href="#OnUnmount" class="hash-link" aria-label="Direct link to OnUnmount" title="Direct link to OnUnmount">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L695"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">OnUnmount</code><code>(</code><code>callback<!-- -->: </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Adds a lifecycle callback to be called when the Virtual Instance is
+  unmounted.
+</p>
+<p>
+  This is useful for performing a side effect that begins/ends when a
+  component starts/stops being rendered.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="FindChild"><code style="text-decoration:none">FindChild</code><a href="#FindChild" class="hash-link" aria-label="Direct link to FindChild" title="Direct link to FindChild">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L729"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">FindChild</code><code>(</code><code>childPath<!-- -->: </code><code class="blue_P4bS">string</code><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance</a></code></div><div>
+<p>
+  Creates a new VirtualInstance that automatically mounts on the child of the
+  parent VirtualInstance. Will wait until a child with the given name is
+  found.
+</p>
+<p>The following blocks of code are equivalent:</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> parent <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">Premade</span><span class="token punctuation">(</span><span class="token string">"Frame"</span><span class="token punctuation">)</span>
+<span class="token keyword">local</span> child <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">Premade</span><span class="token punctuation">(</span><span class="token string">"Frame"</span><span class="token punctuation">)</span>
+parent<span class="token punctuation">:</span><span class="token function">AddChild</span><span class="token punctuation">(</span><span class="token string">"ChildName"</span><span class="token punctuation">,</span> child<span class="token punctuation">)</span>
+</code></pre>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> parent <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">Premade</span><span class="token punctuation">(</span><span class="token string">"Frame"</span><span class="token punctuation">)</span>
+<span class="token keyword">local</span> child <span class="token operator">=</span> parent<span class="token punctuation">:</span><span class="token function">FindChild</span><span class="token punctuation">(</span><span class="token string">"ChildName"</span><span class="token punctuation">)</span>
+</code></pre>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Combine"><code style="text-decoration:none">Combine</code><a href="#Combine" class="hash-link" aria-label="Direct link to Combine" title="Direct link to Combine">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L808"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">Combine</code><code>(</code><code>...<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/VirtualInstance">VirtualInstance</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Combines the directives from another, or multiple other VirtualInstances.
+  The VirtualInstances passed in must meet the following requirements:
+</p>
+<ul>
+  <li>
+    They must be of "Premade" type, with an equivalent or related ClassName to
+    the target VirtualInstance.
+  </li>
+  <li>
+    They must not already be rendered by Dex and/or combined with another
+    VirtualInstance.
+  </li>
+</ul>
+<p>
+  Combine can be used to compose different effects or input handlers within a
+  VirtualInstance tree:
+</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">RecolorWithMouseInput</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> isHovering <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> isPressing <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> Dex<span class="token punctuation">.</span><span class="token function">Premade</span><span class="token punctuation">(</span><span class="token string">"GuiButton"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        MouseEnter <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            isHovering<span class="token punctuation">:</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token keyword">true</span><span class="token punctuation">)</span>
+        <span class="token keyword">end</span><span class="token punctuation">,</span>
+        MouseLeave <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            isHovering<span class="token punctuation">:</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span>
+        <span class="token keyword">end</span><span class="token punctuation">,</span>
+        MouseButton1Down <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            isPressing<span class="token punctuation">:</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token keyword">true</span><span class="token punctuation">)</span>
+        <span class="token keyword">end</span><span class="token punctuation">,</span>
+        MouseButton1Up <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            isPressing<span class="token punctuation">:</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span>
+        <span class="token keyword">end</span><span class="token punctuation">,</span>
+        BackgroundColor3 <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">Map</span><span class="token punctuation">(</span>isHovering<span class="token punctuation">,</span> isPressing<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>
+            currentHovering<span class="token punctuation">,</span>
+            currentPressing
+        <span class="token punctuation">)</span>
+            <span class="token keyword">if</span> currentPressing <span class="token keyword">then</span>
+                <span class="token keyword">return</span> Color3<span class="token punctuation">.</span><span class="token function">fromHex</span><span class="token punctuation">(</span><span class="token string">"aaa"</span><span class="token punctuation">)</span>
+            <span class="token keyword">elseif</span> currentHovering <span class="token keyword">then</span>
+                <span class="token keyword">return</span> Color3<span class="token punctuation">.</span><span class="token function">fromHex</span><span class="token punctuation">(</span><span class="token string">"ddd"</span><span class="token punctuation">)</span>
+            <span class="token keyword">else</span>
+                <span class="token keyword">return</span> Color3<span class="token punctuation">.</span><span class="token function">fromHex</span><span class="token punctuation">(</span><span class="token string">"fff"</span><span class="token punctuation">)</span>
+            <span class="token keyword">end</span><span class="token punctuation">,</span>
+        <span class="token keyword">end</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span>
+
+<span class="token comment">-- . . .</span>
+
+<span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">Button</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> button <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"Button"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        Activated <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Button was clicked!"</span><span class="token punctuation">)</span>
+        <span class="token keyword">end</span><span class="token punctuation">,</span>
+        AutoButtonColor <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    button<span class="token punctuation">:</span><span class="token function">Combine</span><span class="token punctuation">(</span><span class="token function">RecolorWithMouseInput</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> button
+<span class="token keyword">end</span>
+</code></pre>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="SubscribeWhileMounted"><code style="text-decoration:none">SubscribeWhileMounted</code><a href="#SubscribeWhileMounted" class="hash-link" aria-label="Direct link to SubscribeWhileMounted" title="Direct link to SubscribeWhileMounted">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/AmberGraceSoftware/Dex/blob/master/src/VirtualInstance.luau#L886"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>VirtualInstance<!-- -->:</code><code class="green_DgR4">SubscribeWhileMounted</code><code>(</code><div class="inset_uKQm"><div><code>input:<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/api/Observable">Observable</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">T</code><code class="op_lSLc">&gt;</code><code>,</code></div><div><code>listener<!-- -->: </code><code class="purple_ieR2">(</code><code>value<!-- -->: </code><code class="blue_P4bS">T</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code>,</code></div><div><code>immediatelyCallListenerOnMount<!-- -->: </code><code class="blue_P4bS">boolean?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Subscribes a custom listener to an observable's value while the
+  VirtualInstance is mounted, and automatically unsubscribes the listener when
+  the VirtualInstance unmounts.
+</p>
+<div class="admonition admonition-tip alert alert--success">
+  <div class="admonition-heading">
+    <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
+          <path d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path>
+        </svg></span>tip</h5>
+  </div>
+  <div class="admonition-content">
+    <p>
+      SubscribeWhileMounted is much safer than calling <a href="/api/Observable#Subscribe">Observable:Subscribe</a>
+      directly, as you do not need to handle an unsubscribe function manually to
+      prevent memory leaks.
+    </p>
+    <p>
+      You can use this function to trigger side effects such as animations
+      whenever an observable value changes:
+    </p>
+    <pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">PulseAnimation</span><span class="token punctuation">(</span>valueToWatch<span class="token punctuation">:</span> Dex<span class="token punctuation">.</span>Observable<span class="token operator">&#x3C;</span>any<span class="token operator">></span><span class="token punctuation">)</span>
+    <span class="token comment">-- Create a UIScale object that plays a 1-second "pulse" animation</span>
+    <span class="token comment">-- whenever a stopwatch is played.</span>
+    <span class="token keyword">local</span> stopwatch <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">Stopwatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span>duration <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> uiScale <span class="token operator">=</span> Dex<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"UIScale"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        Scale <span class="token operator">=</span> stopwatch<span class="token punctuation">:</span><span class="token function">Map</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>currentTime<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token number">1</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">0.5</span> <span class="token operator">-</span> currentTime<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">0.1</span>
+        <span class="token keyword">end</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token comment">-- Play the stopwatch whenever the valueToWatch observable changes.</span>
+    uiScale<span class="token punctuation">:</span><span class="token function">SubscribeWhileMounted</span><span class="token punctuation">(</span>valueToWatch<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        stopwatch<span class="token punctuation">:</span><span class="token function">Play</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> uiScale
+<span class="token keyword">end</span>
+</code></pre>
+  </div>
+</div>
+</div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
+    &quot;functions&quot;: [
+        {
+            &quot;name&quot;: &quot;SetProperties&quot;,
+            &quot;desc&quot;: &quot;Adds properties to be rendered on the instance when it is reconciled.\n\nMultiple calls to this function will merge the provided property map with\nthe existing one, prioritizing the later call.\n\nValues in the propertyMap can have multiple possible types, which are each\nhandled differently:\n\n- A **Static Value** (number, boolean, string, UDim2, etc.) to be assigned\nright as the VirtualInstance is rendered\n- An **Observablue Value** to be assigned as the VirtualInstance is\nRendered, as well as when the Observable value changes\n- A **`Dex.Nil`** symbol, which assigns a property to `nil` when rendered\n- A **function** which represents a listener to connect to an event while\nthe VirtualInstance is rendered\n- Another **VirtualInstance**, which references an instance property to be\nassigned. This is useful for ViewportFrames, for example, where a camera\nmust both be created underneath the ViewportFrame, and assigned as the\nCurrentCamera property within the same frame.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;propertyMap&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;{[string]: CanBeObservable&lt;any&gt;}&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 146,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;SetAttributes&quot;,
+            &quot;desc&quot;: &quot;Adds attributes to be rendered on the instance when it is reconciled.\n\nMultiple calls to this function will merge the provided attribute map with\nthe existing one, prioritizing the latest calls.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;attributeMap&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;{[string]: CanBeObservable&lt;any&gt;}&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 168,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;AddTags&quot;,
+            &quot;desc&quot;: &quot;Adds tags to the Virtual Instance when it is reconciled. Multiple calls to\nthis function will add extra tags to the VirtualInstance if they do not\nexist.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;tags&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;CanBeObservable&lt;{string}&gt;&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 189,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Connect&quot;,
+            &quot;desc&quot;: &quot;Adds an event listener to the Virtual Instance, which will automatically\nbe connected and disconnected as the VirtualInstance is reconciled.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;eventName&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;listener&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;(...any) -&gt; ()&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 210,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OutProperty&quot;,
+            &quot;desc&quot;: &quot;Creates an Observable object that updates to the current value of an\nproperty on the virtual instance once when it is mounted, and listens to\nupdates on this property.\n\nGive initialValue a type annotation if initializing to nil\n(e.g. vInst:OutProperty(\&quot;Adornee\&quot;, nil :: Instance?)()&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;propName&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;initialValue&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;T&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;T&gt;&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 240,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OutInitialProperty&quot;,
+            &quot;desc&quot;: &quot;Creates an Observable object that updates to the original value of an\nproperty on the virtual instance once when it is mounted. This is useful\nfor referencing properties on a premade instance without hardcoding them in\na Dex component.\n\nGive initialValue a type annotation if initializing to nil\n(e.g. vInst:OutInitialProperty(\&quot;Adornee\&quot;, nil :: Instance?))&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;propName&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;initialValue&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;T&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;T&gt; - An observable with the same output type as initialValue.&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 274,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OutAttribute&quot;,
+            &quot;desc&quot;: &quot;Creates an Observable object that updates to the current value of an\nattribute on the virtual instance once when it is mounted, and listens to\nupdates on this attribute.\n\nGive initialValue a type annotation if initializing to nil\n(e.g. vInstance:OutAttribute(\&quot;Foo\&quot;, nil :: string?))&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;attributeName&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;initialValue&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;T&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;T&gt;&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 307,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OutInitialAttribute&quot;,
+            &quot;desc&quot;: &quot;Creates an Observable object that updates to the original value of an\nattribute on the virtual instance once when it is mounted. This is useful\nfor referencing attributes on a premade instance without hardcoding them in\na Dex component.\n\nGive initialValue a type annotation if initializing to nil\n(e.g. vInst:OutInitialAttribute(\&quot;Foo\&quot;, nil :: string?))&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;attributeName&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;initialValue&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;T&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;T&gt;&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 341,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OutInstance&quot;,
+            &quot;desc&quot;: &quot;Outputs a reference to the reconciled instance to a Dex State object.\n\n:::danger\nUsing OutInstance to directly edit the rendered instance&#x27;s properties may\nlead to unexpected behavior. It is recommended to only use OutInstance where\nno alternatives are available within the Dex API for your use case.\n\n## Use Case Alternatives\n\n### Preformating an instance\nIf an instance requires some amount of preformatting (e.g. deleting children\nof a premade template), you can use the directive\n[VirtualInstance:DestroyPremadeChildren] to destroy template UI elements\nwithin a design.\n\nMost other use cases for preformatting can usually be handled through the\n:SetProperties directive.\n\n### Using a nested template for [Dex.Clone]\nDex.Clone supports passing in another _VirtualInstance_ as an argument, as\nlong as there are no circular dependencies. This will wait until the\ntemplate VirtualInstance is mounted to instantiate the cloned instance.\n\n### OnMount/OnUnmount\nThe methods [VirtualInstance:OnMount] and [VirtualInstance.OnUnmont] allow\nside effects to be performed during the VirtualInstance&#x27;s rendering\nlifecycle. If your use case does not require a direct reference to the\nrendered instance, this may be the best option.\n:::&quot;,
+            &quot;params&quot;: [],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;Instance?&gt;&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 395,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;AddChild&quot;,
+            &quot;desc&quot;: &quot;Adds a child VirtualInstance node to this VirtualInstance.\n\nThe path can be a dot-separated string, or an array of raw string names.\n\nIf the child is a VirtualInstance, it will be created or found depending on\nthe type of VirtualInstance passed in.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;path&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string | number&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;child&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;CanBeObservable&lt;VirtualInstance?&gt;&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 421,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;AddChildren&quot;,
+            &quot;desc&quot;: &quot;Adds multiple children to the VirtualInstance given a child map. See\nVirtualInstance:Child() for API reference&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;childMap&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;CanBeObservable&lt;{[any]: CanBeObservable&lt;VirtualInstance?&gt;}&gt;&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 443,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;MapChildren&quot;,
+            &quot;desc&quot;: &quot;Creates a child VirtualInstance for each key/value pair of the input\nobservable. When a Key/Value pair changes, the existing\nVirtualInstance at that key is destroyed (if it exists), and a new one is\ncreated (if the value is not `nil`).\n\nThe mapping function should create a single VirtualInstance based on the\ncurrent key and value. \n\nThis performs better than directly calling [VirtualInstance:AddChildren]\nwith an Observable input, as this only creates/destroys virtual instances on\nthe specific key/value pairs that have changed whenever the input observable\nupdates.\n\nExample:\n```lua\nlocal function ItemList()\n    local visibleItemIds = Dex.State({\&quot;Sword\&quot;, \&quot;Gun\&quot;, \&quot;MagicStaff\&quot;})\n    local scrollingFrame = Dex.New(\&quot;ScrollingFrame\&quot;, {\n        Size = UDim2.fromScale(1, 1)\n    })\n    scrollingFrame:MapChildren(visibleItemIds, function(i, id)\n        -- Instantiate a child ItemCard component for this given item ID,\n        -- and destroy/re-create a new item card when this ID changes.\n        return ItemCard({\n            id = id,\n            layoutOrder = i,\n        })\n    end)\n    return scollingFrame\nend\n```&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;input&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;{[K]: V}&gt;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;map&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;(key: K, value: V) -&gt; CanBeObservable&lt;VirtualInstance&gt;?&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 493,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;MapChildrenByKey&quot;,
+            &quot;desc&quot;: &quot;Creates a child VirtualInstance for each key of the input\nobservable. VirtualInstances will only be created/destroyed according to the\nprovided mapping function when a new key is added or removed from the table.\n\nThe value is wrapped in an observable, and will forward updates to the\nmapping function when the value at a particlar key changes.\n\nThe mapping function should create a single VirtualInstance based on the\ncurrent key and observable value at that key.\n\nThis is useful for instances where the input observable is a \&quot;Map\&quot;, \&quot;Set\&quot;,\nor \&quot;Dictionary\&quot; type, and may perform better than\n[VirtualInstance:MapChildren] in that case by minimizing\ncreation/destruction of virtual instances.\n\nExample:\n```lua\nlocal function ItemList()\n    local visibleItemIdSet = Dex.State({\n        [\&quot;Sword\&quot;] = true,\n        [\&quot;Gun\&quot;] = true,\n        [\&quot;MagicStaff\&quot;] = true}\n    )\n    local scrollingFrame = Dex.New(\&quot;ScrollingFrame\&quot;, {\n        Size = UDim2.fromScale(1, 1)\n    })\n    scrollingFrame:MapChildrenByKey(visibleItemIds, function(id)\n        return ItemCard({\n            id = id,\n        })\n    end)\n    return scollingFrame\nend\n```&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;input&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;{[K]: V}&gt;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;map&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;(key: K, value: Observable&lt;V&gt;) -&gt; CanBeObservable&lt;VirtualInstance&gt;?&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 551,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;MapChildrenByValue&quot;,
+            &quot;desc&quot;: &quot;Creates a child VirtualInstance for each value of the input\nobservable. VirtualInstances will only be created/destroyed according to the\nprovided mapping function when a new value is added or removed from the\ntable.\n\nIn the case of duplicate values, the last key/value pair defined in the\ninput table will be considered.\n\nThe key is wrapped in an observable, and will forward updates to the\nmapping function if the value is moved to another key.\n\nThe mapping function should create a single VirtualInstance based on the\ncurrent value and observable key for each value.\n\nThis is useful for instances where the input observable is an \&quot;Array\&quot; \&quot;Map\&quot;,\nor \&quot;Dictionary\&quot; type, and may perform better than\n[VirtualInstance:MapChildren] in that case by minimizing\ncreation/destruction of virtual instances.\n\nExample:\n```lua\nlocal function ItemList()\n    local visibleItemIdSet = Dex.State({\&quot;Sword\&quot;, \&quot;Gun\&quot;, \&quot;MagicStaff\&quot;})\n    local scrollingFrame = Dex.New(\&quot;ScrollingFrame\&quot;, {\n        Size = UDim2.fromScale(1, 1)\n    })\n    scrollingFrame:MapChildrenByValue(visibleItemIds, function(id, i)\n        return ItemCard({\n            id = id,\n            layoutOrder = i, -- Observable&lt;number&gt;\n        })\n    end)\n    return scollingFrame\nend\n```&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;input&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;{[K]: V}&gt;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;map&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;(value: V, key: Observable&lt;K&gt;) -&gt; CanBeObservable&lt;VirtualInstance&gt;?&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 610,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;DestroyPremadeChildren&quot;,
+            &quot;desc&quot;: &quot;Adds a directive to destroy children of the VirtualInstance once it is\nmounted.\n\nThis is useful for scenarios where the design of a premade template contains\nobjects that should be destroyed before rendering the actual UI.\n\nThe \&quot;filter\&quot; argument can be a name or predicate describing which children\nto destroy. If a name is defined, all children found with this name will be\ndestroyed. If a predicate is defined, all children for which this function\nreturns true will be destroyed.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;filter&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string | ((child: Instance) -&gt; boolean) | nil&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 651,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnMount&quot;,
+            &quot;desc&quot;: &quot;Adds a lifecycle callback to be called when the Virtual Instance is mounted.\nThis is useful for performing a side effect that begins/ends when a\ncomponent starts/stops being rendered.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;callback&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;() -&gt; ()&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 672,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnUnmount&quot;,
+            &quot;desc&quot;: &quot;Adds a lifecycle callback to be called when the Virtual Instance is\nunmounted.\n\nThis is useful for performing a side effect that begins/ends when a\ncomponent starts/stops being rendered.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;callback&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;() -&gt; ()&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 695,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;FindChild&quot;,
+            &quot;desc&quot;: &quot;Creates a new VirtualInstance that automatically mounts on the child of the\nparent VirtualInstance. Will wait until a child with the given name is\nfound.\n\nThe following blocks of code are equivalent:\n```lua\nlocal parent = Dex.Premade(\&quot;Frame\&quot;)\nlocal child = Dex.Premade(\&quot;Frame\&quot;)\nparent:AddChild(\&quot;ChildName\&quot;, child)\n```\n\n```lua\nlocal parent = Dex.Premade(\&quot;Frame\&quot;)\nlocal child = parent:FindChild(\&quot;ChildName\&quot;)\n```&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;childPath&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;string&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;VirtualInstance&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 729,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Combine&quot;,
+            &quot;desc&quot;: &quot;Combines the directives from another, or multiple other VirtualInstances.\nThe VirtualInstances passed in must meet the following requirements:\n\n- They must be of \&quot;Premade\&quot; type, with an equivalent or related ClassName to\nthe target VirtualInstance.\n- They must not already be rendered by Dex and/or combined with another\nVirtualInstance.\n\nCombine can be used to compose different effects or input handlers within a\nVirtualInstance tree:\n\n```lua\nlocal function RecolorWithMouseInput()\n    local isHovering = Dex.State(false)\n    local isPressing = Dex.State(false)\n    return Dex.Premade(\&quot;GuiButton\&quot;, {\n        MouseEnter = function()\n            isHovering:Set(true)\n        end,\n        MouseLeave = function()\n            isHovering:Set(false)\n        end,\n        MouseButton1Down = function()\n            isPressing:Set(true)\n        end,\n        MouseButton1Up = function()\n            isPressing:Set(false)\n        end,\n        BackgroundColor3 = Dex.Map(isHovering, isPressing)(function(\n            currentHovering,\n            currentPressing\n        )\n            if currentPressing then\n                return Color3.fromHex(\&quot;aaa\&quot;)\n            elseif currentHovering then\n                return Color3.fromHex(\&quot;ddd\&quot;)\n            else\n                return Color3.fromHex(\&quot;fff\&quot;)\n            end,\n        end),\n    })\nend\n\n-- . . .\n\nlocal function Button()\n    local button = Dex.New(\&quot;Button\&quot;, {\n        Activated = function()\n            print(\&quot;Button was clicked!\&quot;)\n        end,\n        AutoButtonColor = false,\n    })\n    button:Combine(RecolorWithMouseInput())\n    return button\nend\n```&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;...&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;VirtualInstance&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 808,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;SubscribeWhileMounted&quot;,
+            &quot;desc&quot;: &quot;Subscribes a custom listener to an observable&#x27;s value while the\nVirtualInstance is mounted, and automatically unsubscribes the listener when\nthe VirtualInstance unmounts.\n\n:::tip\nSubscribeWhileMounted is much safer than calling [Observable:Subscribe]\ndirectly, as you do not need to handle an unsubscribe function manually to\nprevent memory leaks.\n\nYou can use this function to trigger side effects such as animations\nwhenever an observable value changes:\n```lua\nlocal function PulseAnimation(valueToWatch: Dex.Observable&lt;any&gt;)\n    -- Create a UIScale object that plays a 1-second \&quot;pulse\&quot; animation\n    -- whenever a stopwatch is played.\n    local stopwatch = Dex.Stopwatch({duration = 1})\n    local uiScale = Dex.New(\&quot;UIScale\&quot;, {\n        Scale = stopwatch:Map(function(currentTime)\n            return 1 + (0.5 - currentTime) * 0.1\n        end)\n    })\n\n    -- Play the stopwatch whenever the valueToWatch observable changes.\n    uiScale:SubscribeWhileMounted(valueToWatch, function()\n        stopwatch:Play()\n    end)\n\n    return uiScale\nend\n```\n:::&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;input:&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Observable&lt;T&gt;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;listener&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;(value: T) -&gt; ()&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;immediatelyCallListenerOnMount&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;boolean?&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 886,
+                &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+            }
+        }
+    ],
+    &quot;properties&quot;: [],
+    &quot;types&quot;: [],
+    &quot;name&quot;: &quot;VirtualInstance&quot;,
+    &quot;desc&quot;: &quot;VirtualInstances are the basic building blocks for Dex applications.\n\nVirtualInstances are \&quot;Mounted\&quot; by Dex&#x27;s reconciler engine,\ncreating/destoying/modifying these real instances automatically as needed.\n\n## Constructors\n---\n\n### Dex.New\n```lua\nDex.New(\n    className: string,\n    props: {[string]: any}?,\n    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}\n) -&gt; VirtualInstance\n```\n\nCreates a new [VirtualInstance] that represents a newly-created Roblox\nInstance (via `Instance.new(className)`).\n\n---\n\n### Dex.Clone\n```lua\nDex.Clone(\n    template: Instance | VirtualInstance,\n    props: {[string]: any}?,\n    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}\n) -&gt; VirtualInstance\n```\nCreates a new [VirtualInstance] that represents a cloned Roblox Instance\nfrom a given template instance (via `template:Clone()`).\n\n---\n\n### Dex.Premade\n```lua\nDex.Premade(\n    className: stirng,\n    props: {[string]: any}?,\n    children: {[any]: CanBeObservable&lt;VirtualInstance?&gt;}\n) -&gt; VirtualInstance\n```\n\nCreates a new VirtualInstance that represents a pre-existing Roblox Instance\nto be modified by Dex.\n\nIf passed into the the Render function for a [Dex.Root] component, the root\ninstance will be used used.&quot;,
+    &quot;source&quot;: {
+        &quot;line&quot;: 117,
+        &quot;path&quot;: &quot;src/VirtualInstance.luau&quot;
+    }
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#AddChild" class="table-of-contents__link toc-highlight">:AddChild</a></li><li><a href="#AddChildren" class="table-of-contents__link toc-highlight">:AddChildren</a></li><li><a href="#AddTags" class="table-of-contents__link toc-highlight">:AddTags</a></li><li><a href="#Combine" class="table-of-contents__link toc-highlight">:Combine</a></li><li><a href="#Connect" class="table-of-contents__link toc-highlight">:Connect</a></li><li><a href="#DestroyPremadeChildren" class="table-of-contents__link toc-highlight">:DestroyPremadeChildren</a></li><li><a href="#FindChild" class="table-of-contents__link toc-highlight">:FindChild</a></li><li><a href="#MapChildren" class="table-of-contents__link toc-highlight">:MapChildren</a></li><li><a href="#MapChildrenByKey" class="table-of-contents__link toc-highlight">:MapChildrenByKey</a></li><li><a href="#MapChildrenByValue" class="table-of-contents__link toc-highlight">:MapChildrenByValue</a></li><li><a href="#OnMount" class="table-of-contents__link toc-highlight">:OnMount</a></li><li><a href="#OnUnmount" class="table-of-contents__link toc-highlight">:OnUnmount</a></li><li><a href="#OutAttribute" class="table-of-contents__link toc-highlight">:OutAttribute</a></li><li><a href="#OutInitialAttribute" class="table-of-contents__link toc-highlight">:OutInitialAttribute</a></li><li><a href="#OutInitialProperty" class="table-of-contents__link toc-highlight">:OutInitialProperty</a></li><li><a href="#OutInstance" class="table-of-contents__link toc-highlight">:OutInstance</a></li><li><a href="#OutProperty" class="table-of-contents__link toc-highlight">:OutProperty</a></li><li><a href="#SetAttributes" class="table-of-contents__link toc-highlight">:SetAttributes</a></li><li><a href="#SetProperties" class="table-of-contents__link toc-highlight">:SetProperties</a></li><li><a href="#SubscribeWhileMounted" class="table-of-contents__link toc-highlight">:SubscribeWhileMounted</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Written by Amber Grace. Built with Moonwave and Docusaurus</div></div></div></footer></div>
+<script src="/assets/js/runtime~main.0eec535d.js"></script>
+<script src="/assets/js/main.a096a266.js"></script>
+</body>
+</html>
