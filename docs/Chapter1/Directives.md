@@ -190,12 +190,6 @@ local function LabelComponent(props: {
 end
 ```
 
-:::info
-For more on output directives such as `:OutProperty()`, `:OutAttribute()`,
-`:OutInitialProperty()`, `:OutInitialAttribute()`, and `:OutInstance()`, see
-[the Advanced tutorial on using these directives](/docs/Chapter2/EventsOutputObservables)
-:::
-
 ## FindChild Directive
 
 When working with premade VirtualInstance templates, you may commonly need to
@@ -244,11 +238,6 @@ local function Button()
     return button
 end
 ```
-
-:::info
-For more on using the `:Combine()` directive effectively, see
-[the Advanced tutorial on using Combine](/docs/Chapter2/Combine)
-:::
 
 ## Lifecycle Callbacks
 

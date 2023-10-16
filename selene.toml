@@ -1,5 +1,5 @@
 std = "roblox+testez"
-exclude = ["DevPackages/*"]
+exclude = ["DevPackages/*", "testez.d.luau"]
 
 [lints]
 unused_variable = "warn"

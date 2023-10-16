@@ -14,3 +14,7 @@ globalTypes.d.lua
 # Roblox Studio lock files
 /*.rbxlx.lock
 /*.rbxl.lock
+
+# In progress tutorial pages
+docs/Chapter2/**
+docs/Chapter1/Animations.md
