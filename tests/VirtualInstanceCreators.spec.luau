@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dec.VirtualInstanceCreators)
+local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dex.VirtualInstanceCreators)
 
 return function()
     it("should create a new VirtualInstance using New()", function()

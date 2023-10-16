@@ -9,12 +9,12 @@ type ReconciledNode = Types.ReconciledNode
 
 --[[
     @param rootInstance: Instance - The root instance to render to.
-    @param virtualInstance: Dec.VirtualInstance? - The virtual instance to render.
-    @param reconciledNode: Dec.ReconciledNode? - The previous reconciled node to replace
-    @return Dec.ReconciledNode - The reconciled node that was rendered.
+    @param virtualInstance: Dex.VirtualInstance? - The virtual instance to render.
+    @param reconciledNode: Dex.ReconciledNode? - The previous reconciled node to replace
+    @return Dex.ReconciledNode - The reconciled node that was rendered.
     
-    Entry point for the Dec reconciler on a VirtualInstance. This function is
-    called by Root objects (created via Dec.Root) when they are Rendered
+    Entry point for the Dex reconciler on a VirtualInstance. This function is
+    called by Root objects (created via Dex.Root) when they are Rendered
     with a new VirtualInstance, and also by observable Children updates. Handles
     the logic for mounting, unmounting, and replacing VirtualInstances.
 ]]

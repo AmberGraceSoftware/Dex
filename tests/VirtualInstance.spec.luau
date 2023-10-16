@@ -1,8 +1,8 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local VirtualInstance = require(ReplicatedStorage.Packages.Dec.VirtualInstance)
-local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
-local Types = require(ReplicatedStorage.Packages.Dec.Types)
+local VirtualInstance = require(ReplicatedStorage.Packages.Dex.VirtualInstance)
+local State = require(ReplicatedStorage.Packages.Dex.Observables.State)
+local Types = require(ReplicatedStorage.Packages.Dex.Types)
 
 type Observable<T> = Types.Observable<T>
 

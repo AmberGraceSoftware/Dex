@@ -38,9 +38,9 @@ end
 
     ---
 
-    ### Dec.Eased
+    ### Dex.Eased
     ```ts
-    Dec.Eased<T>(
+    Dex.Eased<T>(
         target: Observable<T>
         info: TweenInfo
     ) -> Observable<T>
@@ -52,7 +52,7 @@ end
     :::info
     Eased must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 ]=]
@@ -73,10 +73,10 @@ Eased.__index._decobservabletype = "Eased"
 
 --[=[
     @function Eased
-    @within Dec
+    @within Dex
     @param target Observable<T>
     @param info TweenInfo
-    @return Observable<T>
+    @return Eased<T>
 
     Creates an eased Observable that tweens its value in realtime every time
     the input Observable changes its value, based on the TweenInfo provided.

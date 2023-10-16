@@ -4,12 +4,12 @@ local Observable = require(script.Parent.Observable)
 
 --[=[
     @prop Clock Observable<number>
-    @within Dec
+    @within Dex
 
     Observable number that derives its value from the current time in seconds
     in UTC (i.e. the value returned by `os.time()`)
 
-    While subscribed, `Dec.Clock` automatically updates its value whenever the
+    While subscribed, `Dex.Clock` automatically updates its value whenever the
     value of `os.time()` changes.
 ]=]
 

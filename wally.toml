@@ -1,7 +1,7 @@
 [package]
-name = "ambergracesoftware/dec"
-description = "A libary for building Roblox user interfaces"
-version = "0.1.3"
+name = "ambergracesoftware/dex"
+description = "A library for building reactive user interfaces on Roblox"
+version = "0.1.4"
 authors = [ "Amber Grace" ]
 license = "MIT"
 registry = "https://github.com/UpliftGames/wally-index"

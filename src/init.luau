@@ -1,13 +1,13 @@
 --!strict
 --[[
-    Dec is a reactive UI library for Roblox.
+    Dex is a reactive UI library for Roblox.
 
-    Dec combines all of the best features of modern libraries like Roact,
+    Dex combines all of the best features of modern libraries like Roact,
     Fusion, and more for building reusable, performant, declarative UI
     components.
 
-    Github Repository: AmberGraceSoftware/Dec
-    Wally Package ID: ambergracesoftware/dec
+    Github Repository: AmberGraceSoftware/Dex
+    Wally Package ID: ambergracesoftware/dex
     Documentation: Found on Github
     License: MIT
 ]]
@@ -39,57 +39,57 @@ export type Root = Types.Root
 export type Nil = Symbol<"Nil">
 
 --[=[
-    @class Dec
+    @class Dex
 
     :::warning
-    Dec is still a work in progress and does not currently have a full release!
-    Please avoiding Dec in production-bound projects, as the library is not fully
+    Dex is still a work in progress and does not currently have a full release!
+    Please avoiding Dex in production-bound projects, as the library is not fully
     tested, and the API may be subject to change
     :::
 
-    The Dec library contains a collection of objects for creating reactive UI
+    The Dex library contains a collection of objects for creating reactive UI
     components
     
     For more information, see the [Usage Guide](../docs/intro)
 ]=]
-local Dec = {}
+local Dex = {}
 
 -- Basic State and Observables
-Dec.State = require(script.Observables.State).new
-Dec.Record = require(script.Observables.StateRecord).new
-Dec.Dict = require(script.Observables.StateRecord).newDict
-Dec.Map = require(script.Util.MapObservable)
-Dec.CustomObservable = Observable.new
-Dec.Clock = require(script.Observables.Clock)
+Dex.State = require(script.Observables.State).new
+Dex.Record = require(script.Observables.StateRecord).new
+Dex.Dict = require(script.Observables.StateRecord).newDict
+Dex.Map = require(script.Util.MapObservable)
+Dex.CustomObservable = Observable.new
+Dex.Clock = require(script.Observables.Clock)
 
 -- Realtime simulation observable utilities
-Dec.Spring = require(script.Observables.Spring).new
-Dec.IntSpring = require(script.Observables.IntSpring).new
-Dec.AngleSpring = require(script.Observables.AngleSpring).new
-Dec.Eased = require(script.Observables.Eased).new
-Dec.Stopwatch = require(script.Observables.Stopwatch).new
-Dec.Timer = require(script.Observables.Timer).new
+Dex.Spring = require(script.Observables.Spring).new
+Dex.IntSpring = require(script.Observables.IntSpring).new
+Dex.AngleSpring = require(script.Observables.AngleSpring).new
+Dex.Eased = require(script.Observables.Eased).new
+Dex.Stopwatch = require(script.Observables.Stopwatch).new
+Dex.Timer = require(script.Observables.Timer).new
 
 -- Interop functions
-Dec.ObserveFusionState = require(script.Interop.ObserveFusionState)
+Dex.ObserveFusionState = require(script.Interop.ObserveFusionState)
 
 -- VirtualInstance Creators
-Dec.New = VirtualInstanceCreators.New
-Dec.Clone = VirtualInstanceCreators.Clone
-Dec.Premade = VirtualInstanceCreators.Premade
+Dex.New = VirtualInstanceCreators.New
+Dex.Clone = VirtualInstanceCreators.Clone
+Dex.Premade = VirtualInstanceCreators.Premade
 
 -- Root-Level Reconciler API
-Dec.Root = Root.new
+Dex.Root = Root.new
 
 -- Symbols
-Dec.Nil = Symbols.Nil
+Dex.Nil = Symbols.Nil
 
 -- Reflection
-Dec.CoerceAsObservable = require(script.Util.CoerceAsObservable)
-Dec.IsObservable = require(script.Reflection.IsObservable)
-Dec.IsState = require(script.Reflection.IsState)
-Dec.IsStateRecord = require(script.Reflection.IsStateRecord)
-Dec.IsVirtualInstance = require(script.Reflection.IsVirtualInstance)
-Dec.GetVirtualInstanceType = require(script.Reflection.GetVirtualInstanceType)
+Dex.CoerceAsObservable = require(script.Util.CoerceAsObservable)
+Dex.IsObservable = require(script.Reflection.IsObservable)
+Dex.IsState = require(script.Reflection.IsState)
+Dex.IsStateRecord = require(script.Reflection.IsStateRecord)
+Dex.IsVirtualInstance = require(script.Reflection.IsVirtualInstance)
+Dex.GetVirtualInstanceType = require(script.Reflection.GetVirtualInstanceType)
 
-return Dec
+return Dex

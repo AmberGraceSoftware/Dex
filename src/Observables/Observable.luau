@@ -9,8 +9,8 @@ export type Unsubscribe = Types.Unsubscribe
     @type CanBeObservable<T> Observable<T> | T
     @within Observable
 
-    Utility type that denotes a value can be an observable. Dec also provides
-    the utility function [Dec.CoerceAsObservable] for unwrapping these objects.
+    Utility type that denotes a value can be an observable. Dex also provides
+    the utility function [Dex.CoerceAsObservable] for unwrapping these objects.
 ]=]
 
 --[=[
@@ -20,7 +20,7 @@ export type Unsubscribe = Types.Unsubscribe
     detect updates whenver this value changes.
 
     When setting a [VirtualInstance]'s properties to an Observable, the
-    properties in the mounted instance will automatically be updated by Dec to
+    properties in the mounted instance will automatically be updated by Dex to
     match the current value of the observable whenever its value changes.
 
     An observable will automatically be garbage collected so long as there are
@@ -36,19 +36,19 @@ export type Unsubscribe = Types.Unsubscribe
 
     Using Custom Observables should only be done with caution
 
-    ### Dec.CustomObservable
+    ### Dex.CustomObservable
 
     ```ts
-    Dec.CustomObservable<T>(
+    Dex.CustomObservable<T>(
         getCurrent: () -> T,
         createUpdateStream: (notifyChange: () -> ()) -> (() -> ())
     ) -> Observable<T>
     ```
 
-    #### See: [Dec.CustomObservable] for full documentation
+    #### See: [Dex.CustomObservable] for full documentation
 
     :::caution
-    Read the full [Dec.CustomObservable] documentation before writing Custom
+    Read the full [Dex.CustomObservable] documentation before writing Custom
     Observables; otherwise, opt for other subclasses such as [State].
     :::
 ]=]
@@ -127,7 +127,7 @@ end
 
     Example of mapping a number to a currency display value:
     ```lua
-    local money = Dec.State(3)
+    local money = Dex.State(3)
 
     local moneyFormatted = money:Map(function(currentMoney)
         return string.format("$%0.2f", currentMoney)
@@ -226,23 +226,23 @@ end
 
 --[=[
     @function CustomObservable
-    @within Dec
+    @within Dex
     @param getCurrent () -> T
     @param createUpdateStream (notifyChange: () -> ()) -> (() -> ())
     @return Observable<T>
 
 
     :::warning
-    Consider opting for other Dec constructs (like State) over custom
+    Consider opting for other Dex constructs (like State) over custom
     observables.
     
-    When writing custom Dec observables, Make sure to implement the `getCurrent`
+    When writing custom Dex observables, Make sure to implement the `getCurrent`
     and `createUpdateStream` parameters correctly, as failing to do so may
     cause memory leaks or unresponsive UI.
     :::
 
-    Creates a new Dec Observable object. Observables are used to hold, derive,
-    or map state within a Dec application.
+    Creates a new Dex Observable object. Observables are used to hold, derive,
+    or map state within a Dex application.
 
     The first parameter should be a function that always returns the current
     state of the observable whenever called.
@@ -275,7 +275,7 @@ end
     end
     ```
 
-    `createUpdateStream` is automatically called by Dec the first time an
+    `createUpdateStream` is automatically called by Dex the first time an
     observable is subscribed (or used by a mounted VirtualInstance), and its
     return function to close the update stream is automatically called when the
     Observable's last subscriber is unsubscribed and/or the last VirtualInstance
@@ -297,7 +297,7 @@ end
             connection:Disconnect()
         end
     end
-    local playerViewportSize = Dec.CustomObservable(
+    local playerViewportSize = Dex.CustomObservable(
         getCurrent,
         createUpdateStream
     )
@@ -305,7 +305,7 @@ end
     ```
 
     Custom observables may be useful for connecting third party libraries or
-    other systems in your game's codebase to a Dec UI application.
+    other systems in your game's codebase to a Dex UI application.
 ]=]
 function Observable.new<T>(
     getCurrent: () -> T,
@@ -423,12 +423,12 @@ local function applyBinopPolymorphic(
     binop: (a: number, b: number) -> number
 ): any
     if typeof(a) ~= typeof(b) then
-        error("Can only perform math operations on Dec Observables of the " .. 
+        error("Can only perform math operations on Dex Observables of the " .. 
             "same type (got " .. typeof(a) .. " and " .. typeof(b) .. ")")
     end
     local monadicMapper = typeToMonadicBinopMapper[typeof(a)]
     if not monadicMapper then
-        error("Can only perform math operations on Dec Observables with " .. 
+        error("Can only perform math operations on Dex Observables with " .. 
             "scalar, vector, or matrix value types (got " .. typeof(a) ..  ")")
     end
 

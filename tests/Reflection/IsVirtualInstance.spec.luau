@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local IsVirtualInstance = require(ReplicatedStorage.Packages.Dec.Reflection.IsVirtualInstance)
-local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dec.VirtualInstanceCreators)
+local IsVirtualInstance = require(ReplicatedStorage.Packages.Dex.Reflection.IsVirtualInstance)
+local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dex.VirtualInstanceCreators)
 
 return function()
     it("returns true for VirtualInstance", function()

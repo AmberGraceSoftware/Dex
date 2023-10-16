@@ -5,7 +5,7 @@ type VirtualInstance = Types.VirtualInstance
 export type VirtualInstanceType = "New" | "Clone" | "Premade"
 --[=[
     @function GetVirtualInstanceType
-    @within Dec
+    @within Dex
     @param passedIn VirtualInstance
     @return "New" | "Clone" | "Premade"
 

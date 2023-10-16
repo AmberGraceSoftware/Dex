@@ -3,7 +3,7 @@
 
 Run this TestRunner script on the command line in Roblox Studio. The output
 will be a "proof" checksum, which should then be copied and pasted into
-testing_proof_checksum.txt in Dec's root project folder before a PR is merged.
+testing_proof_checksum.txt in Dex's root project folder before a PR is merged.
 
 ]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -72,8 +72,8 @@ end
 
 local function TestRunner()
     -- Generate a checksum of the source code
-    local sourceRoots = {ReplicatedStorage.DecTests,
-    ReplicatedStorage.Packages.Dec}
+    local sourceRoots = {ReplicatedStorage.DexTests,
+    ReplicatedStorage.Packages.Dex}
     local sourceChecksum = generateSourceFileChecksum(
         captureSourceFileStrings(sourceRoots)
     )
@@ -97,7 +97,7 @@ local function TestRunner()
             testResults = results
         end
     }
-    TestEZ.TestBootstrap:run({ReplicatedStorage.DecTests}, interceptReporter)
+    TestEZ.TestBootstrap:run({ReplicatedStorage.DexTests}, interceptReporter)
 
     -- Put old modules back into place and delete cloned ones
     for _, root in tempRoots do
@@ -134,7 +134,7 @@ local function TestRunner()
             )
         end
         print("\n\tProof-of-testing checksum (paste into " ..
-            "'testing_proof_checksum.txt' file in Dec's root project " .. 
+            "'testing_proof_checksum.txt' file in Dex's root project " .. 
             "directory): ", proof_checksum)
     end)
 end

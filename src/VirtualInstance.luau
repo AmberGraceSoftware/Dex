@@ -55,7 +55,7 @@ local function assertNotYetMounted(virtualInstance: VirtualInstance)
             "Cannoy modify a VirtualInstance after it has been mounted. " .. 
             "Please verify your code to make sure you are only defining " ..
             "properties, attributes, tags, etc. before mounting the " .. 
-            "VirtualInstance (See Dec docs). You should utilize Observables " ..
+            "VirtualInstance (See Dex docs). You should utilize Observables " ..
             "instead of modifying a VirtaulInstance after it is mounted.",
             2
         )
@@ -64,17 +64,17 @@ end
 
 --[=[
     @class VirtualInstance
-    VirtualInstances are the basic building blocks for Dec applications.
+    VirtualInstances are the basic building blocks for Dex applications.
 
-    VirtualInstances are "Mounted" by Dec's reconciler engine,
+    VirtualInstances are "Mounted" by Dex's reconciler engine,
     creating/destoying/modifying these real instances automatically as needed.
 
     ## Constructors
     ---
 
-    ### Dec.New
+    ### Dex.New
     ```lua
-    Dec.New(
+    Dex.New(
         className: string,
         props: {[string]: any}?,
         children: {[any]: CanBeObservable<VirtualInstance?>}
@@ -86,9 +86,9 @@ end
 
     ---
 
-    ### Dec.Clone
+    ### Dex.Clone
     ```lua
-    Dec.Clone(
+    Dex.Clone(
         template: Instance | VirtualInstance,
         props: {[string]: any}?,
         children: {[any]: CanBeObservable<VirtualInstance?>}
@@ -99,9 +99,9 @@ end
 
     ---
 
-    ### Dec.Premade
+    ### Dex.Premade
     ```lua
-    Dec.Premade(
+    Dex.Premade(
         className: stirng,
         props: {[string]: any}?,
         children: {[any]: CanBeObservable<VirtualInstance?>}
@@ -109,9 +109,9 @@ end
     ```
 
     Creates a new VirtualInstance that represents a pre-existing Roblox Instance
-    to be modified by Dec.
+    to be modified by Dex.
 
-    If passed into the the Render function for a [Dec.Root] component, the root
+    If passed into the the Render function for a [Dex.Root] component, the root
     instance will be used used.
 ]=]
 local VirtualInstance = {}
@@ -135,7 +135,7 @@ VirtualInstance.__index._dectype = "VirtualInstance"
     right as the VirtualInstance is rendered
     - An **Observablue Value** to be assigned as the VirtualInstance is
     Rendered, as well as when the Observable value changes
-    - A **`Dec.Nil`** symbol, which assigns a property to `nil` when rendered
+    - A **`Dex.Nil`** symbol, which assigns a property to `nil` when rendered
     - A **function** which represents a listener to connect to an event while
     the VirtualInstance is rendered
     - Another **VirtualInstance**, which references an instance property to be
@@ -266,7 +266,7 @@ end
     Creates an Observable object that updates to the original value of an
     property on the virtual instance once when it is mounted. This is useful
     for referencing properties on a premade instance without hardcoding them in
-    a Dec component.
+    a Dex component.
 
     Give initialValue a type annotation if initializing to nil
     (e.g. vInst:OutInitialProperty("Adornee", nil :: Instance?))
@@ -333,7 +333,7 @@ end
     Creates an Observable object that updates to the original value of an
     attribute on the virtual instance once when it is mounted. This is useful
     for referencing attributes on a premade instance without hardcoding them in
-    a Dec component.
+    a Dex component.
 
     Give initialValue a type annotation if initializing to nil
     (e.g. vInst:OutInitialAttribute("Foo", nil :: string?))
@@ -362,12 +362,12 @@ end
     @within VirtualInstance
     @return Observable<Instance?>
 
-    Outputs a reference to the reconciled instance to a Dec State object.
+    Outputs a reference to the reconciled instance to a Dex State object.
 
     :::danger
     Using OutInstance to directly edit the rendered instance's properties may
     lead to unexpected behavior. It is recommended to only use OutInstance where
-    no alternatives are available within the Dec API for your use case.
+    no alternatives are available within the Dex API for your use case.
 
     ## Use Case Alternatives
 
@@ -380,8 +380,8 @@ end
     Most other use cases for preformatting can usually be handled through the
     :SetProperties directive.
 
-    ### Using a nested template for [Dec.Clone]
-    Dec.Clone supports passing in another _VirtualInstance_ as an argument, as
+    ### Using a nested template for [Dex.Clone]
+    Dex.Clone supports passing in another _VirtualInstance_ as an argument, as
     long as there are no circular dependencies. This will wait until the
     template VirtualInstance is mounted to instantiate the cloned instance.
 
@@ -474,8 +474,8 @@ end
     Example:
     ```lua
     local function ItemList()
-        local visibleItemIds = Dec.State({"Sword", "Gun", "MagicStaff"})
-        local scrollingFrame = Dec.New("ScrollingFrame", {
+        local visibleItemIds = Dex.State({"Sword", "Gun", "MagicStaff"})
+        local scrollingFrame = Dex.New("ScrollingFrame", {
             Size = UDim2.fromScale(1, 1)
         })
         scrollingFrame:MapChildren(visibleItemIds, function(i, id)
@@ -531,12 +531,12 @@ end
     Example:
     ```lua
     local function ItemList()
-        local visibleItemIdSet = Dec.State({
+        local visibleItemIdSet = Dex.State({
             ["Sword"] = true,
             ["Gun"] = true,
             ["MagicStaff"] = true}
         )
-        local scrollingFrame = Dec.New("ScrollingFrame", {
+        local scrollingFrame = Dex.New("ScrollingFrame", {
             Size = UDim2.fromScale(1, 1)
         })
         scrollingFrame:MapChildrenByKey(visibleItemIds, function(id)
@@ -593,8 +593,8 @@ end
     Example:
     ```lua
     local function ItemList()
-        local visibleItemIdSet = Dec.State({"Sword", "Gun", "MagicStaff"})
-        local scrollingFrame = Dec.New("ScrollingFrame", {
+        local visibleItemIdSet = Dex.State({"Sword", "Gun", "MagicStaff"})
+        local scrollingFrame = Dex.New("ScrollingFrame", {
             Size = UDim2.fromScale(1, 1)
         })
         scrollingFrame:MapChildrenByValue(visibleItemIds, function(id, i)
@@ -677,7 +677,7 @@ function VirtualInstance.__index.OnMount(
     table.insert(self._directives, {
         _type = "OnMount",
         _payload = callback,
-        _trace = getTrace("Dec.OnMount", 1),
+        _trace = getTrace("Dex.OnMount", 1),
     })
 end
 
@@ -700,7 +700,7 @@ function VirtualInstance.__index.OnUnmount(
     table.insert(self._directives, {
         _type = "OnUnmount",
         _payload = callback,
-        _trace = getTrace("Dec.OnUnmount", 1),
+        _trace = getTrace("Dex.OnUnmount", 1),
     })
 end
 
@@ -716,13 +716,13 @@ end
 
     The following blocks of code are equivalent:
     ```lua
-    local parent = Dec.Premade("Frame")
-    local child = Dec.Premade("Frame")
+    local parent = Dex.Premade("Frame")
+    local child = Dex.Premade("Frame")
     parent:AddChild("ChildName", child)
     ```
 
     ```lua
-    local parent = Dec.Premade("Frame")
+    local parent = Dex.Premade("Frame")
     local child = parent:FindChild("ChildName")
     ```
 ]=]
@@ -753,7 +753,7 @@ end
 
     - They must be of "Premade" type, with an equivalent or related ClassName to
     the target VirtualInstance.
-    - They must not already be rendered by Dec and/or combined with another
+    - They must not already be rendered by Dex and/or combined with another
     VirtualInstance.
 
     Combine can be used to compose different effects or input handlers within a
@@ -761,9 +761,9 @@ end
 
     ```lua
     local function RecolorWithMouseInput()
-        local isHovering = Dec.State(false)
-        local isPressing = Dec.State(false)
-        return Dec.Premade("GuiButton", {
+        local isHovering = Dex.State(false)
+        local isPressing = Dex.State(false)
+        return Dex.Premade("GuiButton", {
             MouseEnter = function()
                 isHovering:Set(true)
             end,
@@ -776,7 +776,7 @@ end
             MouseButton1Up = function()
                 isPressing:Set(false)
             end,
-            BackgroundColor3 = Dec.Map(isHovering, isPressing)(function(
+            BackgroundColor3 = Dex.Map(isHovering, isPressing)(function(
                 currentHovering,
                 currentPressing
             )
@@ -794,7 +794,7 @@ end
     -- . . .
     
     local function Button()
-        local button = Dec.New("Button", {
+        local button = Dex.New("Button", {
             Activated = function()
                 print("Button was clicked!")
             end,
@@ -863,11 +863,11 @@ end
     You can use this function to trigger side effects such as animations
     whenever an observable value changes:
     ```lua
-    local function PulseAnimation(valueToWatch: Dec.Observable<any>)
+    local function PulseAnimation(valueToWatch: Dex.Observable<any>)
         -- Create a UIScale object that plays a 1-second "pulse" animation
         -- whenever a stopwatch is played.
-        local stopwatch = Dec.Stopwatch({duration = 1})
-        local uiScale = Dec.New("UIScale", {
+        local stopwatch = Dex.Stopwatch({duration = 1})
+        local uiScale = Dex.New("UIScale", {
             Scale = stopwatch:Map(function(currentTime)
                 return 1 + (0.5 - currentTime) * 0.1
             end)
@@ -906,7 +906,7 @@ end
     @private
     @return VirtualInstance - A new, empty Virtual Instance.
 
-    A mutable element that Dec reconciles into a Roblox Instance.
+    A mutable element that Dex reconciles into a Roblox Instance.
     When a VirtualInstance is reconciled, its properties are sealed. A
     VirtualInstance should only be mutated by component objects before it is
     reconciled. Use Observers instead to mutate a VirtualInstance after it has
@@ -928,7 +928,7 @@ function VirtualInstance.new(
             {
                 _type = "Properties",
                 _payload = defaultProperties :: any,
-                _trace = getTrace("Dec." .. constructorType, traceLevel)
+                _trace = getTrace("Dex." .. constructorType, traceLevel)
             }
         )
     end
@@ -940,7 +940,7 @@ function VirtualInstance.new(
                 _payload = defaultChildMap,
                 _trace = if #directives > 0
                     then directives[1]._trace
-                    else getTrace("Dec." .. constructorType, traceLevel)
+                    else getTrace("Dex." .. constructorType, traceLevel)
             }
         )
     end

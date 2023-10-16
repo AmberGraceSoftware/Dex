@@ -2,7 +2,7 @@
 
 --[=[
     @function IsStateRecord
-    @within Dec
+    @within Dex
     @param passedIn unknown
     @return boolean
 

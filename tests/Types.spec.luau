@@ -1,5 +1,5 @@
 --!strict
-local Types = require(game.ReplicatedStorage.Packages.Dec.Types)
+local Types = require(game.ReplicatedStorage.Packages.Dex.Types)
 
 return function()
     it("returns no values", function()

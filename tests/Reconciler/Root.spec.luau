@@ -1,15 +1,15 @@
 --!strict
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Root = require(ReplicatedStorage.Packages.Dec.Reconciler.Root)
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Root = require(ReplicatedStorage.Packages.Dex.Reconciler.Root)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     it("should render then unmount a New virtual instance", function()
         local hostInstance = Instance.new("Folder")
         local root = Root.new(hostInstance)
 
-        local virtualInstance = Dec.New("Part", {Transparency = 0.5})
+        local virtualInstance = Dex.New("Part", {Transparency = 0.5})
         expect(root._reconciled).to.equal(nil)
 
         local reconciledNode = root:Render(virtualInstance)
@@ -30,7 +30,7 @@ return function()
         local hostInstance = Instance.new("Folder")
         local root = Root.new(hostInstance)
 
-        local virtualInstance = Dec.New("Part")
+        local virtualInstance = Dex.New("Part")
         root:Render(virtualInstance)
         expect(#hostInstance:GetChildren()).to.equal(1)
         local node: any = virtualInstance._reconciledNode
@@ -51,12 +51,12 @@ return function()
 
         local root = Root.new(hostInstance)
 
-        local virtualInstance = Dec.Premade("Part", {
+        local virtualInstance = Dex.Premade("Part", {
             Transparency = 0.5
         })
         expect(root._reconciled).to.equal(nil)
 
-        local App = Dec.Premade("Folder", {}, {
+        local App = Dex.Premade("Folder", {}, {
             ExistingInstance = virtualInstance
         })
         local reconciledNode = root:Render(App)
@@ -82,7 +82,7 @@ return function()
 
         local root = Root.new(hostInstance)
 
-        local virtualInstance = Dec.Clone(templateInstance, {
+        local virtualInstance = Dex.Clone(templateInstance, {
             Transparency = 0.5
         })
         expect(root._reconciled).to.equal(nil)
@@ -92,7 +92,7 @@ return function()
         expect(#hostInstance:GetChildren()).to.equal(1)
         local node: any = virtualInstance._reconciledNode
         expect(node).to.be.ok()
-        expect(node._instance.Name).to.equal("DecRoot")
+        expect(node._instance.Name).to.equal("DexRoot")
         expect(node._instance.Transparency).to.equal(0.5)
 
         root:Unmount()
@@ -108,13 +108,13 @@ return function()
         templateChild.BackgroundTransparency = 0.5
         templateChild.Parent = host
 
-        local parent = Dec.Premade("Frame")
+        local parent = Dex.Premade("Frame")
         local child = parent:FindChild("TextLabel", "Template")
-        parent:AddChild("Copy", Dec.Clone(child, {
+        parent:AddChild("Copy", Dex.Clone(child, {
             BackgroundTransparency = 1
         }))
 
-        local root = Dec.Root(host)
+        local root = Dex.Root(host)
         root:Render(parent)
 
         expect(#host:GetChildren()).to.equal(2)

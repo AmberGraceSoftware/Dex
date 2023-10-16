@@ -3,7 +3,7 @@ order = ["Introduction"]
 
 [[classOrder]]
 collapsed = false
-classes = ["Dec", "VirtualInstance", "Root"]
+classes = ["Dex", "VirtualInstance", "Root"]
 
 [[classOrder]]
 section = "Observables"
@@ -14,7 +14,7 @@ classes = ["Observable", "State", "Record", "Dict", "Stopwatch", "Timer",
 gitSourceBranch = "main"
 
 [docusaurus]
-url = "https://dec.ambergracesoftware.com"
+url = "https://dex.ambergracesoftware.com"
 baseUrl = "/"
 tagline = "A Library for Building Roblox User Interfaces"
 
@@ -22,7 +22,7 @@ tagline = "A Library for Building Roblox User Interfaces"
 title = ""
 
 [navbar.logo]
-alt = "Dec"
+alt = "Dex"
 src = "logo.svg"
 
 [home]

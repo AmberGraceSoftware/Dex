@@ -62,7 +62,7 @@ local function ApplyReferenceToVInst(
 end
 
 --[[
-    @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
+    @param reconciledNode: Dex.ReconciledNode - The reconciled node to store cleanup tasks on
     @param propMap: {[string]: any} - The property map to apply to the VirtualInstance
 
     Applies a property map to a VirtualInstance, throwing any Roblox engine

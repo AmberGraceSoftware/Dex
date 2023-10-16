@@ -13,7 +13,7 @@ end
 
 --[=[
     @function CoerceAsObservable
-    @within Dec
+    @within Dex
     @param value CanBeObservable<T>
     @return Observable<T>
 

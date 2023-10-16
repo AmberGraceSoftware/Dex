@@ -2,8 +2,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local IsObservable = require(ReplicatedStorage.Packages.Dec.Reflection.IsObservable)
-local PolymorphicLerp = require(ReplicatedStorage.Packages.Dec.Util.PolymorphicLerp)
+local IsObservable = require(ReplicatedStorage.Packages.Dex.Reflection.IsObservable)
+local PolymorphicLerp = require(ReplicatedStorage.Packages.Dex.Util.PolymorphicLerp)
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 local State = require(script.Parent.State)
@@ -35,10 +35,10 @@ export type TweenParams<T> = Types.TweenParams<T>
 
     ---
 
-    ### Dec.Tween
+    ### Dex.Tween
 
     ```ts
-    Dec.Tween<T>(
+    Dex.Tween<T>(
         initialValueOrPlayInput: T | Observable<TweenParams<T>>
     ) -> Tween<T>
     ```
@@ -55,7 +55,7 @@ export type TweenParams<T> = Types.TweenParams<T>
 
     Tweens can either be played by calling the `:Play()` method
     ```lua
-    local tween = Dec.Tween(0)
+    local tween = Dex.Tween(0)
     tween:Play({
         goal = 1,
         info = TweenInfo.new(0.1)
@@ -64,8 +64,8 @@ export type TweenParams<T> = Types.TweenParams<T>
 
     …or automatically play when an input state holding a params table changes:
     ```lua
-    local input = Dec.State(0)
-    local tween = Dec.Tween(Dec.Map(input)(function(currentInput)
+    local input = Dex.State(0)
+    local tween = Dex.Tween(Dex.Map(input)(function(currentInput)
         return {
             goal = input,
             info = TweenInfo.new(0.1)
@@ -79,7 +79,7 @@ export type TweenParams<T> = Types.TweenParams<T>
     :::info
     Tweens must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 ]=]
@@ -188,7 +188,7 @@ end
 
 --[=[
     @function Tween
-    @within Dec
+    @within Dex
     @param initialValue T | Observable<TweenParams<T>>
     @return Tween<T>
 

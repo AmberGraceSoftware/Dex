@@ -24,9 +24,9 @@ type Unsubscribe = Types.Unsubscribe
 
     ---
 
-    ### Dec.Record
+    ### Dex.Record
     ```ts
-    Dec.Record<T>(
+    Dex.Record<T>(
         initialValue T
     ) -> Record<T>
     ```
@@ -50,9 +50,9 @@ type Unsubscribe = Types.Unsubscribe
 
     ---
 
-    ### Dec.Dict
+    ### Dex.Dict
     ```ts
-    Dec.Dict<K, V>(
+    Dex.Dict<K, V>(
         initialValue {[K]: V}
     ) -> Dict<K, V>
     ```
@@ -223,13 +223,13 @@ end
 
     Example:
     ```lua
-    local record = Dec.Record({
+    local record = Dex.Record({
         coins = 0,
         items = {},
     })
 
-    local coins = record:Index("coins") :: Dec.State<number>
-    local items = record:Index("items") :: Dec.State<number>
+    local coins = record:Index("coins") :: Dex.State<number>
+    local items = record:Index("items") :: Dex.State<number>
 
     -- . . . Updates in stateRecord will be reflected in coins/items:
     record:Replace({
@@ -259,7 +259,7 @@ end
 
     Example:
     ```lua
-    local playerCoinsDict = Dec.Dict({} :: {[Player]: number})
+    local playerCoinsDict = Dex.Dict({} :: {[Player]: number})
     
     -- Use Index to observe states at a particular key. 
     local player = game.Players.LocalPlayer
@@ -306,7 +306,7 @@ end
 
 --[[
     @function Record
-    @within Dec
+    @within Dex
     @param initialValue T
     @return Record<T>
 
@@ -341,7 +341,7 @@ end
 
 --[=[
     @function Dict
-    @within Dec
+    @within Dex
     @param initialValue: {[K]: V}
     @return Dict<K, V>
 

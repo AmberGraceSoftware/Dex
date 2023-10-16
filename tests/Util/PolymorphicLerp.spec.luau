@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local PolymorphicLerp = require(ReplicatedStorage.Packages.Dec.Util.PolymorphicLerp)
+local PolymorphicLerp = require(ReplicatedStorage.Packages.Dex.Util.PolymorphicLerp)
 
 return function()
     it("performs polymorphic lerp for numbers", function()

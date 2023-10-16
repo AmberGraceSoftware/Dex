@@ -16,7 +16,7 @@ local function main()
     local out = "return [=[\n" .. licenseContent ..  "\n]=]"
     fs.writeFile("temp/src/LICENSE.luau", out)
     process.spawn("cd", {"temp"})
-    process.spawn("rojo", {"build", "--output=Dec.rbxmx", "temp/release.project.json"})
+    process.spawn("rojo", {"build", "--output=Dex.rbxmx", "temp/release.project.json"})
     process.spawn("rm", {"-rf", "temp"})
 end
 

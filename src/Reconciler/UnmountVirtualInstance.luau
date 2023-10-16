@@ -6,8 +6,8 @@ type VirtualInstance = Types.VirtualInstance
 type ReconciledNode = Types.ReconciledNode
 
 --[[
-    @param node: Dec.ReconciledNode - The node to unmount.
-    @return Dec.ReconciledNode? - The new Reconciled Node, if the old node was replaced.
+    @param node: Dex.ReconciledNode - The node to unmount.
+    @return Dex.ReconciledNode? - The new Reconciled Node, if the old node was replaced.
 
     Unmounts a reconciled VirtualInstance, cleaning up all of its children,
     connections, created instances, etc.

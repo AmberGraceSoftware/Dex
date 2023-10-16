@@ -1,31 +1,31 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     describe("AddChild", function()
         it("Adds single VirtualInstance child", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
             vInst:AddChildren({
-                Foo = Dec.New("Frame")
+                Foo = Dex.New("Frame")
             })
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
             expect(#host:GetChildren()).to.equal(1)
             expect(host:GetChildren()[1].Name).to.equal("Foo")
         end)
         it("Adds a observable child list", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
 
-            local childrenState = Dec.State({
-                Dec.New("Frame"),
-                Dec.New("Frame"),
+            local childrenState = Dex.State({
+                Dex.New("Frame"),
+                Dex.New("Frame"),
             })
             vInst:AddChildren(childrenState)
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
             local children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -37,8 +37,8 @@ return function()
             expect(children[2].ClassName).to.equal("Frame")
 
             childrenState:Set({
-                Dec.New("ImageLabel"),
-                Dec.New("ImageLabel"),
+                Dex.New("ImageLabel"),
+                Dex.New("ImageLabel"),
             })
             children = host:GetChildren()
             table.sort(children, function(a, b)
@@ -52,15 +52,15 @@ return function()
         end)
         it("Adds a observable child map", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
 
-            local childrenState = Dec.State({
-                a = Dec.New("Frame"),
-                b = Dec.New("Frame"),
-            } :: {[string]: Dec.VirtualInstance})
+            local childrenState = Dex.State({
+                a = Dex.New("Frame"),
+                b = Dex.New("Frame"),
+            } :: {[string]: Dex.VirtualInstance})
             vInst:AddChildren(childrenState)
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
             local children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -72,8 +72,8 @@ return function()
             expect(children[2].ClassName).to.equal("Frame")
 
             childrenState:Set({
-                c = Dec.New("ImageLabel"),
-                d = Dec.New("ImageLabel"),
+                c = Dex.New("ImageLabel"),
+                d = Dex.New("ImageLabel"),
             })
             children = host:GetChildren()
             table.sort(children, function(a, b)
@@ -87,15 +87,15 @@ return function()
         end)
         it("Adds a observable single child value", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
 
-            local childAState = Dec.State(Dec.New("Frame") :: any)
+            local childAState = Dex.State(Dex.New("Frame") :: any)
             vInst:AddChildren({
                 a = childAState,
-                b = Dec.New("ImageLabel")
+                b = Dex.New("ImageLabel")
             })
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
 
             local children = host:GetChildren()
             table.sort(children, function(a, b)
@@ -116,7 +116,7 @@ return function()
             expect(children[1].Name).to.equal("b")
             expect(children[1].ClassName).to.equal("ImageLabel")
 
-            childAState:Set(Dec.New("TextLabel", {Name = "Bar"}))
+            childAState:Set(Dex.New("TextLabel", {Name = "Bar"}))
             children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -127,7 +127,7 @@ return function()
             expect(children[2].Name).to.equal("b")
             expect(children[2].ClassName).to.equal("ImageLabel")
 
-            childAState:Set(Dec.Nil)
+            childAState:Set(Dex.Nil)
             children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -138,16 +138,16 @@ return function()
         end)
         it("Adds a nested observable single child value", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
 
-            local childAState = Dec.State(Dec.New("Frame") :: any)
-            local nestedObservable = Dec.State(childAState)
+            local childAState = Dex.State(Dex.New("Frame") :: any)
+            local nestedObservable = Dex.State(childAState)
             vInst:AddChildren({
                 a = nestedObservable,
-                b = Dec.New("ImageLabel")
+                b = Dex.New("ImageLabel")
             })
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
 
             local children = host:GetChildren()
             table.sort(children, function(a, b)
@@ -168,7 +168,7 @@ return function()
             expect(children[1].Name).to.equal("b")
             expect(children[1].ClassName).to.equal("ImageLabel")
 
-            childAState:Set(Dec.New("TextLabel", {Name = "Bar"}))
+            childAState:Set(Dex.New("TextLabel", {Name = "Bar"}))
             children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -179,7 +179,7 @@ return function()
             expect(children[2].Name).to.equal("b")
             expect(children[2].ClassName).to.equal("ImageLabel")
 
-            nestedObservable:Set(Dec.Nil :: any)
+            nestedObservable:Set(Dex.Nil :: any)
             children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name
@@ -190,16 +190,16 @@ return function()
         end)
         it("Adds observable list of observable children", function()
             local host = Instance.new("Frame")
-            local vInst = Dec.Premade("Frame")
+            local vInst = Dex.Premade("Frame")
 
-            local childAState = Dec.State(Dec.New("Frame") :: any)
-            local childMap = Dec.State({
+            local childAState = Dex.State(Dex.New("Frame") :: any)
+            local childMap = Dex.State({
                 a = childAState,
-                b = Dec.New("ImageLabel")
+                b = Dex.New("ImageLabel")
             } :: {[string]: any})
             vInst:AddChildren(childMap)
 
-            Dec.Root(host):Render(vInst)
+            Dex.Root(host):Render(vInst)
 
             local children = host:GetChildren()
             table.sort(children, function(a, b)
@@ -220,7 +220,7 @@ return function()
             expect(children[1].Name).to.equal("b")
             expect(children[1].ClassName).to.equal("ImageLabel")
 
-            childAState:Set(Dec.New("TextLabel", {Name = "Bar"}))
+            childAState:Set(Dex.New("TextLabel", {Name = "Bar"}))
             children = host:GetChildren()
             table.sort(children, function(a, b)
                 return a.Name < b.Name

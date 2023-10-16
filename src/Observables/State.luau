@@ -18,10 +18,10 @@ export type State<T> = Types.State<T>
 
     ---
 
-    ### Dec.State
+    ### Dex.State
 
     ```ts
-    Dec.State<T>(initialValue: T) -> State<T>
+    Dex.State<T>(initialValue: T) -> State<T>
     ```
 
     Creates a new [State] observable with the given initial value,
@@ -30,7 +30,7 @@ export type State<T> = Types.State<T>
     If you pass in `nil` or table with optional values as the inital value, you
     should give the initial value a type annotation:
     ```lua
-    local notification = Dec.State(nil :: {
+    local notification = Dex.State(nil :: {
         id: string,
         message: string,
     }?)
@@ -79,7 +79,7 @@ end
 
 --[=[
     @function State
-    @within Dec
+    @within Dex
     @param initialValue T
     @return State<T>
 

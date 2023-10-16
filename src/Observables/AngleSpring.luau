@@ -72,9 +72,9 @@ local typeToSpringStepMethod = {
 
     ---
 
-    ### Dec.AngleSpring
+    ### Dex.AngleSpring
     ```ts
-    Dec.AngleSpring<T>(
+    Dex.AngleSpring<T>(
         target: Observable<T>
         angularFrequency: number?
     ) -> AngleSpring<T>
@@ -87,7 +87,7 @@ local typeToSpringStepMethod = {
     :::info
     AngleSprings must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 ]=]
@@ -116,10 +116,10 @@ end
 
 --[=[
     @function AngleSpring
-    @within Dec
+    @within Dex
     @param target Observable<T>
     @param angularFrequency number?
-    @return Observable<T>
+    @return AngleSpring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, wrapped around the range [-pi, pi]. The spring simulates in
     realtime until the target value is reached.

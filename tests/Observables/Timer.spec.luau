@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Timer = require(ReplicatedStorage.Packages.Dec.Observables.Timer)
-local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
+local Timer = require(ReplicatedStorage.Packages.Dex.Observables.Timer)
+local State = require(ReplicatedStorage.Packages.Dex.Observables.State)
 
 return function()
     local function waitUntilClockChange()

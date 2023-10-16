@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Observable = require(ReplicatedStorage.Packages.Dec.Observables.Observable)
-local CoerceAsObservable = require(ReplicatedStorage.Packages.Dec.Util.CoerceAsObservable)
+local Observable = require(ReplicatedStorage.Packages.Dex.Observables.Observable)
+local CoerceAsObservable = require(ReplicatedStorage.Packages.Dex.Util.CoerceAsObservable)
 
 return function()
     it("returns the same Observable if passed an Observable", function()

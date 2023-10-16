@@ -13,7 +13,7 @@ function Header() {
         <img
           src={siteConfig.baseUrl + "logo.svg"}
           className="bigLogo"
-          alt="Dec"
+          alt="Dex"
         />
         <br/>
         <br/>
@@ -30,7 +30,7 @@ function Header() {
           <div className="cta-button" >
             <Link
               className="button button--secondary button--lg"
-              to="/api/Dec"
+              to="/api/Dex"
             >
               API Reference →
             </Link>
@@ -48,7 +48,7 @@ export default function Home() {
       <Header />
       <main>
         <p className="library-tagline">
-          Dec is a UI library which enables Roblox developers to easily bring
+          Dex is a UI library which enables Roblox developers to easily bring
           their UI designs to life.
         </p>
       </main>

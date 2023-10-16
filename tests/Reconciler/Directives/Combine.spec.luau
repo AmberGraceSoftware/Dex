@@ -1,18 +1,18 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     describe("Combine", function()
         it("Combines multiple premade VirtualInstances", function()
             local host = Instance.new("TextLabel")
-            local vInst1 = Dec.Premade("TextLabel", {
+            local vInst1 = Dex.Premade("TextLabel", {
                 Text = "Foo",
             })
-            local vInst2 = Dec.Premade("GuiObject", {}, {
-                Child = Dec.New("Frame")
+            local vInst2 = Dex.Premade("GuiObject", {}, {
+                Child = Dex.New("Frame")
             })
-            local vInst3 = Dec.Premade("GuiObject", {
+            local vInst3 = Dex.Premade("GuiObject", {
                 LayoutOrder = 123,
             })
             vInst1:Combine(
@@ -20,7 +20,7 @@ return function()
                 vInst3
             )
 
-            Dec.Root(host):Render(vInst1)
+            Dex.Root(host):Render(vInst1)
 
             expect(table.isfrozen(vInst1._directives)).to.equal(true)
             expect(table.isfrozen(vInst2._directives)).to.equal(true)

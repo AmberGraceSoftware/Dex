@@ -1,6 +1,6 @@
 --!strict
 --[[
-    Stores all internal and external Types for Dec
+    Stores all internal and external Types for Dex
 ]]
 export type Unsubscribe = () -> ()
 export type Set<T> = {[T]: true}

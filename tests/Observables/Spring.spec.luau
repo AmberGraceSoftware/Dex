@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Spring = require(ReplicatedStorage.Packages.Dec.Observables.Spring)
-local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
+local Spring = require(ReplicatedStorage.Packages.Dex.Observables.Spring)
+local State = require(ReplicatedStorage.Packages.Dex.Observables.State)
 return function()
     it("should create a Spring which eases towards target", function()
         local target = State.new(0)

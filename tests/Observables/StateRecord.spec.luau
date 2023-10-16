@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local StateRecord = require(ReplicatedStorage.Packages.Dec.Observables.StateRecord)
+local StateRecord = require(ReplicatedStorage.Packages.Dex.Observables.StateRecord)
 
 return function()
     it("should have a set-able value and notify changes to the value", function()

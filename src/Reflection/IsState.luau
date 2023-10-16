@@ -2,7 +2,7 @@
 
 --[=[
     @function IsState
-    @within Dec
+    @within Dex
     @param passedIn unknown
     @return boolean
 

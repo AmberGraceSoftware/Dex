@@ -1,45 +1,45 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     describe("SetAttributes", function()
         it("Sets static attributes on a VirtualInstance", function()
             local host = Instance.new("Frame")
-            local virtualInstance = Dec.Premade("Frame")
+            local virtualInstance = Dex.Premade("Frame")
             virtualInstance:SetAttributes({
                 Foo = 123,
             })
-            Dec.Root(host):Render(virtualInstance)
+            Dex.Root(host):Render(virtualInstance)
             expect(host:GetAttribute("Foo")).to.equal(123)
         end)
         it("Sets observable attributes on a VirtualInstance", function()
             local host = Instance.new("Frame")
-            local virtualInstance = Dec.Premade("Frame")
-            local fooAttrState = Dec.State(123)
+            local virtualInstance = Dex.Premade("Frame")
+            local fooAttrState = Dex.State(123)
             virtualInstance:SetAttributes({
                 Foo = fooAttrState
             })
-            Dec.Root(host):Render(virtualInstance)
+            Dex.Root(host):Render(virtualInstance)
             expect(host:GetAttribute("Foo")).to.equal(123)
 
             fooAttrState:Set(456)
             expect(host:GetAttribute("Foo")).to.equal(456)
         end)
-        it("Handles nil and Dec.Nil attributes", function()
+        it("Handles nil and Dex.Nil attributes", function()
             local host = Instance.new("Frame")
             host:SetAttribute("Fighters", 456)
-            local virtualInstance = Dec.Premade("Frame")
-            local fooAttrState = Dec.State(123 :: any)
+            local virtualInstance = Dex.Premade("Frame")
+            local fooAttrState = Dex.State(123 :: any)
             virtualInstance:SetAttributes({
                 Foo = fooAttrState,
-                Fighters = Dec.Nil,
+                Fighters = Dex.Nil,
             })
-            Dec.Root(host):Render(virtualInstance)
+            Dex.Root(host):Render(virtualInstance)
             expect(host:GetAttribute("Foo")).to.equal(123)
             expect(host:GetAttribute("Fighters")).to.equal(nil)
 
-            fooAttrState:Set(Dec.Nil)
+            fooAttrState:Set(Dex.Nil)
             expect(host:GetAttribute("Foo")).to.equal(nil)
         end)
         -- If Instance attributes are ever supported:
@@ -49,26 +49,26 @@ return function()
         --     refInst.Name = "Child"
         --     refInst.Parent = host
 
-        --     local rootVInst = Dec.New("Frame")
+        --     local rootVInst = Dex.New("Frame")
         --     local refVInst = rootVInst:FindChild("Frame", "Child")
         --     rootVInst:SetAttributes({
         --         Child = refInst,
         --         Child2 = refVInst,
         --     })
-        --     Dec.Root(host):Render(rootVInst)
+        --     Dex.Root(host):Render(rootVInst)
         --     expect(host:GetAttribute("Child")).to.equal(refInst)
         --     expect(host:GetAttribute("Child2")).to.equal(refInst)
         -- end)
         it("Resolves nested observable attributes", function()
             local host = Instance.new("TextLabel")
-            local fooState = Dec.State(123)
-            local nestingState = Dec.State(fooState :: any)
+            local fooState = Dex.State(123)
+            local nestingState = Dex.State(fooState :: any)
 
-            local virtualInstance = Dec.Premade("TextLabel", {})
+            local virtualInstance = Dex.Premade("TextLabel", {})
             virtualInstance:SetAttributes({
                 Foo = nestingState,
             })
-            Dec.Root(host):Render(virtualInstance)
+            Dex.Root(host):Render(virtualInstance)
             expect(host:GetAttribute("Foo")).to.equal(123)
 
             fooState:Set(456)
@@ -83,13 +83,13 @@ return function()
         end)
         it("Uses the last defined key when multiple directives are used", function()
             local host = Instance.new("TextLabel")
-            local fooState1 = Dec.State(123)
-            local fooState2 = Dec.State(456)
+            local fooState1 = Dex.State(123)
+            local fooState2 = Dex.State(456)
 
-            local virtualInstance = Dec.Premade("TextLabel")
+            local virtualInstance = Dex.Premade("TextLabel")
             virtualInstance:SetAttributes({Foo = fooState1})
             virtualInstance:SetAttributes({Foo = fooState2})
-            Dec.Root(host):Render(virtualInstance)
+            Dex.Root(host):Render(virtualInstance)
             expect(host:GetAttribute("Foo")).to.equal(456)
 
             fooState1:Set(789)

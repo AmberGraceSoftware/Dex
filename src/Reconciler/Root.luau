@@ -13,22 +13,22 @@ type ReconciledNode = Types.ReconciledNode
 --[=[
     @class Root
 
-    Entry point for rendering Dec applications.
+    Entry point for rendering Dex applications.
 
-    In order to write a Dec application, you need to first create a root via
-    [Dec.Root], and render an instance using [Root:Render()]
+    In order to write a Dex application, you need to first create a root via
+    [Dex.Root], and render an instance using [Root:Render()]
 
     ```lua
-    -- Create our Dec application
-    local App = Dec.Premade("ScreenGui", {}, {
-        Label = Dec.Premade("TextLabel", {
+    -- Create our Dex application
+    local App = Dex.Premade("ScreenGui", {}, {
+        Label = Dex.Premade("TextLabel", {
             Text = "Hello, World!",
         })
     })
 
-    -- Render our Dec app over a premade ScreenGui template named "App"
+    -- Render our Dex app over a premade ScreenGui template named "App"
     local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    local root = Dec.Root(PlayerGui:WaitForChild("App"))
+    local root = Dex.Root(PlayerGui:WaitForChild("App"))
     root.Render(App)
     ```
     
@@ -36,10 +36,10 @@ type ReconciledNode = Types.ReconciledNode
 
     ---
 
-    ### Dec.Root
+    ### Dex.Root
     
     ```lua
-    Dec.Root(hostInstance: Instance) -> Root
+    Dex.Root(hostInstance: Instance) -> Root
     ```
 
     Creates a new [Root] instance. The Root is a reference to a real Roblox
@@ -57,7 +57,7 @@ Root.__index._dectype = "Root"
 
     Reconciles a Virtual Instance into the root's Roblox Instance. After the
     call, the Virtual Instance is sealed and cannot be mutated. Instead, you
-    should use Dec Observers to mutate the Instance after reconciliation.
+    should use Dex Observers to mutate the Instance after reconciliation.
     
     It returns the Reconciled Node.
 ]=]
@@ -100,7 +100,7 @@ end
 
 --[=[
     @function Root
-    @within Dec
+    @within Dex
     @param hostInstance Instance
     @return Root
 

@@ -5,13 +5,13 @@ sidebar_position: 1
 # Introduction
 
 :::warning
-Dec is still a work in progress and does not currently have a full release!
-Please avoiding Dec in production-bound projects, as the library is not fully
+Dex is still a work in progress and does not currently have a full release!
+Please avoiding Dex in production-bound projects, as the library is not fully
 tested, and the API may be subject to change
 :::
 
 <p className="highlight-paragraph">
-Dec is a library for building the User Interfaces of Roblox projects. Dec makes
+Dex is a library for building the User Interfaces of Roblox projects. Dex makes
 it simple to write Components—smaller pieces of code responsible for specific
 portions of UI—which can work together to build the interface for a complete
 Roblox experience.
@@ -20,7 +20,7 @@ Roblox experience.
 <div style={{"display":"block", "margin-right":"7.5%", "margin-left":"3%"}}>
     <span style={{"display": "flex", "align-items": "center",
     "justify-content":"space-between"}}>
-        <h4><i>Install Dec inside your project:&nbsp;&nbsp;</i></h4>
+        <h4><i>Install Dex inside your project:&nbsp;&nbsp;</i></h4>
         <div class="cta-button">
             <a class="button button--primary button-lg" href="./Installation" 
             style={{"display":"block", "width":"11.5em"}}>
@@ -30,7 +30,7 @@ Roblox experience.
     </span>
     <span style={{"display": "flex", "align-items": "center",
     "justify-content":"space-between"}}>
-        <h4><i>Learn the basics of Dec:&nbsp;&nbsp;</i></h4>
+        <h4><i>Learn the basics of Dex:&nbsp;&nbsp;</i></h4>
         <div class="cta-button">
             <a class="button button--primary button-lg"
             href="./Chapter1/VirtualInstance"
@@ -43,7 +43,7 @@ Roblox experience.
     "justify-content":"space-between"}}>
         <h4><i>Read the full documentation:&nbsp;&nbsp;</i></h4>
         <div class="cta-button">
-            <a class="button button--primary button-lg" href="../api/Dec"
+            <a class="button button--primary button-lg" href="../api/Dex"
             style={{"display":"block", "width":"11.5em"}}>
                 API Reference → 
             </a>
@@ -54,18 +54,18 @@ Roblox experience.
 ---
 
 <h2 className="less-top-margin">
-    Animated "Hello World" Using Dec:
+    Animated "Hello World" Using Dex:
 </h2>
 
 
 ```lua
 --!strict
-local Dec = require(game.ReplicatedStorage.Packages.Dec)
+local Dex = require(game.ReplicatedStorage.Packages.Dex)
 
 local function App()
-    local stopwatch = Dec.Stopwatch({playing = true})
-    return Dec.New("ScreenGui", {}, {
-        Label = Dec.New("TextLabel", {
+    local stopwatch = Dex.Stopwatch({playing = true})
+    return Dex.New("ScreenGui", {}, {
+        Label = Dex.New("TextLabel", {
             Size = UDim2.fromScale(1, 1),
             BackgroundTransparency = 1,
             TextSize = 24,
@@ -77,7 +77,7 @@ local function App()
     })
 end
 
-local root = Dec.Root(game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+local root = Dex.Root(game.Players.LocalPlayer:WaitForChild("PlayerGui"))
 root:Render(App())
 ```
 

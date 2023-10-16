@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GetVirtualInstanceType = require(ReplicatedStorage.Packages.Dec.Reflection.GetVirtualInstanceType)
-local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dec.VirtualInstanceCreators)
+local GetVirtualInstanceType = require(ReplicatedStorage.Packages.Dex.Reflection.GetVirtualInstanceType)
+local VirtualInstanceCreators = require(ReplicatedStorage.Packages.Dex.VirtualInstanceCreators)
 
 return function()
     it("returns the constructor type for New VirtualInstance", function()

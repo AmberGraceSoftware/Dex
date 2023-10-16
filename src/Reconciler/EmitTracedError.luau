@@ -8,7 +8,7 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 
     Emits an error at the given debug level which has a traceback to the
     original VirtualInstance API call that the error can be traced to in the 
-    Dec library user's code
+    Dex library user's code
 ]]
 local function EmitTracedError(
     errMessage: string,

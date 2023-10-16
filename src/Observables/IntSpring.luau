@@ -55,9 +55,9 @@ type IntSpring<T> = Types.IntSpring<T>
 
     ---
 
-    ### Dec.IntSpring
+    ### Dex.IntSpring
     ```ts
-    Dec.IntSpring<T>(
+    Dex.IntSpring<T>(
         target: Observable<T>
         angularFrequency: number?
     ) -> IntSpring<T>
@@ -71,7 +71,7 @@ type IntSpring<T> = Types.IntSpring<T>
     :::info
     IntSprings must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 ]=]
@@ -100,10 +100,10 @@ end
 
 --[=[
     @function IntSpring
-    @within Dec
+    @within Dex
     @param target Observable<T>
     @param angularFrequency number
-    @return Observable<T>
+    @return IntSpring<T>
     Creates an easing observable that simulates the behavior of a critically
     damped spring, constrained to the Integer range. Rounds the current position
     towards the target value, which is useful for UI components like currency or
