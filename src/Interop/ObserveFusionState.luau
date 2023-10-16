@@ -7,12 +7,12 @@ export type Unsubscribe = Types.Unsubscribe
 
 --[=[
     @function ObserveFusionState
-    @within Dec
+    @within Dex
     @param Fusion any
     @param fusionStateObject Fusion.StateObject<T>
     @return Observable<T>
 
-    Interoperability function that maps a Fusion StateObject to a Dec
+    Interoperability function that maps a Fusion StateObject to a Dex
     Observable object. The returned observable is garbage collected once
     dereferenced and unsubscribed/unmounted.
 

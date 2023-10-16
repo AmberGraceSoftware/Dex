@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Observable = require(ReplicatedStorage.Packages.Dec.Observables.Observable)
-local IsObservable = require(ReplicatedStorage.Packages.Dec.Reflection.IsObservable)
+local Observable = require(ReplicatedStorage.Packages.Dex.Observables.Observable)
+local IsObservable = require(ReplicatedStorage.Packages.Dex.Reflection.IsObservable)
 
 
 return function()

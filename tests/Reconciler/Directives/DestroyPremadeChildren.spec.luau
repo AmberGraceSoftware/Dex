@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     describe("DestroyPremadeChildren", function()
@@ -12,10 +12,10 @@ return function()
                 child.Parent = host
             end
             
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:DestroyPremadeChildren()
 
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             expect(#host:GetChildren()).to.equal(0)
         end)
@@ -27,10 +27,10 @@ return function()
                 child.Parent = host
             end
             
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:DestroyPremadeChildren("Child2")
 
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             expect(#host:GetChildren()).to.equal(2)
             local children = host:GetChildren()
@@ -50,7 +50,7 @@ return function()
                 child.Parent = host
             end
             
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:DestroyPremadeChildren(function(child)
                 if child:IsA("Frame") then
                     return child.LayoutOrder == 3
@@ -58,7 +58,7 @@ return function()
                 return false
             end)
             
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             expect(#host:GetChildren()).to.equal(2)
             local children = host:GetChildren()

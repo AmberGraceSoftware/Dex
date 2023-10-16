@@ -4,11 +4,11 @@ sidebar_position: 5
 
 # Creating & Mapping State
 
-At its heart, Dec is also a language for representing ***State***. State is any
+At its heart, Dex is also a language for representing ***State***. State is any
 hidden variable that, when changed, will eventually lead to something updating
 in a User Interface. State can be things like coins, whether or not a player is
 hovering/pressing over a UI component, the price/display name/thumbnail of an
-item being sold to the user, and more. Creating reactive UI Components in Dec
+item being sold to the user, and more. Creating reactive UI Components in Dex
 requires breaking down what simple variables are being displayed to the user
 on-screen.
 
@@ -45,10 +45,10 @@ section, and let's represent this "coins" variable as a state.
 ## `CoinCounter` Component
 
 We can create a State that holds a number representing the player's coins by
-calling the function [Dec.State](/api/State):
+calling the function [Dex.State](/api/State):
 
 ```lua
-local coins = Dec.State(0)
+local coins = Dex.State(0)
 ```
 
 Then, we can use `:Set()` to update this state and `:Current()` to get its
@@ -65,27 +65,27 @@ Let's now utilize this state in our UI.
 So far, we've seen examples of using ***VirtualInstances*** to assign static
 properties of an instance:
 ```lua
-local coinsLabel = Dec.Premade("TextLabel", {
+local coinsLabel = Dex.Premade("TextLabel", {
     Text = "42",
 })
 ```
 
-Dec also supports passing in *States* to the property table of a virtual
+Dex also supports passing in *States* to the property table of a virtual
 instance. Doing so will cause the UI to automatically update whenever this
 state changes!
 
 ```lua
-local coinsLabel = Dec.Premade("TextLabel", {
+local coinsLabel = Dex.Premade("TextLabel", {
     Text = coins,
 })
 ```
 
 ![Reactive Coins UI](/TutorialAssets/Chapter1/State/CoinsReactive.gif)
 
-The way in which Dec Components generate visuals from State follows a software
+The way in which Dex Components generate visuals from State follows a software
 paradigm called [*Reactive Programming*](https://en.wikipedia.org/wiki/Reactive_programming).
-To gain a better understanding of how Reactive Programming works in Dec, let's
-quickly go over a core concept in Dec: ***Observables***
+To gain a better understanding of how Reactive Programming works in Dex, let's
+quickly go over a core concept in Dex: ***Observables***
 
 ## Observables
 
@@ -93,7 +93,7 @@ quickly go over a core concept in Dec: ***Observables***
 from a base class called ***Observable***. Observables are objects that  *hold
 some value* and can *listen to changes in this value*.
 
-`Dec.State` is a special type of Observable in that its value can be *written
+`Dex.State` is a special type of Observable in that its value can be *written
 to;* however, some observables are "read-only" and their value depends on other
 factors.
 
@@ -103,9 +103,9 @@ to read from this state within the `CoinCounter` component, we can type this
 parameter as an ***Observable*** to make the component more re-usable.
 
 ```lua
-local function CoinCounter(coins: Dec.Observable<number>)
-    return Dec.Premade("Frame", {}, {
-        CoinsLabel = Dec.Premade("TextLabel", {
+local function CoinCounter(coins: Dex.Observable<number>)
+    return Dex.Premade("Frame", {}, {
+        CoinsLabel = Dex.Premade("TextLabel", {
             Text = coins,
         })
     })
@@ -118,9 +118,9 @@ state; and 3) updates this state over time.
 
 ```lua
 -- Create a state to hold coins
-local coins = Dec.State(0)
+local coins = Dex.State(0)
 
--- Render a new CoinCounter component within a Dec.Root object (presumed to
+-- Render a new CoinCounter component within a Dex.Root object (presumed to
 -- exist in this scope)
 root:Render(CoinCounter(coins))
 
@@ -144,14 +144,14 @@ and two decimal points, so that `42` shows up as `£42.00`. To do this, we will
 need to transform the coins state somehow.
 
 ***Mapping*** Is the process of transforming one observable to another by using
-a transformation function. Mapping is achieved in Dec by calling
-[Dec.Map](/api/Dec#Map) with the state we want to map, then calling the returned
+a transformation function. Mapping is achieved in Dex by calling
+[Dex.Map](/api/Dex#Map) with the state we want to map, then calling the returned
 value again with a transformation function.
 
 The ***Mapping*** syntax looks like this:
 
 ```lua
-local coinsFormatted = Dec.Map(coins)(function(currentCoins)
+local coinsFormatted = Dex.Map(coins)(function(currentCoins)
     return string.format("£%.2f", currentCoins)
 end)
 ```
@@ -168,10 +168,10 @@ print(coinsFormatted:Current()) -- £123.00
 Let's use a mapped value to format the `coins` observable in our `CoinCounter`
 component example:
 ```lua
-local function CoinCounter(coins: Dec.Observable<number>)
-    return Dec.Premade("Frame", {}, {
-        CoinsLabel = Dec.Premade("TextLabel", {
-            Text = Dec.Map(coins)(function(currentCoins)
+local function CoinCounter(coins: Dex.Observable<number>)
+    return Dex.Premade("Frame", {}, {
+        CoinsLabel = Dex.Premade("TextLabel", {
+            Text = Dex.Map(coins)(function(currentCoins)
                 return string.format("£%.2f", currentCoins)
             end),
         })
@@ -185,12 +185,12 @@ end
 
 ***Observable Mapping*** can take in multiple inputs. For example, if you wanted
 to derive a value from `coins` and a `currency` type, you would simply call
-`Dec.Map` with two arguments:
+`Dex.Map` with two arguments:
 
 ```lua
-local coins = Dec.State(0)
-local currency = Dec.State("£")
-local coinsFormatted = Dec.Map(currency, coins)(function(
+local coins = Dex.State(0)
+local currency = Dex.State("£")
+local coinsFormatted = Dex.Map(currency, coins)(function(
     currentCurrency,
     currentCoins
 )
@@ -204,16 +204,16 @@ print(coinsFormatted:Current()) -- $42.00
 ```
 
 :::info
-Dec provides a shorthand method for mapping an single input observable to a
+Dex provides a shorthand method for mapping an single input observable to a
 single output observable called [:Map()](/api/Observable#Map). Due to a current
 Luau language limitation, calling the `:Map()` method will discard the type
-information of the output observable, so you should prefer using `Dec.Map`
+information of the output observable, so you should prefer using `Dex.Map`
 over `Observable:Map()` in most cases for the sake of type safety.
 
 `:Map()` is still useful in situations where you do not need the type of the
 output observable, such as when storing it as a VirtualInstance property:
 ```lua
-return Dec.Premade("TextLabel", {
+return Dex.Premade("TextLabel", {
     Text = coins:Map(function(currentCoins)
         return string.format("£%.2f", currentCoins)
     end),
@@ -227,13 +227,13 @@ return Dec.Premade("TextLabel", {
 This feature has been disabled due to a regression in Luau's type system.
 :::
 
-~~Dec provides operator overloads for observables of the same number or vector
+~~Dex provides operator overloads for observables of the same number or vector
 type! You can use operators like `+`, `-`, `*`, `/`, and `^` between two
 observable objects to get a mapped observable:~~
 
 ```lua
-local a = Dec.State(3)
-local b = Dec.State(4)
+local a = Dex.State(3)
+local b = Dex.State(4)
 local sum = a + b
 print(sum:Current()) -- 7
 a:Set(4)
@@ -243,7 +243,7 @@ print(sum:Current()) -- 8
 ~~In the example above, `sum` is equivalent to mapping `a` and `b` with an
 summation mapping function:~~
 ```lua
-local sum = Dec.Map(a, b)(function(currentA, currentB)
+local sum = Dex.Map(a, b)(function(currentA, currentB)
     return currentA + currentB
 end)
 ```
@@ -252,7 +252,7 @@ end)
 example, you can add a UDim2 with an *Observable UDim2*:~~
 
 ```lua
-local basePosition: Dec.Observable<UDim2> = Dec.State(UDim2.fromScale(0.5, 0.1))
+local basePosition: Dex.Observable<UDim2> = Dex.State(UDim2.fromScale(0.5, 0.1))
 local PADDING = UDim2.fromScale(0.05, 0.05)
 local paddedPosition = basePosition + PADDING
 print(paddedPosition:Current()) -- ~ {0.55, 0}, {0.15, 0}
@@ -265,7 +265,7 @@ This is done by calling the `:Subscribe()` method, which calls a listener
 whenever the observable's value changes, and can be unsubscribed.
 
 ```lua
-local value = Dec.State(42)
+local value = Dex.State(42)
 local unsubscribe = value:Subscribe(function(currentValue)
     print("The current value is ", currentValue)
 end)
@@ -292,15 +292,15 @@ A safe alternative to calling `Observable:Subscribe()` is the function
 `VirtualInstance:SubscribeWhileMounted()`, which takes in the Observable as a
 first parameter, and automatically unsubscribes to the observable's value once
 the VirtualInstance is ***Unmounted*** (i.e. is no longer being rendered by
-Dec).
+Dex).
 
 We can use this inside a component to safely handle side effects and debugging
 in a way that cleans itself up when the Component's Virtual Instances stop being
-rendered by Dec:
+rendered by Dex:
 
 ```lua
-local function ComponentWithSideEffects(value: Dec.Observable<number>)
-    local frame = Dec.Premade("Frame")
+local function ComponentWithSideEffects(value: Dex.Observable<number>)
+    local frame = Dex.Premade("Frame")
 
     -- This will keep printing changes to the value until the frame is no longer
     -- rendered

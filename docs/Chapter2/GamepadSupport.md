@@ -10,11 +10,11 @@ Tutorials are still in progress, and will be released section-by-section
 
 ## Section Outline:
 - Holy cow we need to add first-class support for Roblox's gamepad methods...
-- Dec.GamepadSelect(vInstance)
-- Dec.GamepadAddSelectionParent(name: string, vInstance)
-- Dec.GamepadAddSelectionTuple(name: string, {vInstance})
-- Dec.GamepadRemoveSelectionGroup(name: string, vInstance)
-- Dec.GamepadVirtualCursorEnable(vInstance)
+- Dex.GamepadSelect(vInstance)
+- Dex.GamepadAddSelectionParent(name: string, vInstance)
+- Dex.GamepadAddSelectionTuple(name: string, {vInstance})
+- Dex.GamepadRemoveSelectionGroup(name: string, vInstance)
+- Dex.GamepadVirtualCursorEnable(vInstance)
 
 Once these are implemented, document them and add a guide for using them and
-mapping these to Dec states with proper Unsubscribe handling!
+mapping these to Dex states with proper Unsubscribe handling!

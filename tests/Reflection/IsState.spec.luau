@@ -1,8 +1,8 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
-local StateRecord = require(ReplicatedStorage.Packages.Dec.Observables.StateRecord)
-local IsState = require(ReplicatedStorage.Packages.Dec.Reflection.IsState)
+local State = require(ReplicatedStorage.Packages.Dex.Observables.State)
+local StateRecord = require(ReplicatedStorage.Packages.Dex.Observables.StateRecord)
+local IsState = require(ReplicatedStorage.Packages.Dex.Reflection.IsState)
 
 return function()
     it("returns true for State", function()

@@ -10,7 +10,7 @@ local VirtualInstanceCreators = {}
 
 --[=[
     @function New
-    @within Dec
+    @within Dex
     @param className string
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
@@ -35,7 +35,7 @@ end
 
 --[=[
     @function Clone
-    @within Dec
+    @within Dex
     @param template Instance | VirtualInstance
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
@@ -60,16 +60,16 @@ end
 
 --[=[
     @function Premade
-    @within Dec
+    @within Dex
     @param className string
     @param props {[string]: any}?
     @param children {[any]: CanBeObservable<VirtualInstance?>}
     @return VirtualInstance
 
     Creates a new VirtualInstance that represents a pre-existing Roblox Instance
-    to be modified by Dec.
+    to be modified by Dex.
 
-    If passed into the the Render function for a [Dec.Root] component, the root
+    If passed into the the Render function for a [Dex.Root] component, the root
     instance will be used used.
 ]=]
 function VirtualInstanceCreators.Premade(

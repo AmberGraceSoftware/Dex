@@ -1,22 +1,22 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Dec = require(ReplicatedStorage.Packages.Dec)
+local Dex = require(ReplicatedStorage.Packages.Dex)
 
 return function()
     describe("MapChildren", function()
         it("Updates only mapped children for KVs that change", function()
-            local input = Dec.State({"a", "b", "c"})
+            local input = Dex.State({"a", "b", "c"})
 
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:MapChildren(input, function(i, letter)
-                return Dec.New("TextLabel", {
+                return Dex.New("TextLabel", {
                     LayoutOrder = i,
                     Text = letter
                 })
             end)
 
             local host = Instance.new("Frame")
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             -- Verify generated children match original state
             local children = (host:GetChildren() :: any) :: {TextLabel}
@@ -41,17 +41,17 @@ return function()
             expect(newChildren[2].Text).to.equal("d")
             expect(newChildren[3]).to.equal(children[3])
         end)
-        it("Map can return Observable<VirtualInstance> or Dec.Nil", function()
-            local input = Dec.State({"a", "b", "c"})
-            local textSuffix = Dec.State("Foo" :: string?)
+        it("Map can return Observable<VirtualInstance> or Dex.Nil", function()
+            local input = Dex.State({"a", "b", "c"})
+            local textSuffix = Dex.State("Foo" :: string?)
 
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:MapChildren(input, function(i, letter)
                 return textSuffix:Map(function(suffix)
                     if suffix == nil then
-                        return Dec.Nil
+                        return Dex.Nil
                     end
-                    return Dec.New("TextLabel", {
+                    return Dex.New("TextLabel", {
                         LayoutOrder = i,
                         Text = letter .. suffix
                     })
@@ -59,7 +59,7 @@ return function()
             end)
 
             local host = Instance.new("Frame")
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             -- Verify generated children match original state
             local children = (host:GetChildren() :: any) :: {TextLabel}
@@ -91,18 +91,18 @@ return function()
     end)
     describe("MapChildrenByKey", function()
         it("Doesn't create/destroy instances when no keys change", function()
-            local input = Dec.State({"a", "b", "c"})
+            local input = Dex.State({"a", "b", "c"})
 
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:MapChildrenByKey(input, function(i, letter)
-                return Dec.New("TextLabel", {
+                return Dex.New("TextLabel", {
                     LayoutOrder = i,
                     Text = letter
                 })
             end)
 
             local host = Instance.new("Frame")
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             -- Verify generated children match original state
             local children = (host:GetChildren() :: any) :: {TextLabel}
@@ -131,18 +131,18 @@ return function()
     end)
     describe("MapChildrenByValue", function()
         it("Doesn't create/destroy instances when no values change", function()
-            local input = Dec.State({"a", "b", "c"})
+            local input = Dex.State({"a", "b", "c"})
 
-            local parent = Dec.Premade("Frame")
+            local parent = Dex.Premade("Frame")
             parent:MapChildrenByValue(input, function(letter, i)
-                return Dec.New("TextLabel", {
+                return Dex.New("TextLabel", {
                     LayoutOrder = i,
                     Text = letter
                 })
             end)
 
             local host = Instance.new("Frame")
-            Dec.Root(host):Render(parent)
+            Dex.Root(host):Render(parent)
 
             -- Verify generated children match original state
             local children = (host:GetChildren() :: any) :: {TextLabel}

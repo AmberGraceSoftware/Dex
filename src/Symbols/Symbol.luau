@@ -1,6 +1,6 @@
 --!strict
 --[[
-    Simple library used to create Dec Symbol objects
+    Simple library used to create Dex Symbol objects
 ]]
 
 local Types = require(script.Parent.Parent.Types)

@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Symbol = require(ReplicatedStorage.Packages.Dec.Symbols.Symbol)
+local Symbol = require(ReplicatedStorage.Packages.Dex.Symbols.Symbol)
 
 return function()
     it("creates a symbol with the provided name", function()

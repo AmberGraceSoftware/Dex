@@ -4,7 +4,7 @@ type ReconciledNode = Types.ReconciledNode
 type State<T> = Types.State<T>
 
 --[[
-    @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
+    @param reconciledNode: Dex.ReconciledNode - The reconciled node to store cleanup tasks on
     @param payload: {property: string, state: State<any>, once: boolean}
     
     Outputs a property on the reconciled instance to the state specified in the

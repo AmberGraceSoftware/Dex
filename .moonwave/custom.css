@@ -6,8 +6,8 @@
     --decdocs-codeblock-background: #334460;
     --decdocs-comment-color: #74909c;
     --ifm-font-size-base: 110%;
-    --dec-footer-background-color: var(--ifm-background-surface-color);
-    --dec-footer-color: #1b2b38;
+    --dex-footer-background-color: var(--ifm-background-surface-color);
+    --dex-footer-color: #1b2b38;
     --doc-sidebar-width: 320px !important;
     --ifm-heading-line-height: 1.75;
     --ifm-code-border-radius: 0.65rem;
@@ -30,13 +30,13 @@ html[data-theme='dark'] {
     --decdocs-moonwave-member-background-color: #263144;
     --decdocs-codeblock-background: #263144;
     --decdocs-comment-color: #637d89;
-    /* --dec-footer-background-color: #15232c; */
-    --dec-footer-color: #e8eff5;
+    /* --dex-footer-background-color: #15232c; */
+    --dex-footer-color: #e8eff5;
 }
 
 .footer {
-    background-color: var(--dec-footer-background-color) !important;
-    color: var(--dec-footer-color) !important;
+    background-color: var(--dex-footer-background-color) !important;
+    color: var(--dex-footer-color) !important;
     font-weight: 500;
     font-style: italic;
 }

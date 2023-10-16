@@ -34,7 +34,7 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
 
 --[=[
     @function Map
-    @within Dec
+    @within Dex
     @param ... Observable<...T>
     @return ((map: ...T) -> ReturnType) -> Observable<ReturnType>
 
@@ -43,10 +43,10 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     
     Example:
     ```lua
-    local x = Dec.State(2)
-    local y = Dec.State(3)
+    local x = Dex.State(2)
+    local y = Dex.State(3)
     
-    local sum = Dec.Map(x, y)(function(currentX, currentY)
+    local sum = Dex.Map(x, y)(function(currentX, currentY)
         return currentX + currentY
     end)
 
@@ -54,12 +54,12 @@ type ReturnType = (<D1>(dep1: Observable<D1>) -> (
     ```
 
     For Observables where the values are a vector or scalar type, math
-    operations can be used as an alias for `Dec.Map`!
+    operations can be used as an alias for `Dex.Map`!
 
     Example:
     ```lua
-    local x = Dec.State(2)
-    local y = Dec.State(3)
+    local x = Dex.State(2)
+    local y = Dex.State(3)
     local sum = x + y
 
     print(sum:Current()) -- 5

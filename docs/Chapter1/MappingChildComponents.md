@@ -11,8 +11,8 @@ VirtualInstance under a parent.
 
 ## Observable Children
 
-In previous sections, we saw the third argument of `Dec.New`/`Dec.Clone`
-`Dec.Premade` can be used to create child VirtualInstance when a root/parent
+In previous sections, we saw the third argument of `Dex.New`/`Dex.Clone`
+`Dex.Premade` can be used to create child VirtualInstance when a root/parent
 object is rendered.
 
 In many cases of a UI's design, a VirtualInstance may need to have child
@@ -23,9 +23,9 @@ parameter of a VirtualInstance:
 
 ```lua
 local function ItemList(props: {
-    items: Dec.Observable<{Dec.VirtualInstance}>
+    items: Dex.Observable<{Dex.VirtualInstance}>
 })
-    return Dec.New("Frame", {
+    return Dex.New("Frame", {
         Size = UDim2.fromScale(0.4, 0.6),
         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -35,12 +35,12 @@ local function ItemList(props: {
 end
 ```
 
-When an observable is passed to a VirtualInstance's children parameter, Dec will
+When an observable is passed to a VirtualInstance's children parameter, Dex will
 automatically create/destroy instances as needed to match the new value
 of the observable list whenever it changes:
 
 ```lua
-local items = Dec.State({} :: {Dec.VirtualInstance})
+local items = Dex.State({} :: {Dex.VirtualInstance})
 local list = ItemList({
     items = items
 })
@@ -48,15 +48,15 @@ local list = ItemList({
 -- . . .
 
 items:Set({
-    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
+    Dex.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 1",
         Position = UDim2.fromScale(0.5, 0.3),
     }),
-    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
+    Dex.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 2",
         Position = UDim2.fromScale(0.5, 0.5),
     }),
-    Dec.Clone(game.ReplicatedStorage.UITemplates.Item, {
+    Dex.Clone(game.ReplicatedStorage.UITemplates.Item, {
         Text = "Item 3",
         Position = UDim2.fromScale(0.5, 0.7),
     }),
@@ -75,19 +75,19 @@ dynamically based on another table state (like a list of strings):
 
 ```lua
 local function TodoList(props: {
-    items: Dec.Observable<{string}>
+    items: Dex.Observable<{string}>
 })
     local children = props.items:Map(function(currentItems)
         -- Begin creating a list of children
         local childList = {
             -- Layout constraint
-            Dec.New("UIListLayout", {
+            Dex.New("UIListLayout", {
                 SortOrder = Enum.SortOrder.LayoutOrder,
                 HorizontalAlignment = Enum.HorizontalAlignment.Center,
                 Padding = UDim.new(0.05, 0),
             }),
             -- Heading
-            Dec.New("TextLabel", {
+            Dex.New("TextLabel", {
                 Text = "Todo List:",
                 LayoutOrder = 0,
                 TextSize = 18,
@@ -99,7 +99,7 @@ local function TodoList(props: {
 
         -- Generate a new child VirtualInstance for each todo item
         for i, description in currentItems do
-            table.insert(childList, Dec.New("TextLabel", {
+            table.insert(childList, Dex.New("TextLabel", {
                 Text = description,
                 LayoutOrder = i,
                 TextSize = 18,
@@ -107,7 +107,7 @@ local function TodoList(props: {
                 BorderSizePixel = 0,
                 BackgroundColor3 = Color3.fromHex("fff"),
             }, {
-                Dec.New("UICorner", {
+                Dex.New("UICorner", {
                     CornerRadius = UDim.new(0.2, 0)
                 })
             }))
@@ -115,7 +115,7 @@ local function TodoList(props: {
         return childList
     end)
 
-    return Dec.New("Frame", {
+    return Dex.New("Frame", {
         Size = UDim2.fromScale(0.7, 0.6),
         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -128,19 +128,19 @@ end
 (Then, to instantiate the `TodoList` component):
 ```lua
 local function Gui()
-    local todoItems = Dec.State({} :: {string})
+    local todoItems = Dex.State({} :: {string})
     local list = TodoList({
         items = todoItems
     })
 
     -- . . .
     todoItems:Set({
-        "Install Dec within your project",
+        "Install Dex within your project",
         "Read up on the tutorials and API",
         "Write a cool reactive UI with it!",
     })
 
-    return Dec.New("ScreenGui", {ResetOnSpawn = false}, {list})
+    return Dex.New("ScreenGui", {ResetOnSpawn = false}, {list})
 end
 ```
 
@@ -151,7 +151,7 @@ end
 Let's briefly go over a feature of VirtualInstances: ***Directives***.
 
 VirtualInstances have special methods on them called ***Directives***, which are
-instructions of how Dec should put together the instance heirarchy when
+instructions of how Dex should put together the instance heirarchy when
 reconciled by a [Root](/API/Root) object. If you've followed along with the
 guide so far, you have actually been using two directives under the hood
 already: [:SetProperties()](/API/VirtualInstance#SetProperties) and
@@ -159,25 +159,25 @@ already: [:SetProperties()](/API/VirtualInstance#SetProperties) and
 
 ```lua
 -- Creating a VirtualInstance with "Properties" and "Children" tables defined:
-local virtualInstance1 = Dec.New("Frame", {
+local virtualInstance1 = Dex.New("Frame", {
     BackgroundTransparency = 1
 }, {
-    Dec.New("TextLabel")
+    Dex.New("TextLabel")
 })
 
 -- . . . Is equivalent to adding a "SetProperties" and "AddChildren" directive!
-local virtualInstance2 = Dec.New("Frame")
+local virtualInstance2 = Dex.New("Frame")
 virtualInstance2:SetProperties({
     BackgroundTransparency = 1,
 })
 virtualInstance2:AddChildren({
-    Dec.New("TextLabel"),
+    Dex.New("TextLabel"),
 })
 ```
 
 :::info
 Under the hood, when passing the "properties" and "children" arguments to the
-VirtualInstance constructors, Dec is actually adding the directives
+VirtualInstance constructors, Dex is actually adding the directives
 [:SetProperties()](/API/VirtualInstance#SetProperties) and
 [:AddChildren()](/API/VirtualInstance#AddChildren) to the new VirtualInstance.
 
@@ -185,33 +185,33 @@ Please note that _VirtualInstance directives **should only be called within the
 same scope that the VirtualInstance is created in!**_
 
 If you attempt to add a directive to a VirtualInstance after it has been
-rendered, Dec will produce an error. In addition to this, directives can be
+rendered, Dex will produce an error. In addition to this, directives can be
 _added_ to a VirtualInstance, but never _removed_. Changing the visual output
 of a VirtualInstance should always be done by using Observables.
 :::
 
 ## `:MapChildren()` Directives
 
-In the previous examples, Dec automatically deletes all child instances
+In the previous examples, Dex automatically deletes all child instances
 and re-creates new ones every time the children observable changes. In most
 cases, however, you probably only want to create new child instances when an
 item is added to a list, and destroy old ones when an item is removed from the
 list.
 
-Dec provides the [:MapChildren()](/API/VirtualInstance#MapChildren) method for
+Dex provides the [:MapChildren()](/API/VirtualInstance#MapChildren) method for
 this very common use case!
 ```lua
 local function TodoList(props: {
-    items: Dec.Observable<{string}>
+    items: Dex.Observable<{string}>
 })
-    local listFrame = Dec.New("Frame", {
+    local listFrame = Dex.New("Frame", {
         -- . . .
     })
 
     -- . . .
 
     listFrame:MapChildren(props.items, function(i, description)
-        return Dec.New("TextLabel", {
+        return Dex.New("TextLabel", {
             Text = description,
             LayoutOrder = i,
             TextSize = 18,
@@ -219,7 +219,7 @@ local function TodoList(props: {
             BorderSizePixel = 0,
             BackgroundColor3 = Color3.fromHex("fff"),
         }, {
-            Dec.New("UICorner", {
+            Dex.New("UICorner", {
                 CornerRadius = UDim.new(0.2, 0)
             })
         })
@@ -299,7 +299,7 @@ todoItems:Set({
 </center>
 <br/>
 
-In addition to [:MapChildren()](/API/VirtualInstance#MapChildren), Dec also
+In addition to [:MapChildren()](/API/VirtualInstance#MapChildren), Dex also
 provides the directives
 [:MapChildrenByKey()](/API/VirtualInstance#MapChildrenByKey) and
 [:MapChildrenByValue()](/API/VirtualInstance#MapChildrenByValue), which behave
@@ -321,12 +321,12 @@ In this case, the TodoList can be best optimized by implementing
 `MapChildrenByValue`:
 ```lua
 local function TodoList(props: {
-    items: Dec.Observable<{string}>
+    items: Dex.Observable<{string}>
 })
     -- . . .
 
     listFrame:MapChildrenByValue(props.items, function(description, i)
-        return Dec.New("TextLabel", {
+        return Dex.New("TextLabel", {
             Text = description, -- string
             LayoutOrder = i,   -- Observable<number>
             TextSize = 18,
@@ -334,7 +334,7 @@ local function TodoList(props: {
             BorderSizePixel = 0,
             BackgroundColor3 = Color3.fromHex("fff"),
         }, {
-            Dec.New("UICorner", {
+            Dex.New("UICorner", {
                 CornerRadius = UDim.new(0.2, 0)
             })
         })
@@ -384,12 +384,12 @@ children by key instead of by value:
 
 ```lua
 local function TodoList(props: {
-    items: Dec.Observable<{string}>
+    items: Dex.Observable<{string}>
 })
     -- . . .
 
     listFrame:MapChlidrenByKey(props.items, function(i, description)
-        return Dec.New("TextLabel", {
+        return Dex.New("TextLabel", {
             Text = description, -- Observable<string>
             LayoutOrder = i,   -- number
             TextSize = 18,
@@ -397,7 +397,7 @@ local function TodoList(props: {
             BorderSizePixel = 0,
             BackgroundColor3 = Color3.fromHex("fff"),
         }, {
-            Dec.New("UICorner", {
+            Dex.New("UICorner", {
                 CornerRadius = UDim.new(0.2, 0)
             })
         })

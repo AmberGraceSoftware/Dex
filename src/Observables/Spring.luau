@@ -130,9 +130,9 @@ local typeToSpringStepMethod = {
 
     ---
 
-    ### Dec.Spring
+    ### Dex.Spring
     ```ts
-    Dec.Spring<T>(
+    Dex.Spring<T>(
         target: Observable<T>
         angularFrequency: number?
     ) -> Spring<T>
@@ -145,7 +145,7 @@ local typeToSpringStepMethod = {
     :::info
     Springs must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 ]=]
@@ -170,7 +170,7 @@ Spring.StepMethods = typeToSpringStepMethod
 
 --[=[
     @function Spring
-    @within Dec
+    @within Dex
     @param target Observable<T>
     @param angularFrequency number?
     @return Observable<T>

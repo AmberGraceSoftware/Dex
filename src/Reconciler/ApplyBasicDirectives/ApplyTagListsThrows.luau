@@ -83,7 +83,7 @@ local function applyListOfPossiblyObservableTags(
 end
 
 --[[
-    @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
+    @param reconciledNode: Dex.ReconciledNode - The reconciled node to store cleanup tasks on
     @param tagList: CanBeObservable<{string}> - The tag list to apply to the VirtualInstance
 
     Applies a tag list to a VirtualInstance, throwing any Roblox engine

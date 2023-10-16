@@ -30,9 +30,9 @@ type Observable<T> = Types.Observable<T>
     
     ---
     
-    ### Dec.Stopwatch
+    ### Dex.Stopwatch
     ```lua
-    Dec.Stopwatch({
+    Dex.Stopwatch({
         duration: number?,
         isPlaying: CanBeObservable<boolean>?,
         playOnChange: Observable<any>?,
@@ -61,17 +61,17 @@ type Observable<T> = Types.Observable<T>
     :::info
     Stopwatches must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 
     Usage Example:
     ```lua
-    local stopwatch = Dec.Stopwatch({
+    local stopwatch = Dex.Stopwatch({
         duration = 10,
         isPlaying = true,
     })
-    local frame = Dec.New("Frame")({
+    local frame = Dex.New("Frame")({
         -- Opaque for 5 seconds, then fades to Transparent over 5 seconds:
         BackgroundTransparency = stopwatch:Alpha(5, 10),
     })
@@ -155,7 +155,7 @@ end
     @field playOnChange Observable<any>?,
 
     Type that specifies the props for constructing a [Stopwatch] observable (via
-    [Dec.Stopwatch])
+    [Dex.Stopwatch])
 
     `duration` is an optional prop that specifies the end time of the stopwatch.
     Defaults to `math.huge`.
@@ -170,7 +170,7 @@ end
 
 --[=[
     @function Stopwatch
-    @within Dec
+    @within Dex
     @param props StopwatchProps?
     @return Stopwatch
 

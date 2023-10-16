@@ -7,7 +7,7 @@ type VirtualInstanceTrace = Types.VirtualInstanceTrace
 type ReconciledNode = Types.ReconciledNode
 
 local WAIT_FOR_CHILD_TIMEOUT = 30
-local DEFAULT_CREATED_CHILD_NAME = "DecRoot"
+local DEFAULT_CREATED_CHILD_NAME = "DexRoot"
 
 type PseudoPromise = {
     andThen: (callback: (Instance) -> ()) -> (),
@@ -187,8 +187,8 @@ local function CloneTemplateReconciledInstance(
     local templateArg = virtualInstance._constructorTypeArgument
     if IsVirtualInstance(templateArg) then
         if templateArg._constructorType == "New" then
-            -- In the case that our template was a "Dec.New" virtual
-            -- instance, simply treat as a Dec.New call
+            -- In the case that our template was a "Dex.New" virtual
+            -- instance, simply treat as a Dex.New call
             return CreateNewReconciledInstance(childPath, templateArg)
         elseif
             templateArg._reconciledNode

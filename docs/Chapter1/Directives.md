@@ -4,17 +4,17 @@ sidebar_position: 9
 
 # VirtualInstance Directives
 
-Dec tries to allow access to all use cases in Roblox's [Data Model](https://create.roblox.com/docs/projects/data-model) through VirtualInstances.
+Dex tries to allow access to all use cases in Roblox's [Data Model](https://create.roblox.com/docs/projects/data-model) through VirtualInstances.
 
 VirtualInstances aim to be as declarative as possible (i.e. described in
 terms of _how they are put together in relation to state_ rather than in terms
-of the exact instructions for how to put them together). Dec uses a concept
+of the exact instructions for how to put them together). Dex uses a concept
 called ***Directives*** to bridge this gap.
 
 ***Directives*** are methods which declare special instructions on how to put
 together an instance heirarchy based on application state. They can be _added_
 to a VirtualInstance but _never removed._ Once a VirtualInstance is rendered by
-Dec, it becomes ***frozen***, meaning no more directives can be added or removed
+Dex, it becomes ***frozen***, meaning no more directives can be added or removed
 from the VirtualInstance.
 
 ## Basic Directives
@@ -22,23 +22,23 @@ from the VirtualInstance.
 The [:SetProperties()](/API/VirtualInstance#SetProperties) and
 [:AddChildren()](/API/VirtualInstance#AddChildren) directives define a
 VirtualInstance's properties and children respectively. The first two arguments
-of VirtualInstance constructors (such as [Dec.New](/api/Dec#New)) automatically
+of VirtualInstance constructors (such as [Dex.New](/api/Dex#New)) automatically
 add a `:SetProperties()` and `:AddChildren()` directive when defined.
 ```lua
 -- Creating a VirtualInstance with "Properties" and "Children" tables defined:
-local virtualInstance1 = Dec.New("Frame", {
+local virtualInstance1 = Dex.New("Frame", {
     BackgroundTransparency = 1
 }, {
-    Dec.New("TextLabel")
+    Dex.New("TextLabel")
 })
 
 -- . . . Is equivalent to adding a "SetProperties" and "AddChildren" directive!
-local virtualInstance2 = Dec.New("Frame")
+local virtualInstance2 = Dex.New("Frame")
 virtualInstance2:SetProperties({
     BackgroundTransparency = 1,
 })
 virtualInstance2:AddChildren({
-    Dec.New("TextLabel"),
+    Dex.New("TextLabel"),
 })
 ```
 
@@ -47,10 +47,10 @@ component:
 ```lua
 local function Component(props: {
     layoutOrder: number,
-    coins: Dec.Observable<number>,
+    coins: Dex.Observable<number>,
 })
     -- Layout
-    local label = Dec.New("TextLabel", {
+    local label = Dex.New("TextLabel", {
         LayoutOrder = props.layoutOrder
     })
 
@@ -74,15 +74,15 @@ Let's go over a few more ***Directives*** and their use cases.
 
 ## Defining Attributes
 
-Dec can render attributes in a similar way to properties by adding a
+Dex can render attributes in a similar way to properties by adding a
 `:SetAttributes()` directive. This takes in a table that can hold both _Static_
 and _Observable_ values:
 
 ```lua
 local function FrameWithAttributes(props: {
-    id: Dec.Observable<string>
+    id: Dex.Observable<string>
 })
-    local frame = Dec.New("Frame")
+    local frame = Dex.New("Frame")
     frame:SetAttributes({
         id = props.id,
     })
@@ -93,7 +93,7 @@ When rendered, this component will generate a frame with attributes that adjusts
 to be equal to a state passed in via props:
 ```lua
 local frame = FrameWithAttributes({
-    id = Dec.State("ValueFromProps")
+    id = Dex.State("ValueFromProps")
 })
 ```
 <center>
@@ -102,7 +102,7 @@ local frame = FrameWithAttributes({
 
 ## Defining Tags
 
-Dec also provides an `:AddTags()` directives, which adds
+Dex also provides an `:AddTags()` directives, which adds
 [CollectionService Tags](https://create.roblox.com/docs/reference/engine/classes/CollectionService)
 to a VirtualInstance while it is being rendered.
 
@@ -111,9 +111,9 @@ string values:
 
 ```lua
 local function TaggedUIScaleConstraint(props: {
-    darkMode: Dec.Observable<boolean>
+    darkMode: Dex.Observable<boolean>
 })
-    local uiScale = Dec.New("UIScale")
+    local uiScale = Dex.New("UIScale")
     frame:AddTags(props.darkMode:Map(function(darkModeEnabled)
         if darkModeEnabled then
             return {"ApplyDarkMode", "AutoScaling"}
@@ -126,7 +126,7 @@ end
 ```
 ```lua
 local uiScale = TaggedUIScaleConstraint({
-    darkMode = Dec.State(false)
+    darkMode = Dex.State(false)
 })
 ```
 <center>
@@ -139,7 +139,7 @@ The `:SetProperties()` directive can connect to listeners by providing a
 function as a value for an event name:
 ```lua
 local function Button()
-    return Dec.Premade("GuiButton", {
+    return Dex.Premade("GuiButton", {
         Activated = function()
             print("Button was pressed!")
         end,
@@ -147,11 +147,11 @@ local function Button()
 end
 ```
 
-Alternatively, Dec provides a separate directive `:Connect()` which achieves
+Alternatively, Dex provides a separate directive `:Connect()` which achieves
 the same result:
 ```lua
 local function Button()
-    local button = Dec.Premade("GuiButton")
+    local button = Dex.Premade("GuiButton")
     button:Connect("Activated", function()
         print("Button was pressed!")
     end)
@@ -159,13 +159,13 @@ local function Button()
 end
 ```
 
-Dec will automatically clean up the connection/disconnection of these event
+Dex will automatically clean up the connection/disconnection of these event
 listeners while a VirtualInstance is being rendered.
 
 ## Listening to Property & Attribute Changed events
 
-The [:OutProperty()](https://dec.ambergracesoftware.com/api/VirtualInstance#OutProperty)
-and [:OutAttribute()](https://dec.ambergracesoftware.com/api/VirtualInstance#OutProperty)
+The [:OutProperty()](https://dex.ambergracesoftware.com/api/VirtualInstance#OutProperty)
+and [:OutAttribute()](https://dex.ambergracesoftware.com/api/VirtualInstance#OutProperty)
 directives listen to changes in a specific property or attribute while the
 VirtualInstance is being rendered. These directives return an Observable
 object which changes when the property or attribute changes, and are initialized
@@ -173,9 +173,9 @@ to the value and type of the second argument passed into the directive:
 
 ```lua
 local function LabelComponent(props: {
-    text: Dec.Observable<string>m
+    text: Dex.Observable<string>m
 })
-    local label = Dec.Premade("TextLabel", {
+    local label = Dex.Premade("TextLabel", {
         Text = props.text,
     })
     -- Create an Observable which tracks the ContentText (translated text) of
@@ -203,7 +203,7 @@ define a child VirtualInstance, then set it as a child of another
 VirtualInstance:
 
 ```lua
-local child = Dec.Premade("Frame")
+local child = Dex.Premade("Frame")
 parentVirtualInstance:AddChild("ChildName", child)
 ```
 
@@ -215,20 +215,20 @@ local child = parentVirtualInstance:FindChild("ChildName")
 
 ## Combining VirtualInstances
 
-Dec provides a special directive, [:Combine](/api/VirtualInstance#Combine),
+Dex provides a special directive, [:Combine](/api/VirtualInstance#Combine),
 which combines the directive of one or more premade VirtualInstances with
 another VirtualInstance. The VirtualInstances passed to the `:Combine()`
 directive must meet the following requirements:
 
 - They must be of "Premade" type, with an equivalent or related ClassName to the
 target VirtualInstance.
-- They must not already be rendered by Dec and/or combined with another
+- They must not already be rendered by Dex and/or combined with another
 VirtualInstance.
 
 Example:
 ```lua
 local function PrintOnPress()
-    return Dec.Premade("GuiButton", {
+    return Dex.Premade("GuiButton", {
         Activated = function()
             print("Button was pressed!")
         end,
@@ -237,7 +237,7 @@ end
 ```
 ```lua
 local function Button()
-    local button = Dec.New("TextButton", {
+    local button = Dex.New("TextButton", {
         Text = "Click Me!",
     })
     button:Combine(PrintOnPress())
@@ -252,20 +252,20 @@ For more on using the `:Combine()` directive effectively, see
 
 ## Lifecycle Callbacks
 
-A VirtualInstance is ***Mounted*** when it is first rendered by Dec (either
+A VirtualInstance is ***Mounted*** when it is first rendered by Dex (either
 passed in as an argument to [Root:Render()](/api/Root#Render), or created as a
 child of another VirtualInstance). When the VirtualInstance stops being
 rendered, it is ***Unmounted***, meaning any created instances, side effects,
-etc. are automatically cleaned up by Dec.
+etc. are automatically cleaned up by Dex.
 
-Dec provides the directives [:OnMount()](/api/VirtualInstance#OnMont) and
+Dex provides the directives [:OnMount()](/api/VirtualInstance#OnMont) and
 [:OnUnmount()](/api/VirtualInstance#OnUnmount) to listen to these events for
 custom side effects.
 
 Example:
 ```lua
 local function Component()
-    local frame = Dec.New("Frame")
+    local frame = Dex.New("Frame")
     frame:OnMount(function()
         print("Frame was mounted!")
     end)
@@ -278,9 +278,9 @@ end
 
 :::info
 ## SubscribeOnMounted directive
-Dec provides the directive [:SubscribeOnMounted()](/api/VirtualInstance#SubscribeWhileMounted)
+Dex provides the directive [:SubscribeOnMounted()](/api/VirtualInstance#SubscribeWhileMounted)
 to listen for changes to an Observable, and automatically clean up this listener
-when a VirtualInstance is no longer being rendered by Dec.
+when a VirtualInstance is no longer being rendered by Dex.
 
 Under the hood, [:SubscribeOnMounted()](/api/VirtualInstance#SubscribeWhileMounted) 
 uses `:OnMount()` and `:OnUnmount()` to set up and take down the side effect of

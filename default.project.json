@@ -1,19 +1,19 @@
 {
-  "name": "dec",
+  "name": "dex",
   "tree": {
     "$className": "DataModel",
 
     "ReplicatedStorage": {
       "Packages": {
         "$className": "Folder",
-        "Dec": {
+        "Dex": {
           "$path": "src"
         }
       },
       "DevPackages": {
         "$path": "DevPackages"
       },
-      "DecTests": {
+      "DexTests": {
         "$path": "tests"
       }
     },

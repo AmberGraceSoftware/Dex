@@ -18,11 +18,11 @@ local PROOF_FILE_PATH = "testing_proof_checksum.txt"
 local SOURCE_ROOTS: {SourceMap} = {
     {
         sourcePath = "src",
-        robloxPath = "ReplicatedStorage.Packages.Dec",
+        robloxPath = "ReplicatedStorage.Packages.Dex",
     },
     {
         sourcePath = "tests",
-        robloxPath = "ReplicatedStorage.DecTests"
+        robloxPath = "ReplicatedStorage.DexTests"
     }
 }
 
@@ -148,11 +148,11 @@ local function ValidateProofOfTesting()
     local expectedChecksum = generateSourceFileChecksum(
         captureSourceFileStrings(SOURCE_ROOTS))
     if expectedChecksum ~= sourceChecksum then
-        error("Validation Error: Some source code for Dec has changed since " .. 
+        error("Validation Error: Some source code for Dex has changed since " .. 
             "the last time unit tests were ran!\n\nPlease run unit tests " .. 
             "manually and paste the proof checksum output into the '" ..
-            PROOF_FILE_PATH .. "' file at the root of the Dec project " .. 
-            "directory.\n\n See Dec's readme file for more details.\n\n" .. 
+            PROOF_FILE_PATH .. "' file at the root of the Dex project " .. 
+            "directory.\n\n See Dex's readme file for more details.\n\n" .. 
             `Current checksum: {sourceChecksum}; Expected: {expectedChecksum}`
         )
     end

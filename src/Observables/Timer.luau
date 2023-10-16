@@ -27,9 +27,9 @@ type Observable<T> = Types.Observable<T>
     
     ---
     
-    ### Dec.Timer
+    ### Dex.Timer
     ```lua
-    Dec.Timer({
+    Dex.Timer({
         duration: number,
         isPlaying: CanBeObservable<boolean>?,
         playOnChange: Observable<any>?,
@@ -58,17 +58,17 @@ type Observable<T> = Types.Observable<T>
     :::info
     Timers must currently be ***Subscribed*** or ***Mounted*** to exhibit
     expected behavior. This is a requirement for all realtime-simulated
-    observables, which enables safe garbage collection when writing Dec
+    observables, which enables safe garbage collection when writing Dex
     components.
     :::
 
     Usage Example:
     ```lua
-    local timer = Dec.Timer({
+    local timer = Dex.Timer({
         duration = 10,
         isPlaying = true,
     })
-    local frame = Dec.New("Frame")({
+    local frame = Dex.New("Frame")({
         -- Opaque for 5 seconds, then fades to Transparent over 5 seconds:
         BackgroundTransparency = timer:Alpha(5, 0),
     })
@@ -167,7 +167,7 @@ end
     @field playOnChange Observable<any>?,
 
     Type that specifies the props for constructing a [Timer] observable (via
-    [Dec.Timer])
+    [Dex.Timer])
 
     `duration` is a required prop that specifies the initial time of the timer.
 
@@ -181,7 +181,7 @@ end
 
 --[=[
     @function Timer
-    @within Dec
+    @within Dex
     @param props TimerProps
     @return Timer
 

@@ -13,7 +13,7 @@ local function applyNilSymbol(value: any): any
 end
 
 --[[
-    @param reconciledNode: Dec.ReconciledNode - The reconciled node to store cleanup tasks on
+    @param reconciledNode: Dex.ReconciledNode - The reconciled node to store cleanup tasks on
     @param attributeMap: {[string]: any} - The attribute map to apply to the VirtualInstance
     
     Applies an attribute map to a VirtualInstance, throwing any Roblox engine

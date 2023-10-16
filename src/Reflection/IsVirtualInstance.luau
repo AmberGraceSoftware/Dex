@@ -2,11 +2,11 @@
 
 --[=[
     @function IsVirtualInstance
-    @within Dec
+    @within Dex
     @param passedIn unknown
     @return boolean
 
-    This function checks if the passed in value is a Dec VirtualInstance
+    This function checks if the passed in value is a Dex VirtualInstance
 ]=]
 local function IsVirtualInstance(passedIn: unknown): boolean
     if typeof(passedIn) ~= "table" then

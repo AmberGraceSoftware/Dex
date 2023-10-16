@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Clock = require(ReplicatedStorage.Packages.Dec.Observables.Clock)
+local Clock = require(ReplicatedStorage.Packages.Dex.Observables.Clock)
 
 return function()
     it("Resolves to the current return value of os.time()", function()

@@ -1,7 +1,7 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local State = require(ReplicatedStorage.Packages.Dec.Observables.State)
-local MapObservable = require(ReplicatedStorage.Packages.Dec.Util.MapObservable)
+local State = require(ReplicatedStorage.Packages.Dex.Observables.State)
+local MapObservable = require(ReplicatedStorage.Packages.Dex.Util.MapObservable)
 
 return function()
     it("maps a single dependency", function()
