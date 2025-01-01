@@ -26,8 +26,10 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '22'
       - name: Install Moonwave
         run: npm i -g moonwave
       - name: Build docs site
+        env:
+          NODE_OPTIONS: '--no-experimental-require-module'
         run: moonwave build
