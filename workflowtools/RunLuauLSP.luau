@@ -17,23 +17,33 @@ local function RunLuauLSP()
     local fflags = net.jsonDecode(response.body).applicationSettings
 
     -- Build shell command
+    local flagSet = {}
+    local getFlagsResult = process.spawn("luau-lsp", {"--show-flags"})
+    if getFlagsResult.ok then
+        print(getFlagsResult.stdout)
+        for flag in getFlagsResult.stdout:gmatch("([a-zA-Z0-9_]+)=") do
+            flagSet[flag] = true
+        end
+    else
+        error(getFlagsResult.stderr)
+    end
     local args = {
         "analyze",
-        "tests",
-        "src",
         "--sourcemap=sourcemap.json",
-        "--definitions=globalTypes.d.lua",
-        "--definitions=testez.d.luau"
+        "--defs=globalTypes.d.lua",
+        "--defs=testez.d.luau"
     }
     for flag, value in fflags do
-        local luauFlag = flag:match("^FFlag(Luau.*)")
-        if luauFlag then
+        local luauFlag = flag:match("^FFlag(.*)")
+        if luauFlag and flagSet[luauFlag] then
             table.insert(
                 args,
                 "--flag:" .. luauFlag .. "=" .. tostring(value)
             )
         end
     end
+    table.insert(args, "src")
+    table.insert(args, "tests")
     print("luau-lsp " .. table.concat(args, " "))
     local result = process.spawn("luau-lsp", args)
     if result.ok then
