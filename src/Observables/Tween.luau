@@ -1,9 +1,8 @@
 --!strict
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local IsObservable = require(ReplicatedStorage.Packages.Dex.Reflection.IsObservable)
-local PolymorphicLerp = require(ReplicatedStorage.Packages.Dex.Util.PolymorphicLerp)
+local IsObservable = require(script.Parent.Parent.Reflection.IsObservable)
+local PolymorphicLerp = require(script.Parent.Parent.Util.PolymorphicLerp)
 local Types = require(script.Parent.Parent.Types)
 local Observable = require(script.Parent.Observable)
 local State = require(script.Parent.State)
