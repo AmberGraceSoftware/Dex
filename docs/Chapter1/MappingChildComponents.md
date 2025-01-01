@@ -152,10 +152,10 @@ Let's briefly go over a feature of VirtualInstances: ***Directives***.
 
 VirtualInstances have special methods on them called ***Directives***, which are
 instructions of how Dex should put together the instance heirarchy when
-reconciled by a [Root](/API/Root) object. If you've followed along with the
+reconciled by a [Root](/api/Root) object. If you've followed along with the
 guide so far, you have actually been using two directives under the hood
-already: [:SetProperties()](/API/VirtualInstance#SetProperties) and
-[:AddChildren()](/API/VirtualInstance#AddChildren)!
+already: [:SetProperties()](/api/VirtualInstance#SetProperties) and
+[:AddChildren()](/api/VirtualInstance#AddChildren)!
 
 ```lua
 -- Creating a VirtualInstance with "Properties" and "Children" tables defined:
@@ -178,8 +178,8 @@ virtualInstance2:AddChildren({
 :::info
 Under the hood, when passing the "properties" and "children" arguments to the
 VirtualInstance constructors, Dex is actually adding the directives
-[:SetProperties()](/API/VirtualInstance#SetProperties) and
-[:AddChildren()](/API/VirtualInstance#AddChildren) to the new VirtualInstance.
+[:SetProperties()](/api/VirtualInstance#SetProperties) and
+[:AddChildren()](/api/VirtualInstance#AddChildren) to the new VirtualInstance.
 
 Please note that _VirtualInstance directives **should only be called within the
 same scope that the VirtualInstance is created in!**_
@@ -198,7 +198,7 @@ cases, however, you probably only want to create new child instances when an
 item is added to a list, and destroy old ones when an item is removed from the
 list.
 
-Dex provides the [:MapChildren()](/API/VirtualInstance#MapChildren) method for
+Dex provides the [:MapChildren()](/api/VirtualInstance#MapChildren) method for
 this very common use case!
 ```lua
 local function TodoList(props: {
@@ -299,10 +299,10 @@ todoItems:Set({
 </center>
 <br/>
 
-In addition to [:MapChildren()](/API/VirtualInstance#MapChildren), Dex also
+In addition to [:MapChildren()](/api/VirtualInstance#MapChildren), Dex also
 provides the directives
-[:MapChildrenByKey()](/API/VirtualInstance#MapChildrenByKey) and
-[:MapChildrenByValue()](/API/VirtualInstance#MapChildrenByValue), which behave
+[:MapChildrenByKey()](/api/VirtualInstance#MapChildrenByKey) and
+[:MapChildrenByValue()](/api/VirtualInstance#MapChildrenByValue), which behave
 in slightly different ways:
 
 - ***MapChildren*** creates a new instance for every key/value pair. If a key
