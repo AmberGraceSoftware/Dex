@@ -96,6 +96,7 @@ local typeToSpringStepMethod = {
             }
         end,
         function(wrapped: {number})
+            --selene: allow(roblox_suspicious_udim2_new)
             return UDim2.new(unpack(wrapped))
         end
     ),
