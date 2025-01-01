@@ -59,6 +59,7 @@ Dex.State = require(script.Observables.State).new
 Dex.Record = require(script.Observables.StateRecord).new
 Dex.Dict = require(script.Observables.StateRecord).newDict
 Dex.Map = require(script.Util.MapObservable)
+Dex.FlattenObservable = require(script.Util.FlattenObservable)
 Dex.CustomObservable = Observable.new
 Dex.Clock = require(script.Observables.Clock)
 
