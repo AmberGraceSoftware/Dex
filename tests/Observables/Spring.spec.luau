@@ -9,6 +9,7 @@ return function()
 
         local function waitUntilClockChange()
             local start = os.clock()
+            -- selene: allow(empty_loop)
             while os.clock() == start do end
         end
 
