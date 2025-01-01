@@ -25,6 +25,6 @@ jobs:
             -O \
             -L 'https://api.github.com/repos/JohnnyMorganz/luau-lsp/contents/scripts/globalTypes.d.lua'
       - name: Verify type safety with luau-lsp
-        run: lune workflowtools/RunLuauLSP.luau
+        run: lune run workflowtools/RunLuauLSP.luau
       - name: Verify code integrity with selene 
         run: selene src tests
