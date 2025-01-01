@@ -89,6 +89,7 @@ Dex uses unit testing to validate code quality. Because Roblox Studio tests
 cannot currently be fully automated, unit tests must be run manually before
 changes can be merged into the main branch. To perform this process:
 - Sync the build via `rojo build --output Dex.rbxlx`
+- Set `workspace.SignalBehavior` to `Immediate`, as some unit tests require this to be true.
 - Open the build in Roblox Studio, and run the command line script located in `game.ServerScriptStorage.TestRunner`
 - Copy the "proof checksum" generated in Studio's output and replace the contents `testing_proof_checksum.txt` with this checksum, then commit this directly to the branch.
 - Github will automatically start an action which compares the source code with the proof checksum. If it matches, and the unit tests were all successful, the current branch will be marked as safe to merge.

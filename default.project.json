@@ -2,7 +2,11 @@
   "name": "dex",
   "tree": {
     "$className": "DataModel",
-
+    "Workspace": {
+      "$properties": {
+        "SignalBehavior": "Immediate"
+      }
+    },
     "ReplicatedStorage": {
       "Packages": {
         "$className": "Folder",

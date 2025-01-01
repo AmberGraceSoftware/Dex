@@ -7,13 +7,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
+  luau-lsp:
+    name: Luau LSP Analyze
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup aftman toolchain
-        uses: ok-nick/setup-aftman@v0.3.0
+        uses: ok-nick/setup-aftman@v0.4.2
       - name: Install wally dependencies
         run: wally install
       - name: Generate Rojo Sourcemap
@@ -25,6 +26,14 @@ jobs:
             -O \
             -L 'https://api.github.com/repos/JohnnyMorganz/luau-lsp/contents/scripts/globalTypes.d.lua'
       - name: Verify type safety with luau-lsp
-        run: lune workflowtools/RunLuauLSP.luau
+        run: lune run workflowtools/RunLuauLSP.luau
+  selene:
+    name: Selene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v4
+      - name: Setup aftman toolchain
+        uses: ok-nick/setup-aftman@v0.4.2
       - name: Verify code integrity with selene 
-        run: selene src tests
+        run: selene src

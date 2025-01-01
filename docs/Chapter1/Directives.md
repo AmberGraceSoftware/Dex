@@ -19,8 +19,8 @@ from the VirtualInstance.
 
 ## Basic Directives
 
-The [:SetProperties()](/API/VirtualInstance#SetProperties) and
-[:AddChildren()](/API/VirtualInstance#AddChildren) directives define a
+The [:SetProperties()](/api/VirtualInstance#SetProperties) and
+[:AddChildren()](/api/VirtualInstance#AddChildren) directives define a
 VirtualInstance's properties and children respectively. The first two arguments
 of VirtualInstance constructors (such as [Dex.New](/api/Dex#New)) automatically
 add a `:SetProperties()` and `:AddChildren()` directive when defined.
