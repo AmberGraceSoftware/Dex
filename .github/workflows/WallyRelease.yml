@@ -12,7 +12,7 @@ jobs:
       - name: Generate minimal project structure
         run: |
           mkdir temp
-          cp -r src temp
+          cp -r src temp/src
           cp wally.toml temp/src
           cp aftman.toml temp/src
           cp README.md temp/src
