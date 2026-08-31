@@ -19,7 +19,7 @@ local function RunLuauLSP()
 
     -- Build shell command
     local flagSet = {}
-    local getFlagsResult = process.spawn("luau-lsp", {"--show-flags"})
+    local getFlagsResult = process.exec("luau-lsp", {"--show-flags"})
     if getFlagsResult.ok then
         print(getFlagsResult.stdout)
         for flag in getFlagsResult.stdout:gmatch("([a-zA-Z0-9_]+)=") do
@@ -46,7 +46,7 @@ local function RunLuauLSP()
     table.insert(args, "src")
     table.insert(args, "tests")
     print("luau-lsp " .. table.concat(args, " "))
-    local result = process.spawn("luau-lsp", args)
+    local result = process.exec("luau-lsp", args)
     if result.ok then
         print("Luau LSP exited with no errors")
         print(result.stdout)
