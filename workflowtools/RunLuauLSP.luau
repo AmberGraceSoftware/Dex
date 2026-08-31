@@ -9,12 +9,13 @@ local CURRENT_FFLAGS_API =
     "https://clientsettingscdn.roblox.com/v1/settings/application?applicationName=PCDesktopClient"
 
 local net = (require :: any)("@lune/net")
+local serde = (require :: any)("@lune/serde")
 local process = (require :: any)("@lune/process")
 
 local function RunLuauLSP()
     -- Generate fflag parameter list
     local response = net.request(CURRENT_FFLAGS_API)
-    local fflags = net.jsonDecode(response.body).applicationSettings
+    local fflags = serde.decode("json", response.body).applicationSettings
 
     -- Build shell command
     local flagSet = {}
