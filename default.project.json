@@ -23,7 +23,7 @@
     },
     "ServerScriptService":{
       "TestRunner": {
-        "$path": "workflowtools/TestRunner.server.luau"
+        "$path": "lune/test.server.luau"
       }
     }
   }
