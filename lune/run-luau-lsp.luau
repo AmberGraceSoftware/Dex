@@ -9,16 +9,17 @@ local CURRENT_FFLAGS_API =
     "https://clientsettingscdn.roblox.com/v1/settings/application?applicationName=PCDesktopClient"
 
 local net = (require :: any)("@lune/net")
+local serde = (require :: any)("@lune/serde")
 local process = (require :: any)("@lune/process")
 
 local function RunLuauLSP()
     -- Generate fflag parameter list
     local response = net.request(CURRENT_FFLAGS_API)
-    local fflags = net.jsonDecode(response.body).applicationSettings
+    local fflags = serde.decode("json", response.body).applicationSettings
 
     -- Build shell command
     local flagSet = {}
-    local getFlagsResult = process.spawn("luau-lsp", {"--show-flags"})
+    local getFlagsResult = process.exec("luau-lsp", {"--show-flags"})
     if getFlagsResult.ok then
         print(getFlagsResult.stdout)
         for flag in getFlagsResult.stdout:gmatch("([a-zA-Z0-9_]+)=") do
@@ -45,7 +46,7 @@ local function RunLuauLSP()
     table.insert(args, "src")
     table.insert(args, "tests")
     print("luau-lsp " .. table.concat(args, " "))
-    local result = process.spawn("luau-lsp", args)
+    local result = process.exec("luau-lsp", args)
     if result.ok then
         print("Luau LSP exited with no errors")
         print(result.stdout)

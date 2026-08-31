@@ -70,6 +70,7 @@ Dex.AngleSpring = require(script.Observables.AngleSpring).new
 Dex.Eased = require(script.Observables.Eased).new
 Dex.Stopwatch = require(script.Observables.Stopwatch).new
 Dex.Timer = require(script.Observables.Timer).new
+Dex.Tween = require(script.Observables.Tween).new
 
 -- Interop functions
 Dex.ObserveFusionState = require(script.Interop.ObserveFusionState)
